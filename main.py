@@ -32,10 +32,14 @@ def Teams(standings):
     #If there's no standings (i.e., first day of the season), use projections instead
     if standings:
         for division in standings.values():
-            for team in division['teams']:                
+            for team in division['teams']:
                 #Initialize the dictionary for each team within the teams dictionary
-                teams[team['name']] = {}
-                team_name = teams[team['name']]
+                team_name = teams.setdefault(team['name'], {})
+
+                team_name['milestones'] = {
+                    'career': [],
+                    'season': []
+                }
 
                 #Save each team's divison
                 team_name['division'] = division['div_name']
@@ -59,9 +63,7 @@ def Teams(standings):
                             break
     else:
         for team in projections:
-            teams[team['Name']] = {}
-            team_name = teams[team['Name']]
-            
+            team_name = teams.setdefault(team['Name'], {})
             team_name['division'] = team['Division']
             team_name['wins'] = 0
             team_name['losses'] = 0
@@ -109,8 +111,7 @@ def Playoff_Imp(standings, teams):
         #First pass: get first place and second place teams for each division, and 4th place wild card team for each league 
         for division in standings.values():
             #Initialize dictionary for each division
-            gb_ref['divisions'][division['div_name']] = {}
-            div_name = gb_ref['divisions'][division['div_name']]
+            div_name = gb_ref['divisions'].setdefault(division['div_name'], {})
             if division['div_name'] in ('American League East', 'American League Central', 'American League West'):
                 league = 'American League'
             else:
@@ -176,7 +177,7 @@ def Playoff_Imp(standings, teams):
 
     return None
 
-def Winning_Streak(standings, teams, gamedate):
+def Winning_Streak(standings, teams, date_obj):
     #If it's the first day of the season, everyone's winning streaks should be 0
     if standings:
         for team in teams:
@@ -187,7 +188,7 @@ def Winning_Streak(standings, teams, gamedate):
             #Intially define their winning streak to be true and 0 games. Set the start of the streak date to today
             winning_streak = True
             streak_count = 0
-            streak_date = datetime.strptime(gamedate, "%m/%d/%Y").date()
+            streak_date = date_obj.date()
 
             #While the winning streak is still true, keep going back one day at a time and see if the team won and add 1 to "streak_count"
             while winning_streak:
@@ -266,9 +267,9 @@ def Get_SP_Stats(pitchers, team_id, season, last_season, teams):
                     teams[current_team]['pitcher_era'] = float(pitcher_stats['stats'][0]['stats']['era'])
                     teams[current_team]['era_source'] = 'this_year'
 
-def Starting_Pitchers(games, teams, gamedate):
+def Starting_Pitchers(games, teams, date_obj):
     #Get the current year and the previous year to pull pitcher stats
-    date_obj = datetime.strptime(gamedate, "%m/%d/%Y")
+    
     season = date_obj.strftime("%Y")
     last_season = str(date_obj.year - 1)
 
@@ -286,6 +287,71 @@ def Starting_Pitchers(games, teams, gamedate):
             Get_SP_Stats(away_pitcher, away_team_id, season, last_season, teams)
 
     return None
+
+def UpdateMilestone(player_stat, stat, scope, milestone_records):
+    if player_stat > milestone_records[scope][stat]:
+        milestone_records[scope][stat] = player_stat
+    return milestone_records[scope][stat]
+
+def AddMilestone(record, margin, player_stat, team_key, scope, stat, player_name, teams):
+    if (record - margin <= player_stat <= record) or (stat == 'home_runs' and 100 - margin <= player_stat % 100 < 100) or (stat == 'hits' and 1000 - margin <= player_stat % 1000 < 1000):
+        teams[team_key]['milestones'].setdefault(scope, []).append(
+            {"stat": stat, "player": player_name, "value": player_stat}
+        )
+
+def GetMilestones(timecode, gameid, team_status, teams, milestone_stat_list, milestone_records): 
+    box = statsapi.boxscore_data(gameid, timecode=timecode)
+
+    teamid = box[team_status]['team']['id']
+    teamname = statsapi.lookup_team(teamid)[0]['name']
+
+    for batter in box[team_status]['players'].values():
+        if batter.get('battingOrder'):
+            id = batter['person']['id']
+            player_name = batter['person']['fullName']
+            player_career = statsapi.player_stat_data(id, group="hitting", type="career")
+            season_stats = {}
+            career_stats = {}
+            for stat, info in milestone_stat_list.items():
+                season_stats[stat] = batter['seasonStats']['batting'][info['box_name']]
+                career_stats[stat] = player_career['stats'][0]['stats'][info['box_name']]
+
+                season_record = UpdateMilestone(season_stats[stat], stat, 'season', milestone_records)
+                AddMilestone(season_record, info['margin'], season_stats[stat], teamname, 'season', stat, player_name, teams)
+
+                career_record = UpdateMilestone(career_stats[stat], stat, 'career', milestone_records)
+                AddMilestone(career_record, info['margin'], career_stats[stat], teamname, 'career', stat, player_name, teams)
+
+def Milestones(games, date_obj, teams, milestone_records, milestone_stat_list):
+    timecode = date_obj.strftime("%Y%m%d") + "_150000"
+
+    for game in games:
+        GetMilestones(timecode, game['game_id'], 'away', teams, milestone_stat_list, milestone_records)
+        GetMilestones(timecode, game['game_id'], 'home', teams, milestone_stat_list, milestone_records)
+
+def MilestoneScore(milestone_records, scope, stat, stat_value, milestone_stat_list):
+    stat_info = milestone_stat_list[stat]
+    if stat == 'home_runs' and scope == 'career':
+        record_diff = milestone_records[scope][stat] - stat_value + 1
+        milestone_diffs = [abs(m - stat_value) for m in range(100, 701, 100)]
+        diff = min(record_diff, *milestone_diffs)
+        if diff == record_diff:
+             weight = 1
+        else:
+            weight = 0.05*(math.ceil(stat_value / 100) * 100)**0.0053
+    elif stat == 'hits' and scope == 'career':
+        record_diff = milestone_records[scope][stat] - stat_value + 1
+        milestone_diffs = [abs(m - stat_value) for m in range(1000, 3001, 1000)]
+        diff = min(record_diff, *milestone_diffs)
+        if diff == record_diff:
+             weight = 1
+        else:
+            weight = 0.04*(math.ceil(stat_value / 1000) * 1000)**0.0008
+    else:
+        diff = milestone_records[scope][stat] - stat_value + 1
+    score = (1-(diff / (stat_info['margin'] + 0.5))**stat_info['score_exp']) * weight
+
+    return score     
 
 def GetScores(gamedate):
     #Pull games and standings from API
@@ -305,12 +371,48 @@ def GetScores(gamedate):
         if entry["gamedate"] == gamedate:
             return entry["games"]
     
+    #Get date object
+    date_obj = datetime.strptime(gamedate, "%m/%d/%Y")
+
+    milestone_records = {
+        'career': {
+            'games_played': 3562,
+            'runs': 2295,
+            'doubles': 792,
+            'triples': 309,
+            'home_runs': 762,
+            'hits': 4256,
+            'steals': 1406,
+            'rbi': 2297
+        },
+        'season': {
+            'runs': 198,
+            'doubles': 67,
+            'triples': 36,
+            'home_runs': 73,
+            'hits': 262,
+            'steals': 138,
+            'rbi': 191
+        }
+    }
+    
+    milestone_stat_list = {        
+        "runs":         {"margin": 6, 'box_name': 'runs', 'score_exp': 4.5},
+        "doubles":      {"margin": 5, 'box_name': 'doubles', 'score_exp': 3.5},
+        "triples":      {"margin": 4, 'box_name': 'triples', 'score_exp': 2.5},
+        "home_runs":    {"margin": 5, 'box_name': 'homeRuns', 'score_exp': 3.5},
+        "hits":         {"margin": 7, 'box_name': 'hits', 'score_exp': 4.5}, 
+        "steals":       {"margin": 7, 'box_name': 'stolenBases', 'score_exp': 4.5},
+        "rbi":          {"margin": 10, 'box_name': 'rbi', 'score_exp': 6}
+    }
+
     #Run each function to get individual score components
     teams = Teams(standings)
     Playoff_Imp(standings, teams)
-    Winning_Streak(standings, teams, gamedate)
-    Starting_Pitchers(games, teams, gamedate)
-    
+    Winning_Streak(standings, teams, date_obj)
+    Starting_Pitchers(games, teams, date_obj)
+    Milestones(games, date_obj, teams, milestone_records, milestone_stat_list)
+
     #Get a list to put each game's scores into
     game_scores = []
 
@@ -386,12 +488,23 @@ def GetScores(gamedate):
         else:
             max_games_back = None
             division_score = 0
+        #Milestones
+        milestone_score = 0
+        for team in (away_team, home_team):
+            milestones = team['milestones']
+            print(milestones['career'])
+            print(milestones['season'])
+            for scope in ('career', 'season'):
+                for record in milestones[scope]:
+                    milestone_score += MilestoneScore(
+                        milestone_records, scope, record['stat'], record['value'], milestone_stat_list
+                    )
 
         #SCORING
-        unadjusted_score = playoff_imp_score + win_streak_score + wp_score + team_diff_score + era_score + era_diff_score + division_score
+        unadjusted_score = playoff_imp_score + win_streak_score + wp_score + team_diff_score + era_score + era_diff_score + division_score + milestone_score
         score = min(100, 100*((math.log(1+unadjusted_score))/(math.log(3))))              #Final Adjustment (in denominatior, ln(x), x = 1 + 99th percentile score. 
                                                                                     #Adjust higher to get less 100s, lower to get more 100s) 
-        #Add the scores for this game to the game_scores list                                                                            
+        #Add the scores for this game to the game_scores list
         game_scores.append({
             'away_team_name': away_team_name,
             'home_team_name': home_team_name,
@@ -415,6 +528,10 @@ def GetScores(gamedate):
             'away_win_streak': away_win_streak,
             'home_win_streak': home_win_streak,
             'max_games_back': max_games_back,
+            'away_career_milestones': away_team['milestones']['career'],
+            'away_season_milestones': away_team['milestones']['season'],
+            'home_career_milestones': home_team['milestones']['career'],
+            'home_season_milestones': home_team['milestones']['season'],
             'playoff_imp_score': playoff_imp_score,
             'win_streak_score': win_streak_score,                        
             'wp_score': wp_score,
@@ -422,6 +539,7 @@ def GetScores(gamedate):
             'era_score': era_score,
             'era_diff_score': era_diff_score,
             'division_score': division_score,
+            'milestone_score': milestone_score,
             'unadjusted_score': unadjusted_score,
             'score': score,
         })
@@ -438,15 +556,18 @@ def GetScores(gamedate):
 
     return game_scores
 
-def GetAllScores():
+def GetAllScores(starting_date, ending_date):
     #List to hold all scores
     all_scores = [] 
-    #Date to start
-    starting_date = '03/27/2025'
-    #Number of days to run
-    number_of_days = 185
+    #Convert date strings to date objects
+    start_date_obj = datetime.strptime(starting_date, "%m/%d/%Y").date()
+    end_date_obj = datetime.strptime(ending_date, "%m/%d/%Y").date()
+    #Number of days to run (inclusive)
+    number_of_days = (end_date_obj - start_date_obj).days + 1
+    if number_of_days <= 0:
+        raise ValueError("ending_date must be the same as or after starting_date")
     #Inital date object
-    rolling_date_obj = datetime.strptime(starting_date, "%m/%d/%Y").date() - timedelta(days=1)
+    rolling_date_obj = start_date_obj - timedelta(days=1)
     
     #Start tracking how long it's been running
     start_time = time.time()
@@ -532,5 +653,8 @@ def PrintGames(gamedate):
     else:
         print("No games scheduled today")
 
-# all_scores = GetAllScores()
+# all_scores = GetAllScores('03/27/2025', '09/27/2025')
 # print(all_scores)
+
+if __name__ == "__main__":
+    GetScores('09/23/2025')

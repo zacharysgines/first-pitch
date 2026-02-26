@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 from main import GetScores
 from datetime import date
 import html
@@ -16,77 +17,66 @@ st.markdown(
 st.markdown(
     """
     <style>
-        html, body {
-            overflow-x: hidden;
-        }
-
+        
+        /* WHOLE PAGE */
         div[data-testid="stMainBlockContainer"],
         .main .block-container {
             max-width: 100% !important;
             padding-left: 0 !important;
             padding-right: 0 !important;
+            background-color: #F4F1E8;            
         }
 
-        /* Page background */
-        .reportview-container, .stApp {
-            background-color: #F4F1E8;
-            font-family: "Nunito", sans-serif;
-        }
-
+        /* MAIN PAGE FONT */
         .stApp, .stApp * {
             font-family: "Nunito", sans-serif !important;
         }
 
-        /* Top banner */
+        /* HEADER BAR */
         .top-banner {
             background-color: #1F2A44;
             padding: 1.5rem 2rem 2rem 2rem;
-            width: auto;
             margin: -4rem 0 1rem 0;
             text-align: center;
-            box-sizing: border-box;
         }
 
+        /* HEADER TITLE CONTAINER */
         .top-banner .title-block {
             color: #F4F1E8;
             font-size: 3rem;
             line-height: 1.2;
-            font-weight: 700;
-            font-family: "Playball", cursive !important;
+            background-color: #1F2A44;
         }
 
+        /* HEADER TITLE & LOGO */
         .top-banner-title-row {
             display: inline-flex;
             align-items: center;
-            gap: 0.45rem;
-            font-family: "Playball", cursive !important;
+            gap: 0.75rem;
         }
 
+        /* HEADER TITLE */
         .top-banner-title-text {
             font-family: "Playball", cursive !important;
-            font-weight: 400 !important;
             line-height: 1;
         }
 
+        /* HEADER LOGO */
         .top-banner-title-icon {
             font-family: "Material Symbols Outlined" !important;
             font-size: 2.5rem;
             color: #F4F1E8;
             line-height: 1;
-            font-weight: normal;
-            font-style: normal;
-            display: inline-block;
-            margin-right: 5px;
         }
 
+        /* HEADER SUBTITLE */
         .top-banner .subtitle {
             display: block;
-            color: #F4F1E8;
             font-size: 1.2rem;
-            font-weight: 400;
             margin-top: 0.25rem;
         }
 
+        /* HEADER DIVIDER */
         .top-banner-divider {
             width: min(520px, 82%);
             height: 1px;
@@ -94,31 +84,24 @@ st.markdown(
             background-color: #D9A441;
         }
 
-        /* Date section */
+        /* DATE CONTAINER */
         div.st-key-date_toolbar {
-            max-width: 430px;
             margin: 0.75rem auto 0.35rem auto;
-            padding: 0;
             --date-input-width: 190px;
         }
 
+        /* DATE LABEL */
         .date-filter-heading {
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 0.75rem;
-            width: auto;
-            max-width: none;
             margin: 0.8rem auto 0.2rem auto;
-            padding: 0 1.15rem;
-            color: #1F2A44;
             font-size: 0.8rem;
             letter-spacing: 0.12em;
-            text-transform: uppercase;
             font-weight: 700;
-            box-sizing: border-box;
         }
 
+        /* DATE DIVIDER */
         .date-filter-heading::before,
         .date-filter-heading::after {
             content: "";
@@ -127,18 +110,19 @@ st.markdown(
             background-color: #d4d7dd;
         }
 
+        /* LOADING MESSAGE */
         div.st-key-loading_block {
             padding-left: 0.85rem;
         }
 
+        /* NO GAMES MESSAGE */
         .no-games-msg {
             margin-left: 0.85rem;
-            color: #1F2A44;
         }
 
+        /* CALENDAR ICON */
         div.st-key-date_toolbar div[data-baseweb="input"] {
             padding-right: 0 !important;
-            padding-left: 0 !important;
         }
 
         div[data-testid="stDateInput"] {
@@ -432,6 +416,28 @@ with st.container(key="date_toolbar"):
 
     selected_date = st.session_state.selected_date
 
+components.html(
+    """
+    <script>
+      const applyDateInputMobileFix = () => {
+        const inputs = window.parent.document.querySelectorAll('div[data-testid="stDateInput"] input');
+        inputs.forEach((input) => {
+          input.readOnly = true;
+          input.setAttribute('inputmode', 'none');
+          input.style.caretColor = 'transparent';
+        });
+      };
+
+      applyDateInputMobileFix();
+      new MutationObserver(applyDateInputMobileFix).observe(window.parent.document.body, {
+        childList: true,
+        subtree: true,
+      });
+    </script>
+    """,
+    height=0,
+)
+
 # Convert to MM/DD/YYYY for GetScores
 date_str = selected_date.strftime("%m/%d/%Y")
 
@@ -553,3 +559,5 @@ if games:
         st.markdown(card_html, unsafe_allow_html=True)
 else:
     st.markdown('<div class="no-games-msg">No games scheduled.</div>', unsafe_allow_html=True)
+
+
