@@ -32,7 +32,7 @@ jobs:
 
       - name: Run refresh script
         run: |
-          python scripts/refresh_scores.py
+          python scripts/update_scores.py
 
       - name: Commit and push if changed
         run: |
