@@ -5,7 +5,7 @@ from pathlib import Path
 ROOT_DIR = Path(__file__).resolve().parents[1]  
 sys.path.insert(0, str(ROOT_DIR))
 
-from main import GetAllScores, LoadScores, SaveScores
+from GetScores import GetAllScores, LoadScores, SaveScores
 def update_scores():
     today = date.today()
     end_date = today + timedelta(days=31)

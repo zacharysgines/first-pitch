@@ -1,6 +1,6 @@
 import streamlit as st
 import streamlit.components.v1 as components
-from main import GetScores
+from GetScores import ScoreGames
 from datetime import date
 import html
 
@@ -111,13 +111,36 @@ st.markdown(
         }
 
         /* LOADING MESSAGE */
-        div.st-key-loading_block {
-            padding-left: 0.85rem;
+        .loading-msg {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.65rem;
+            width: 100%;
+            text-align: center;
+            color: #1F2A44;
+            font-size: 18px;
+            margin: 0.4rem 0 0.8rem 0;
+        }
+
+        .loading-spinner {
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(31, 42, 68, 0.2);
+            border-top-color: #1F2A44;
+            border-radius: 50%;
+            animation: first-pitch-spin 0.8s linear infinite;
+            flex: 0 0 auto;
+        }
+
+        @keyframes first-pitch-spin {
+            to { transform: rotate(360deg); }
         }
 
         /* NO GAMES MESSAGE */
         .no-games-msg {
-            margin-left: 0.85rem;
+            text-align: center;
+            font-size: 18px;
         }
 
         /* CALENDAR ICON */
@@ -175,7 +198,7 @@ st.markdown(
             padding: 1rem 1.5rem;
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
         }
 
         .team-wrapper {
@@ -185,6 +208,15 @@ st.markdown(
             gap: 0.35rem;
             padding-left: .5rem;
             padding-right: 6.2rem;
+        }
+
+        .game-time {
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #6c7280;
+            margin-bottom: 0.2rem;
         }
 
         .team-column {
@@ -331,6 +363,11 @@ st.markdown(
                 padding-right: 4.8rem;
             }
 
+            .game-time {
+                font-size: 0.74rem;
+                margin-bottom: 0.15rem;
+            }
+
             .team-column {
                 width: auto;
             }
@@ -446,11 +483,20 @@ if "last_loaded_date" not in st.session_state:
     st.session_state.last_loaded_date = None
 
 if st.session_state.last_loaded_date != date_str:
-    with st.container(key="loading_block"):
-        with st.spinner("Loading scores..."):
-            games = GetScores(date_str)
+    loading_placeholder = st.empty()
+    loading_placeholder.markdown(
+        """
+        <div class="loading-msg">
+            <span class="loading-spinner" aria-hidden="true"></span>
+            <span>Loading scores...</span>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+    games = ScoreGames(date_str)
+    loading_placeholder.empty()
 else:
-    games = GetScores(date_str)
+    games = ScoreGames(date_str)
 
 st.session_state.last_loaded_date = date_str
 
@@ -472,6 +518,55 @@ def build_game_notes(game):
     
     def format_era(era_value):
         return f"{float(era_value):.2f}"
+
+    def format_count(diff_value, singular_label, plural_label):
+        if diff_value == 1:
+            return singular_label
+        return plural_label
+
+    def format_milestone_note(milestone, scope):
+        stat_labels = {
+            'runs': ('run', 'runs'),
+            'doubles': ('double', 'doubles'),
+            'triples': ('triple', 'triples'),
+            'home_runs': ('home run', 'home runs'),
+            'hits': ('hit', 'hits'),
+            'steals': ('stolen base', 'stolen bases'),
+            'rbi': ('RBI', 'RBIs'),
+        }
+
+        stat = milestone.get('stat')
+        player = milestone.get('player')
+        diff = milestone.get('diff')
+        chase_type = milestone.get('milestone_type', milestone.get('type'))
+        target = milestone.get('target')
+
+        if stat not in stat_labels or player is None or diff is None or chase_type is None:
+            return None
+
+        singular_label, plural_label = stat_labels[stat]
+        diff_label = format_count(diff, singular_label, plural_label)
+        player_text = html.escape(str(player))
+        diff_text = html.escape(str(diff))
+
+        if chase_type == 'Milestone' and target is not None:
+            target_text = html.escape(str(target))
+            stat_text = html.escape(plural_label)
+            scope_text = html.escape(scope)
+            return (
+                f"<strong>{player_text}</strong>: "
+                f"{diff_text} {diff_label} away from {target_text} {scope_text} {stat_text}"
+            )
+
+        if chase_type == 'Record':
+            scope_text = "single season" if scope == 'season' else "all time"
+            record_label = html.escape(singular_label)
+            return (
+                f"<strong>{player_text}</strong>: "
+                f"{diff_text} {diff_label} away from breaking the {scope_text} {record_label} record"
+            )
+
+        return None
 
     if game['away_era'] is not None and game['away_era'] <= 3.50:
         away_era_text = html.escape(format_era(game['away_era']))
@@ -511,6 +606,26 @@ def build_game_notes(game):
             f": {html.escape(str(game['home_win_streak']))} game winning streak"
         )
 
+    for milestone in game.get('away_career_milestones', []):
+        note = format_milestone_note(milestone, 'career')
+        if note:
+            notes.append(note)
+
+    for milestone in game.get('home_career_milestones', []):
+        note = format_milestone_note(milestone, 'career')
+        if note:
+            notes.append(note)
+
+    for milestone in game.get('away_season_milestones', []):
+        note = format_milestone_note(milestone, 'season')
+        if note:
+            notes.append(note)
+
+    for milestone in game.get('home_season_milestones', []):
+        note = format_milestone_note(milestone, 'season')
+        if note:
+            notes.append(note)
+
     return notes
 
 # ---- Page content ----
@@ -519,6 +634,7 @@ if games:
         score = game['score']
         color_class = score_class(score)
         notes = build_game_notes(game)
+        game_status = html.escape(str(game.get("status", "")))
         notes_html = "".join(
             f"<div class='game-note-item'>{note}</div>"
             for note in notes
@@ -537,6 +653,7 @@ if games:
             '<div class="game-card">'
             '<div class="game-main-row">'
             '<div class="team-wrapper">'
+            f'<div class="game-time">{game_status}</div>'
             '<div class="team-column">'
             '<div class="team-line">'
             f'<span class="team-name">{html.escape(str(game["away_team_name"]))}</span>'
@@ -559,5 +676,3 @@ if games:
         st.markdown(card_html, unsafe_allow_html=True)
 else:
     st.markdown('<div class="no-games-msg">No games scheduled.</div>', unsafe_allow_html=True)
-
-
