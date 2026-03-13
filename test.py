@@ -17,6 +17,7 @@ import statsapi
 import pandas as pd
 from datetime import datetime, timedelta
 import json
+import math
 
 def LoadProjections():
     #Load projections.csv
@@ -59,28 +60,21 @@ def GetTeams(standings):
 gamedate = '07/11/2025'
 date_obj = datetime.strptime(gamedate, "%m/%d/%Y")
 
-games = statsapi.schedule(date='03/12/2026')
+games = statsapi.schedule()
 standings = statsapi.standings_data(date=gamedate)
 teams = GetTeams(standings)
 
-for game in games:
-    print(game)
-    game_status = game['status']
-    if game_status == 'Final':
-        status = 'Final'
-    elif game_status == 'In Progress':
-        inning_num = str(game['current_inning'])
-        inning_state = game['inning_state']
-        if inning_state == 'Top':
-            status = 'Top' + ' ' + inning_num
-        elif inning_state == 'Bottom':
-            status = 'Bot' + ' ' + inning_num
-        else:
-            status = 'Mid' + ' ' + inning_num
-    else:
-        gamedatetime = datetime.fromisoformat(game['game_datetime'].replace("Z", "+00:00"))
-        local_dt = gamedatetime.astimezone()
-        status = local_dt.strftime("%I:%M %p").lstrip("0")
+#Load projections.csv
+with open('prospects.csv', 'r') as f:
+    df = pd.read_csv(f)
+    prospects = df.to_dict(orient='records')
+    
+test_player = 'Konnor Griffin'
 
-
-    print(status)
+for player in prospects:
+    if math.isnan(player['Rank']) == False:
+        name = player['Name']
+        rank = player['Rank']
+        score = rank * -0.0078 + 1.0078
+        print(player)
+        print(score)

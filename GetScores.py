@@ -114,12 +114,25 @@ def GetScores(standings, games, gamedate_obj):
             max_games_back = None
             division_score = 0
         #Milestones
-        away_milestone_score = away_team.get('milestone_score', 0)
-        home_milestone_score = home_team.get('milestone_score', 0)
+        away_milestone_score = 0
+        home_milestone_score = 0
+        for scope in ('career', 'season'):
+            for milestone in away_team['milestones'][scope]:
+                away_milestone_score += milestone['milestone_score']
+            for milestone in home_team['milestones'][scope]:
+                home_milestone_score += milestone['milestone_score']
         milestone_score = away_milestone_score + home_milestone_score
+        #Prospects
+        away_prospect_score = 0
+        home_prospect_score = 0
+        for prospect in away_team['debuts']:
+            away_prospect_score += prospect['score']
+        for prospect in home_team['debuts']:
+            home_prospect_score += prospect['score']
+        prospect_score = away_prospect_score + home_prospect_score
 
         #SCORING
-        unadjusted_score = playoff_imp_score + win_streak_score + wp_score + team_diff_score + era_score + era_diff_score + division_score + milestone_score
+        unadjusted_score = playoff_imp_score + win_streak_score + wp_score + team_diff_score + era_score + era_diff_score + division_score + milestone_score + prospect_score
         score = min(100, 100*((math.log(1+unadjusted_score))/(math.log(3))))              #Final Adjustment (in denominatior, ln(x), x = 1 + 99th percentile score. 
                                                                                     #Adjust higher to get less 100s, lower to get more 100s) 
         #Add the scores for this game to the game_scores list
@@ -149,6 +162,8 @@ def GetScores(standings, games, gamedate_obj):
             'away_season_milestones': away_team['milestones']['season'],
             'home_career_milestones': home_team['milestones']['career'],
             'home_season_milestones': home_team['milestones']['season'],
+            'away_debuts': away_team['debuts'],
+            'home_debuts': home_team['debuts'],
             'playoff_imp_score': playoff_imp_score,
             'win_streak_score': win_streak_score,                        
             'wp_score': wp_score,
@@ -157,6 +172,7 @@ def GetScores(standings, games, gamedate_obj):
             'era_diff_score': era_diff_score,
             'division_score': division_score,
             'milestone_score': milestone_score,
+            'prospect_score': prospect_score,
             'unadjusted_score': unadjusted_score,
             'score': score,
         })
@@ -240,4 +256,4 @@ def GetAllScores(starting_date, ending_date):
         print(i, 'out of', number_of_days, 'sets of scores calculated')
         print(f"Time elapsed: {hours:02}:{minutes:02}:{seconds:02}")
 
-#ScoreGames('07/11/2025', use_json=False)
+#ScoreGames('08/17/2025', use_json=False)

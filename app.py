@@ -568,6 +568,34 @@ def build_game_notes(game):
 
         return None
 
+    def format_debut_note(player):
+        name = player.get('name')
+        pos = player.get('pos')
+
+        if name is None or pos is None:
+            return None
+
+        name_text = html.escape(str(name))
+        pos_text = html.escape(str(pos))
+        mlb_rank = player.get('mlb_rank')
+        org_rank = player.get('org_rank')
+        pos_rank = player.get('pos_rank')
+        org = player.get('org')
+
+        rank_bits = []
+        if mlb_rank is not None:
+            rank_bits.append(f"#{html.escape(str(int(mlb_rank)))} MLB")
+        if org_rank is not None and org:
+            rank_bits.append(
+                f"#{html.escape(str(int(org_rank)))} {html.escape(str(org))}"
+            )
+        if pos_rank is not None:
+            rank_bits.append(f"#{html.escape(str(int(pos_rank)))} {pos_text}")
+
+        rank_text = f" ({', '.join(rank_bits)})" if rank_bits else ""
+
+        return f"<strong>{name_text}{rank_text}</strong>: MLB debut"
+
     if game['away_era'] is not None and game['away_era'] <= 3.50:
         away_era_text = html.escape(format_era(game['away_era']))
         if game['away_era_source'] == 'this_year':
@@ -623,6 +651,16 @@ def build_game_notes(game):
 
     for milestone in game.get('home_season_milestones', []):
         note = format_milestone_note(milestone, 'season')
+        if note:
+            notes.append(note)
+
+    for debut in game.get('away_debuts', []):
+        note = format_debut_note(debut)
+        if note:
+            notes.append(note)
+
+    for debut in game.get('home_debuts', []):
+        note = format_debut_note(debut)
         if note:
             notes.append(note)
 
