@@ -2,6 +2,7 @@ import statsapi
 from datetime import datetime, timedelta
 import time
 import math
+from zoneinfo import ZoneInfo
 from SaveLoad import LoadScores, SaveScores
 from scores.teams import GetTeams
 from scores.records import Records
@@ -9,6 +10,8 @@ from scores.playoffs import Playoff_Imp
 from scores.win_streaks import Winning_Streak
 from scores.starting_pitchers import Starting_Pitchers
 from scores.milestones import Milestones    
+
+DISPLAY_TIMEZONE = ZoneInfo("America/Denver")
 
 def GetScores(standings, games, gamedate_obj):
     #Run each function to get individual score components
@@ -37,7 +40,12 @@ def GetScores(standings, games, gamedate_obj):
             else:
                 status = 'Mid' + ' ' + inning_num
         else:
-            status = game_status
+            gamedatetime = datetime.fromisoformat(game['game_datetime'].replace("Z", "+00:00"))
+            local_dt = gamedatetime.astimezone(DISPLAY_TIMEZONE)
+            timezone_abbr = local_dt.tzname() or ""
+            if " " in timezone_abbr:
+                timezone_abbr = "".join(word[0] for word in timezone_abbr.split() if word)
+            status = f'{local_dt.strftime("%I:%M %p").lstrip("0")} {timezone_abbr}'.strip()
 
         #Team Definitions
         away_team_name = game['away_name']
@@ -133,8 +141,6 @@ def GetScores(standings, games, gamedate_obj):
         #Add the scores for this game to the game_scores list
         game_scores.append({
             'status': status,
-            'game_status': game_status,
-            'game_datetime': game.get('game_datetime'),
             'away_team_name': away_team_name,
             'home_team_name': home_team_name,
             'away_wins': away_wins,

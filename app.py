@@ -5,9 +5,8 @@ from datetime import date, datetime
 import html
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
-# ---- Include Font Awesome ----
+# ---- Include Fonts ----
 st.markdown(
-    '<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">'
     '<link href="https://fonts.googleapis.com/css2?family=Playball&display=swap" rel="stylesheet">'
     '<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">'
     '<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">',
@@ -91,6 +90,11 @@ st.markdown(
             --date-input-width: 190px;
         }
 
+        div.st-key-date_toolbar div[data-testid="stHorizontalBlock"] {
+            max-width: var(--date-input-width);
+            margin: 0 auto;
+        }
+
         /* DATE LABEL */
         .date-filter-heading {
             display: flex;
@@ -172,14 +176,20 @@ st.markdown(
         }
 
         div[data-testid="stDateInput"]::after {
-            content: "\\f133";
-            font-family: "Font Awesome 6 Free";
-            font-weight: 400;
+            content: "calendar_today";
+            font-family: "Material Symbols Outlined" !important;
+            font-weight: normal;
+            font-style: normal;
+            font-variation-settings:
+                "FILL" 0,
+                "wght" 400,
+                "GRAD" 0,
+                "opsz" 20;
             position: absolute;
             right: 12px;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 16px;
+            font-size: 18px;
             color: #1F2A44;
             pointer-events: none;
         }
@@ -436,11 +446,26 @@ st.markdown(
 
 # ---- Date selector ----
 st.markdown('<div class="date-filter-heading">PICK A DATE</div>', unsafe_allow_html=True)
+query_date = st.query_params.get("date")
+browser_timezone = st.query_params.get("tz")
 
 with st.container(key="date_toolbar"):
     if "selected_date" not in st.session_state:
-        # value=date.today(),  # original default
-        st.session_state.selected_date = date(2025, 7, 11)  # testing default (07/11/2025)
+        if query_date:
+            try:
+                st.session_state.selected_date = datetime.strptime(query_date, "%Y-%m-%d").date()
+            except ValueError:
+                st.session_state.selected_date = date(2025, 7, 11)
+        else:
+            # value=date.today(),  # original default
+            st.session_state.selected_date = date(2025, 7, 11)  # testing default (07/11/2025)
+    elif query_date:
+        try:
+            query_date_value = datetime.strptime(query_date, "%Y-%m-%d").date()
+            if query_date_value != st.session_state.selected_date:
+                st.session_state.selected_date = query_date_value
+        except ValueError:
+            pass
 
     picked_date = st.date_input(
         "Game Date",
@@ -451,6 +476,7 @@ with st.container(key="date_toolbar"):
 
     if picked_date != st.session_state.selected_date:
         st.session_state.selected_date = picked_date
+        st.query_params["date"] = picked_date.isoformat()
 
     selected_date = st.session_state.selected_date
 
@@ -474,7 +500,9 @@ components.html(
       };
 
       applyDateInputMobileFix();
-      new MutationObserver(applyDateInputMobileFix).observe(window.parent.document.body, {
+      new MutationObserver(() => {
+        applyDateInputMobileFix();
+      }).observe(window.parent.document.body, {
         childList: true,
         subtree: true,
       });
@@ -485,7 +513,6 @@ components.html(
 
 # Convert to MM/DD/YYYY for GetScores
 date_str = selected_date.strftime("%m/%d/%Y")
-browser_timezone = st.query_params.get("tz")
 
 # ---- Get games for selected date ----
 if "last_loaded_date" not in st.session_state:
