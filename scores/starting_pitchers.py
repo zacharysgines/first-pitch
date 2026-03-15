@@ -3,7 +3,7 @@ import statsapi
 
 def LoadSPProjections():
     #Load sp_projections.csv
-    with open('scores\sp_projections.csv', 'r') as f:
+    with open('scores/sp_projections.csv', 'r', encoding='utf-8') as f:
         df = pd.read_csv(f)
         sp_projections = df.to_dict(orient='records')
     

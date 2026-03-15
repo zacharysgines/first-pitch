@@ -22,7 +22,7 @@ import math
 
 def LoadProjections():
     #Load projections.csv
-    with open('projected_records.csv', 'r') as f:
+    with open('projected_records.csv', 'r', encoding='utf-8') as f:
         df = pd.read_csv(f)
         projections = df.to_dict(orient='records')
     

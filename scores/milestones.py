@@ -8,10 +8,9 @@ import pandas as pd
 with open("scores/milestone_records.json", "r") as f:
     milestone_records = json.load(f)
 
-#Load prospects.csv
-with open('scores/prospects.csv', 'r') as f:
-    df = pd.read_csv(f)
-    prospects = df.to_dict(orient='records')
+# Load prospects.csv as UTF-8 so local and cloud environments decode it the same way.
+df = pd.read_csv('scores/prospects.csv', encoding='utf-8')
+prospects = df.to_dict(orient='records')
 
 batter_milestone_stat_list = {
     "runs":         {"margin": 6, 'box_name': 'runs', 'score_exp': 4.5},
