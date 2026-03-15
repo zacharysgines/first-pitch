@@ -10,7 +10,8 @@ Hot Streak Player
     - OPS over last x games
     - Consecutive scoreless innnings
     - ERA over last x games
-
+ERA milestone
+Modern (and other) era records
 """
 
 import statsapi
@@ -60,21 +61,15 @@ def GetTeams(standings):
 gamedate = '07/11/2025'
 date_obj = datetime.strptime(gamedate, "%m/%d/%Y")
 
-games = statsapi.schedule()
+games = statsapi.schedule(gamedate)
 standings = statsapi.standings_data(date=gamedate)
 teams = GetTeams(standings)
 
-#Load projections.csv
-with open('prospects.csv', 'r') as f:
-    df = pd.read_csv(f)
-    prospects = df.to_dict(orient='records')
-    
-test_player = 'Konnor Griffin'
+for game in games:
+    box = statsapi.boxscore_data(game['game_id'])
+    print(box['gameId'])
+    for batter in box['away']['players'].values():
+        print(batter['person'])
+    break
 
-for player in prospects:
-    if math.isnan(player['Rank']) == False:
-        name = player['Name']
-        rank = player['Rank']
-        score = rank * -0.0078 + 1.0078
-        print(player)
-        print(score)
+#print(statsapi.lookup_player(671106))

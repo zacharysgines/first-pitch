@@ -6,7 +6,7 @@ from SaveLoad import LoadScores, SaveScores
 from scores.teams import GetTeams
 from scores.records import Records
 from scores.playoffs import Playoff_Imp
-from scores.streaks import Winning_Streak
+from scores.win_streaks import Winning_Streak
 from scores.starting_pitchers import Starting_Pitchers
 from scores.milestones import Milestones    
 
@@ -190,15 +190,6 @@ def ScoreGames(gamedate, saved_scores = None, use_json = True):
     if gamedate_obj.month in (11, 12, 1, 2):
         return []
     
-    #Pull games and standings from API
-    games = statsapi.schedule(date=gamedate)
-    if not games:
-        return []
-    if games[0]['game_type'] != 'R':
-        return []
-    
-    standings = statsapi.standings_data(date=gamedate)
-
     #Check if this date already has an entry in the .json file. If so, get the scores from there instead of calculating them
     if use_json:
         if saved_scores == None:
@@ -209,6 +200,16 @@ def ScoreGames(gamedate, saved_scores = None, use_json = True):
                 return entry["games"]
     else:
         saved_scores = []
+        
+    #Pull games and standings from API
+    games = statsapi.schedule(date=gamedate)
+    if not games:
+        return []
+    if games[0]['game_type'] != 'R':
+        return []
+    
+    standings = statsapi.standings_data(date=gamedate)
+
 
     game_scores = GetScores(standings, games, gamedate_obj)
 
@@ -256,4 +257,4 @@ def GetAllScores(starting_date, ending_date):
         print(i, 'out of', number_of_days, 'sets of scores calculated')
         print(f"Time elapsed: {hours:02}:{minutes:02}:{seconds:02}")
 
-#ScoreGames('08/17/2025', use_json=False)
+ScoreGames('08/17/2025', use_json=False)

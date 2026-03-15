@@ -4,13 +4,13 @@ import statsapi
 
 def LoadWinStreaks():
     #Load win_streaks.json
-    with open("scores\win_streaks.json", "r") as f:
+    with open("scores/win_streaks.json", "r") as f:
         win_streaks = json.load(f)
     
     return win_streaks
 
 def SaveWinStreaks(win_streaks):
-    with open("win_streaks.json", "w") as f:
+    with open("scores/win_streaks.json", "w") as f:
         json.dump(win_streaks, f, indent=2)
 
 def Winning_Streak(standings, teams, date_obj):

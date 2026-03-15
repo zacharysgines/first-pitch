@@ -532,7 +532,9 @@ def build_game_notes(game):
             'home_runs': ('home run', 'home runs'),
             'hits': ('hit', 'hits'),
             'steals': ('stolen base', 'stolen bases'),
-            'rbi': ('RBI', 'RBIs'),
+            'rbi': ('RBI', 'RBI'),
+            'strikeouts': ('strikeout', 'strikeouts'),
+            'wins': ('win', 'wins'),
         }
 
         stat = milestone.get('stat')
@@ -598,28 +600,28 @@ def build_game_notes(game):
 
     if game['away_era'] is not None and game['away_era'] <= 3.50:
         away_era_text = html.escape(format_era(game['away_era']))
-        if game['away_era_source'] == 'this_year':
+        if game['away_era_source'] == 'real':
             notes.append(
                 f"<strong>{html.escape(str(game['away_starter']))}</strong>"
                 f": {away_era_text} ERA"
             )
-        else: 
+        elif game['away_era_source'] == 'projected':
             notes.append(
                 f"<strong>{html.escape(str(game['away_starter']))}</strong>"
-                f": {away_era_text} ERA (last year)"
+                f": {away_era_text} ERA (projected)"
             )
 
     if game['home_era'] is not None and game['home_era'] <= 3.50:
         home_era_text = html.escape(format_era(game['home_era']))
-        if game['home_era_source'] == 'this_year':
+        if game['home_era_source'] == 'real':
             notes.append(
                 f"<strong>{html.escape(str(game['home_starter']))}</strong>"
                 f": {home_era_text} ERA"
             )
-        else:
+        elif game['home_era_source'] == 'projected':
             notes.append(
                 f"<strong>{html.escape(str(game['home_starter']))}</strong>"
-                f": {home_era_text} ERA (last year)"
+                f": {home_era_text} ERA (projected)"
             )
 
     if game['away_win_streak'] >= 5:
