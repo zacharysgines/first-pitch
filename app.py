@@ -1,8 +1,9 @@
 import streamlit as st
 import streamlit.components.v1 as components
 from GetScores import ScoreGames
-from datetime import date
+from datetime import date, datetime
 import html
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 # ---- Include Font Awesome ----
 st.markdown(
@@ -456,6 +457,13 @@ with st.container(key="date_toolbar"):
 components.html(
     """
     <script>
+      const browserTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const currentUrl = new URL(window.parent.location.href);
+      if (browserTz && currentUrl.searchParams.get("tz") !== browserTz) {
+        currentUrl.searchParams.set("tz", browserTz);
+        window.parent.location.replace(currentUrl.toString());
+      }
+
       const applyDateInputMobileFix = () => {
         const inputs = window.parent.document.querySelectorAll('div[data-testid="stDateInput"] input');
         inputs.forEach((input) => {
@@ -477,6 +485,7 @@ components.html(
 
 # Convert to MM/DD/YYYY for GetScores
 date_str = selected_date.strftime("%m/%d/%Y")
+browser_timezone = st.query_params.get("tz")
 
 # ---- Get games for selected date ----
 if "last_loaded_date" not in st.session_state:
@@ -668,13 +677,36 @@ def build_game_notes(game):
 
     return notes
 
+def format_game_status(game, browser_timezone_name):
+    game_status = game.get("game_status", game.get("status", ""))
+
+    if game_status in {"Final", "Completed Early"}:
+        return "Final"
+    if game_status == "In Progress":
+        return game.get("status", "In Progress")
+
+    game_datetime = game.get("game_datetime")
+    if not game_datetime:
+        return game.get("status", "")
+
+    try:
+        browser_timezone = ZoneInfo(browser_timezone_name) if browser_timezone_name else ZoneInfo("America/Denver")
+    except ZoneInfoNotFoundError:
+        browser_timezone = ZoneInfo("America/Denver")
+
+    scheduled_dt = datetime.fromisoformat(game_datetime.replace("Z", "+00:00")).astimezone(browser_timezone)
+    timezone_abbr = scheduled_dt.tzname() or ""
+    if " " in timezone_abbr:
+        timezone_abbr = "".join(word[0] for word in timezone_abbr.split() if word)
+    return f'{scheduled_dt.strftime("%I:%M %p").lstrip("0")} {timezone_abbr}'.strip()
+
 # ---- Page content ----
 if games:
     for game in games:
         score = game['score']
         color_class = score_class(score)
         notes = build_game_notes(game)
-        game_status = html.escape(str(game.get("status", "")))
+        game_status = html.escape(str(format_game_status(game, browser_timezone)))
         notes_html = "".join(
             f"<div class='game-note-item'>{note}</div>"
             for note in notes

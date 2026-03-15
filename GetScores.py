@@ -37,12 +37,7 @@ def GetScores(standings, games, gamedate_obj):
             else:
                 status = 'Mid' + ' ' + inning_num
         else:
-            gamedatetime = datetime.fromisoformat(game['game_datetime'].replace("Z", "+00:00"))
-            local_dt = gamedatetime.astimezone()
-            timezone_abbr = local_dt.tzname() or ""
-            if " " in timezone_abbr:
-                timezone_abbr = "".join(word[0] for word in timezone_abbr.split() if word)
-            status = f'{local_dt.strftime("%I:%M %p").lstrip("0")} {timezone_abbr}'.strip()
+            status = game_status
 
         #Team Definitions
         away_team_name = game['away_name']
@@ -138,6 +133,8 @@ def GetScores(standings, games, gamedate_obj):
         #Add the scores for this game to the game_scores list
         game_scores.append({
             'status': status,
+            'game_status': game_status,
+            'game_datetime': game.get('game_datetime'),
             'away_team_name': away_team_name,
             'home_team_name': home_team_name,
             'away_wins': away_wins,
