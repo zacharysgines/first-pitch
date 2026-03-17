@@ -4,7 +4,10 @@ import pandas as pd
 def LoadScores():
     #Load game_scores.json
     with open("game_scores.json", "r") as f:
-        saved_scores = json.load(f)    
+        raw_text = f.read().strip()
+        if not raw_text:
+            return []
+        saved_scores = json.loads(raw_text)
     return saved_scores
 
 def SaveScores(saved_scores):

@@ -5,7 +5,10 @@ import statsapi
 def LoadWinStreaks():
     #Load win_streaks.json
     with open("scores/win_streaks.json", "r") as f:
-        win_streaks = json.load(f)
+        raw_text = f.read().strip()
+        if not raw_text:
+            return []
+        win_streaks = json.loads(raw_text)
     
     return win_streaks
 
@@ -90,7 +93,7 @@ def AddWinStreakEntry(streak_date_str, win_streaks):
     if prior_games:
         for game in prior_games:
             #If there's no winning team listed, then that game got postponed, so skip it.
-            if 'winning_team' not in game:
+            if 'winning_team' not in game or 'losing_team' not in game:
                 continue
             winning_team = game['winning_team']
             losing_team = game['losing_team']

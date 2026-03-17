@@ -1,4 +1,5 @@
 from SaveLoad import LoadProjections
+import math
 
 def Playoff_Imp(standings, teams):
     #Initialize dictionary to hold first and second place teams in each division and 4th place team in wild card
@@ -58,9 +59,15 @@ def Playoff_Imp(standings, teams):
                 wcgb = abs(losses - gb_ref['leagues'][league])
 
                 #Calculate division urgency and wild card urgency, then use those two to get overall urgency
-                div_urgency = max(0, 1/(gb + gl) * (1 - gb/gl))
-                wc_urgency = max(0, 1/(wcgb + gl) * (1 - wcgb/gl))
-                urgency = (div_urgency + wc_urgency*3) / 4
+                if gl == 0:
+                    gl += 1
+                
+                if gb > gl:
+                    urgency = 0
+                else:                                    
+                    div_urgency = max(0, 1.107 * math.exp(-1 * (gl/16.77)**.598) * (1 - gb / gl)**2.547)
+                    wc_urgency = max(0, 1.107 * math.exp(-1 * (gl/16.77)**.598) * (1 - wcgb / gl)**2.547)
+                    urgency = (div_urgency * .4 + wc_urgency * .6)
 
                 teams[team['name']]['playoff_imp'] = urgency
 
