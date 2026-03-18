@@ -256,4 +256,5 @@ def GetAllScores(starting_date, ending_date):
         print(i, 'out of', number_of_days, 'sets of scores calculated')
         print(f"Time elapsed: {hours:02}:{minutes:02}:{seconds:02}")
 
-GetAllScores('04/01/2025', '04/10/2025')
+GetAllScores('04/01/2025', '04/30/2025')
+#ScoreGames('04/30/2025')
