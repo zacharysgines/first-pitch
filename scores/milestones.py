@@ -140,10 +140,7 @@ def GetMilestones(player_id, teamname, player_name, teams, player_type, mileston
                 if math.isnan(rank) == False:
                     player['mlb_rank'] = rank                                        
                 
-                if fv > 65:
-                    player['score'] = 1    
-                else:                    
-                    player['score'] = .0006 * fv**2 - .0373 * fv + .6267
+                player['score'] = .0094 * math.exp(.0576 * fv)
         
         teamname['debuts'].append(player)                        
                     

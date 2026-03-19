@@ -12,6 +12,8 @@ Hot Streak Player
     - ERA over last x games
 ERA milestone
 Modern (and other) era records
+WAR data/better stats
+WC Score
 """
 
 import statsapi

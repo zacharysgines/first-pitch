@@ -63,11 +63,16 @@ def Playoff_Imp(standings, teams):
                     gl += 1
                 
                 if gb > gl:
-                    urgency = 0
+                    div_urgency = 0
                 else:                                    
                     div_urgency = max(0, 1.107 * math.exp(-1 * (gl/16.77)**.598) * (1 - gb / gl)**2.547)
+                
+                if wcgb > gl:
+                    wc_urgency = 0
+                else:                                    
                     wc_urgency = max(0, 1.107 * math.exp(-1 * (gl/16.77)**.598) * (1 - wcgb / gl)**2.547)
-                    urgency = (div_urgency * .4 + wc_urgency * .6)
+                
+                urgency = (div_urgency * .4 + wc_urgency * .6)
 
                 teams[team['name']]['playoff_imp'] = urgency
 

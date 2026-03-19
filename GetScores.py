@@ -26,6 +26,9 @@ def GetScores(standings, games, gamedate_obj):
     game_scores = []
 
     for game in games:
+        if game['game_type'] != 'R':
+            continue
+
         #Game Status
         game_status = game['status']
         if game_status == 'Final' or game_status == 'Completed Early':
@@ -63,29 +66,35 @@ def GetScores(standings, games, gamedate_obj):
         #Win Streak
         away_win_streak = away_team['winning_streak']
         home_win_streak = home_team['winning_streak']
-        away_win_streak_score = 0.0025 * away_win_streak**2 - 0.0028 * away_win_streak + 0.0243
-        home_win_streak_score = 0.0025 * home_win_streak**2 - 0.0028 * home_win_streak + 0.0243
+        away_win_streak_score = 0.002 * away_win_streak**2 - 0.0047 * away_win_streak + 0.0083
+        home_win_streak_score = 0.002 * home_win_streak**2 - 0.0047 * home_win_streak + 0.0083
         win_streak_score = away_win_streak_score + home_win_streak_score
         #Winning Percentage
         away_wp = away_team['win_perc']
         home_wp = home_team['win_perc']    
         away_wp_score = max(0, 53.057 * away_wp**3 - 70.386 * away_wp**2 + 30.373 * away_wp - 4.2451)
         home_wp_score = max(0, 53.057 * home_wp**3 - 70.386 * home_wp**2 + 30.373 * home_wp - 4.2451)
-        wp_score = away_wp_score + home_wp_score
+        wp_score = (away_wp_score + home_wp_score) / 2
         #Winning Percentage Difference
         team_diff = abs(away_wp - home_wp)
         if team_diff <= .02:
-            team_diff_score = .15
-        elif team_diff <= .05:
             team_diff_score = .1
+        elif team_diff <= .05:
+            team_diff_score = .05
         else:
             team_diff_score = 0
+        #Min WP
+        min_wp = min(away_wp, home_wp)
+        if min_wp < .5:
+            min_wp_score = 0
+        else:
+            min_wp_score = 8.9545 * min_wp**2 - 7.0217 * min_wp + 1.3316
         #Starting Pitcher ERA
         if away_team.get('pitcher_name'):
             away_starter = away_team['pitcher_name']
             away_era = away_team['pitcher_era']
             away_era_source = away_team['era_source']
-            away_era_score = max(0, -0.0175 * away_era**3 + 0.2866 * away_era**2 - 1.54 * away_era + 2.705)
+            away_era_score = max(0,  -.012 * away_era**3 + 0.1904 * away_era**2 - 1.008 * away_era + 1.8161)
         else:
             away_starter = None
             away_era = None
@@ -95,7 +104,7 @@ def GetScores(standings, games, gamedate_obj):
             home_starter = home_team['pitcher_name']
             home_era = home_team['pitcher_era']
             home_era_source = home_team['era_source']
-            home_era_score = max(0, -0.0175 * home_era**3 + 0.2866 * home_era**2 - 1.54 * home_era + 2.705)
+            home_era_score = max(0, -.012 * home_era**3 + 0.1904 * home_era**2 - 1.008 * home_era + 1.8161)
         else:
             home_starter = None
             home_era = None
@@ -108,7 +117,7 @@ def GetScores(standings, games, gamedate_obj):
             home_games_back = home_team['games_back']
             max_games_back = max(away_games_back, home_games_back)
             if max_games_back < 8:
-                division_score = max(0, .0019 * max_games_back**3 - 0.0184 * max_games_back**2 + 0.0149 * max_games_back + 0.253)
+                division_score = max(0, .0004 * max_games_back**3 - 0.0053 * max_games_back**2 - 0.0036 * max_games_back + 0.1517)
             else:
                 division_score = 0
         else:
@@ -133,7 +142,7 @@ def GetScores(standings, games, gamedate_obj):
         prospect_score = away_prospect_score + home_prospect_score
 
         #SCORING
-        unadjusted_score = playoff_imp_score + win_streak_score + wp_score + team_diff_score + era_score + division_score + milestone_score + prospect_score
+        unadjusted_score = playoff_imp_score + win_streak_score + wp_score + team_diff_score + era_score + division_score + milestone_score + prospect_score + min_wp_score
         score = min(100, 100*((math.log(1+unadjusted_score))/(math.log(3))))              #Final Adjustment (in denominatior, ln(x), x = 1 + 99th percentile score. 
                                                                                     #Adjust higher to get less 100s, lower to get more 100s) 
         #Add the scores for this game to the game_scores list
@@ -168,6 +177,7 @@ def GetScores(standings, games, gamedate_obj):
             'win_streak_score': win_streak_score,                        
             'wp_score': wp_score,
             'team_diff': team_diff_score,
+            'min_wp_score': min_wp_score,
             'era_score': era_score,
             'division_score': division_score,
             'milestone_score': milestone_score,
@@ -204,11 +214,16 @@ def ScoreGames(gamedate, saved_scores = None, use_json = True):
     games = statsapi.schedule(date=gamedate)
     if not games:
         return []
-    if games[0]['game_type'] != 'R':
+    
+    rs_games = False
+    for game in games:
+        if game['game_type'] == 'R':
+            rs_games = True
+            break
+    if rs_games == False:
         return []
     
     standings = statsapi.standings_data(date=gamedate)
-
 
     game_scores = GetScores(standings, games, gamedate_obj)
 
@@ -256,5 +271,5 @@ def GetAllScores(starting_date, ending_date):
         print(i, 'out of', number_of_days, 'sets of scores calculated')
         print(f"Time elapsed: {hours:02}:{minutes:02}:{seconds:02}")
 
-GetAllScores('04/01/2025', '04/30/2025')
-#ScoreGames('04/30/2025')
+GetAllScores('07/25/2025', '12/31/2025')
+#ScoreGames('09/23/2025')
