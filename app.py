@@ -1,9 +1,21 @@
 import streamlit as st
-import streamlit.components.v1 as components
 from GetScores import ScoreGames
 from datetime import date, datetime
 import html
+from urllib.parse import quote, urlencode
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
+from streamlit.errors import StreamlitSecretNotFoundError
+
+st.set_page_config(
+    page_title="First Pitch",
+    layout="wide",
+    initial_sidebar_state="collapsed",
+)
+
+try:
+    CONTACT_EMAIL = st.secrets["contact_email"]
+except (StreamlitSecretNotFoundError, KeyError):
+    CONTACT_EMAIL = "your-email@example.com"
 
 # ---- Include Fonts ----
 st.markdown(
@@ -19,6 +31,10 @@ st.markdown(
     <style>
         
         /* WHOLE PAGE */
+        html, body, [data-testid="stAppViewContainer"], .stApp {
+            background-color: #F4F1E8 !important;
+        }
+
         div[data-testid="stMainBlockContainer"],
         .main .block-container {
             max-width: 100% !important;
@@ -36,8 +52,333 @@ st.markdown(
         .top-banner {
             background-color: #1F2A44;
             padding: 1.5rem 2rem 2rem 2rem;
-            margin: -4rem 0 1rem 0;
+            margin: -4.15rem 0 1rem 0;
             text-align: center;
+            position: relative;
+        }
+
+        .header-menu-link {
+            position: absolute;
+            top: 0.95rem;
+            left: 1rem;
+            z-index: 1002;
+            width: 46px;
+            height: 46px;
+            min-height: 46px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(244, 241, 232, 0.96);
+            color: #1F2A44;
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.18);
+            padding: 0;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-menu-link,
+        .header-menu-link:link,
+        .header-menu-link:visited,
+        .header-menu-link:hover,
+        .header-menu-link:active,
+        .header-menu-link:focus,
+        .header-menu-link:focus-visible {
+            color: #1F2A44 !important;
+            text-decoration: none !important;
+            border-radius: 50% !important;
+            outline: none !important;
+        }
+
+        .header-menu-form,
+        .nav-close-form,
+        .nav-link-form {
+            margin: 0;
+        }
+
+        button.header-menu-link,
+        button.nav-close-button,
+        button.nav-link-button {
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        .header-menu-link .material-symbols-outlined {
+            font-family: "Material Symbols Outlined" !important;
+            font-size: 1.65rem;
+            line-height: 1;
+        }
+
+        .header-menu-link:hover,
+        .header-menu-link:active,
+        .header-menu-link:focus,
+        .header-menu-link:focus-visible {
+            width: 46px;
+            height: 46px;
+            min-height: 46px;
+            border-radius: 50%;
+            padding: 0;
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.18);
+            transform: none;
+        }
+
+        .menu-drawer {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .menu-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(13, 20, 33, 0.28);
+            backdrop-filter: blur(3px);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.18s ease;
+            display: block;
+            text-decoration: none;
+            pointer-events: none;
+        }
+
+        .nav-panel-shell {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: min(260px, 78vw);
+            z-index: 1001;
+            padding: 1.15rem 1rem 1.25rem 1rem;
+            background: linear-gradient(180deg, #1F2A44 0%, #243553 100%);
+            border-right: 1px solid rgba(244, 241, 232, 0.12);
+            box-shadow: 14px 0 40px rgba(0, 0, 0, 0.22);
+            overflow-y: auto;
+            transform: translateX(-102%);
+            transition: transform 0.22s ease;
+        }
+
+        .menu-drawer:target {
+            pointer-events: auto;
+        }
+
+        .menu-drawer:target .menu-overlay {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .menu-drawer:target .nav-panel-shell {
+            transform: translateX(0);
+        }
+
+        .menu-drawer:target + .top-banner .header-menu-link {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .nav-panel-brand {
+            padding: 0.25rem 0 1rem 0;
+            color: #F4F1E8;
+        }
+
+        .nav-panel-kicker {
+            font-size: 0.78rem;
+            letter-spacing: 0.18em;
+            font-weight: 700;
+            opacity: 0.75;
+        }
+
+        .nav-panel-title {
+            font-family: "Playball", cursive !important;
+            font-size: 2rem;
+            line-height: 1.1;
+            margin-top: 0.35rem;
+        }
+
+        .nav-panel-copy {
+            color: #F4F1E8;
+            font-size: 0.95rem;
+            line-height: 1.45;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+
+        .nav-link-button {
+            width: 100%;
+            border: none;
+            background: transparent;
+            color: #F4F1E8;
+            font-weight: 700;
+            padding: 0.4rem 0;
+            text-align: left;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+
+        .nav-link-form + .nav-link-form {
+            margin-top: 0.5rem;
+        }
+
+        .nav-menu-item + .nav-menu-item {
+            margin-top: 0.5rem;
+        }
+
+        .nav-panel-brand + .nav-menu-item {
+            margin-top: 1rem;
+        }
+
+        .nav-link-button:hover {
+            color: #D9A441;
+        }
+
+        .nav-link-button.active {
+            color: #D9A441;
+            text-decoration: none;
+        }
+
+        .nav-link-button .material-symbols-outlined {
+            font-family: "Material Symbols Outlined" !important;
+            font-size: 1.25rem;
+            line-height: 1;
+        }
+
+        .nav-close-row {
+            margin-bottom: 0.8rem;
+        }
+
+        .nav-close-button {
+            width: 44px;
+            height: 44px;
+            min-height: 44px;
+            border-radius: 999px;
+            border: 1px solid rgba(244, 241, 232, 0.24);
+            background: rgba(244, 241, 232, 0.08);
+            color: #F4F1E8;
+            font-size: 1.15rem;
+            padding: 0;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        .page-transition-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background:
+                linear-gradient(180deg, rgba(31, 42, 68, 0.94) 0%, rgba(36, 53, 83, 0.90) 100%);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.18s ease, visibility 0.18s ease;
+        }
+
+        .page-transition-overlay.is-visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .page-transition-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            color: #F4F1E8;
+        }
+
+        .page-transition-title {
+            font-family: "Playball", cursive !important;
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        .page-transition-subtitle {
+            font-size: 0.82rem;
+            letter-spacing: 0.16em;
+            font-weight: 700;
+            opacity: 0.82;
+        }
+
+        .page-transition-spinner {
+            width: 26px;
+            height: 26px;
+            border: 3px solid rgba(244, 241, 232, 0.25);
+            border-top-color: #F4F1E8;
+            border-radius: 50%;
+            animation: first-pitch-spin 0.8s linear infinite;
+        }
+
+        .info-shell {
+            max-width: 860px;
+            margin: 0.75rem auto 0 auto;
+            padding: 0 1.5rem 2rem 1.5rem;
+        }
+
+        .info-card {
+            background: #FFFFFF;
+            border-radius: 18px;
+            padding: 1.4rem 1.5rem;
+            box-shadow: 0 8px 26px rgba(31, 42, 68, 0.08);
+            margin-bottom: 1rem;
+        }
+
+        .info-kicker {
+            color: #D9A441;
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+        }
+
+        .info-title {
+            color: #1F2A44;
+            font-size: 2rem;
+            font-weight: 800;
+            margin: 0.35rem 0 0.6rem 0;
+        }
+
+        .info-body {
+            color: #344055;
+            font-size: 1rem;
+            line-height: 1.65;
+        }
+
+        .contact-plain {
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        .contact-plain a,
+        .contact-plain a:link,
+        .contact-plain a:visited {
+            color: #1F2A44;
+            text-decoration: underline;
+        }
+
+        .info-list {
+            margin: 0;
+            padding-left: 1.2rem;
+        }
+
+        .info-list li + li {
+            margin-top: 0.55rem;
+        }
+
+        .contact-callout {
+            background: linear-gradient(135deg, #F8E7BD 0%, #F4F1E8 100%);
+            border: 1px solid rgba(217, 164, 65, 0.35);
         }
 
         /* HEADER TITLE CONTAINER */
@@ -328,8 +669,29 @@ st.markdown(
         @media (max-width: 700px) {
             .top-banner {
                 width: 100%;
-                margin: -4rem 0 1rem 0;
+                margin: -4.15rem 0 1rem 0;
                 padding: 1.1rem 1rem 1.35rem 1rem;
+            }
+
+            .header-menu-link {
+                top: 0.8rem;
+                left: 0.75rem;
+                width: 44px;
+                height: 44px;
+                min-height: 44px;
+            }
+
+            .header-menu-link:hover,
+            .header-menu-link:active,
+            .header-menu-link:focus,
+            .header-menu-link:focus-visible {
+                width: 44px;
+                height: 44px;
+                min-height: 44px;
+            }
+
+            .nav-panel-shell {
+                width: min(240px, 82vw);
             }
 
             .top-banner .title-block {
@@ -427,10 +789,255 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+def get_query_value(key, default=None):
+    value = st.query_params.get(key, default)
+    if isinstance(value, list):
+        return value[0] if value else default
+    return value
+
+
+def build_query_params(**updates):
+    params = {}
+    for key in ("page", "date", "tz"):
+        value = get_query_value(key)
+        if value not in (None, ""):
+            params[key] = value
+
+    for key, value in updates.items():
+        if value in (None, ""):
+            params.pop(key, None)
+        else:
+            params[key] = value
+
+    return params
+
+
+def build_hidden_inputs(params):
+    return "".join(
+        f'<input type="hidden" name="{html.escape(str(key), quote=True)}" value="{html.escape(str(value), quote=True)}">'
+        for key, value in params.items()
+    )
+
+
+def render_methodology_page():
+    st.markdown(
+        """
+        <div class="info-shell">
+            <div class="info-title">What is this app?</div>
+                <p>
+                    This app started as a way for me to get better at data analytics by working with something I 
+                    loved in baseball, and continued growing until it became something I’m proud enough of to share 
+                    with others. I’m a huge fan of baseball, but my affiliation to any particular team has wavered 
+                    through the years. I’ve always been more interested in watching the league as a whole. The 
+                    problem, though, is that I never know what game to watch. Typically I would turn on MLB.tv and 
+                    spend 10 minutes looking through team records, starting pitchers, division games, and even 
+                    sometimes going to Baseball Reference or FanGraphs to find championship win probabilities for 
+                    each game, and then after all of this I would find later that day that I missed a significant 
+                    game because I didn’t know that, say, Salvador Perez was one home run away from 300.
+                </p>
+            <div class="info-title">How does it work?</div>
+            <div class="info-body">
+                <p>
+                    This app is an attempt to answer the question “What game should I watch today?” What started 
+                    as a list of notable events in each game quickly turned into a full scoring algorithm for 
+                    each game, each day, using a number of different factors (explanations of each factor can be 
+                    found further down this page):
+                </p>
+                <ul class="info-list">
+                    <li>Playoff implications</li>
+                    <li>Starting pitchers</li>
+                    <li>Milestones</li>
+                    <li>MLB debuts</li>
+                    <li>Winning streaks</li>
+                    <li>Team strength</li>
+                </ul>
+                <p></p>
+                <p>
+                    All these factors get an individual score, and then all are aggregated into a final score from 
+                    0 to 100. While these algorithms have been thoroughly evaluated and tested dozens of times, 
+                    they are not a perfect representation of what games are most interesting. As you use this app, 
+                    use it as a guide to get a feel for the best matchups of the day, find milestones you didn’t 
+                    know were about to be hit, and never miss prospects debuting. Magnitude of differences matter 
+                    more than ordinal rankings.
+                </p>
+                <p>
+                    One thing to note with the scoring is that they will change up to the game date. As starters 
+                    and lineups get announced, the model will begin to take those into account, and the scores will 
+                    reflect that. Scoring updates every morning, so if lineups are announced late or players are 
+                    scratched, then the score might not accurately reflect that game (hopefully this will be fixed 
+                    soon!)
+                </p>
+                <p>
+                    The final point I want to make ties back to the purpose of this app. This is not a way to make 
+                    money or to use a computer to tell people what to do. I made this app because I love baseball, 
+                    and I want to take part in spreading what makes the game so great. I hope this app is fun, leads 
+                    you to learn more interesting things about the sport, and encourages you to embrace the joy that 
+                    comes from watching games. 
+                </p>
+                <p>
+                    Now, with that out of the way, let’s get into the details of how this model works.
+                </p>
+                <div class="info-title">Detailed explanation</div>
+                <ul class="info-list">
+                    <li><strong>Playoff implications:</strong> a homemade algorithm that determines how much this 
+                    game matters to each team in terms of their chances of making the playoffs. This takes into 
+                    account how many games are left in the season and how many games back (or ahead) each team is, 
+                    both in divisional standings and wild card standings. Wild card standings are weighted more 
+                    heavily, as this typically leads to “make the playoffs or go home” situations, whereas divisional 
+                    races are often only important in seeding implications.</li>
+                    <li><strong>Divisional games:</strong> top teams playing in division get a boost in order to give 
+                    significance to early season games where playoffs might not be on the line, but it’s likely that 
+                    the games will still matter come September. This also gives a boost when two teams are fighting 
+                    for playoff positioning late in the season and they play each other, multiplying the already 
+                    strong playoff implications score.</li>
+                    <li><strong>Starting pitcher:</strong> the quality of each team's starting pitcher is a large 
+                    factor in determining scores for games. Currently, this is based on starting pitcher ERA, 
+                    however plans are to change this to FIP or WAR in the near future.</li>
+                    <li><strong>Milestones:</strong> players approaching a milestone will give their teams a boost 
+                    in score when they are within range of hitting that milestone in the given game. These milestones 
+                    include runs scored, doubles, triples, home runs, hits, steals, RBI, and strikeouts for pitchers, 
+                    in both a season and career context. Milestones for home runs, hits and strikeouts include both 
+                    record chases as well as career milestones (such as 300 home runs or 1000 strikeouts), weighted by 
+                    the significance of that milestone. All other stats include only record chases. Milestone scores 
+                    trigger when a player gets within a reasonable range to hit that milestone in the given game, so 
+                    teams won’t get a boost when a player is 10 home runs away from hitting their 700th home run.</li>
+                    <li><strong>Debuts:</strong> Any starting pitcher or position player making their debut in a game 
+                    will get a score boost, however top prospects (as defined by FanGraphs) will get more of a boost 
+                    than unknown players. This will only include starting pitchers and players in the starting lineup, 
+                    as it’s impossible to know whether a reliever or a player on the bench will actually play in the 
+                    given game or not with the data available.</li>
+                    <li><strong>Winning streaks:</strong> teams on longer winning streaks will get a boost to their 
+                    scores.</li>
+                    <li><strong>Team strength:</strong> the success of both teams are taken into account, but have 
+                    relatively small impacts on the overall game score. Things like overall winning percentage and 
+                    difference in winning percentage will have an impact on the overall scoring.</li>
+                </ul>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def render_contact_page():
+    st.markdown(
+        """
+        <div class="info-shell">
+            <div class="info-body contact-plain">
+                If you have any suggestions, problems, or comments, please reach out to me at
+                <a href="mailto:zacharysgines@gmail.com">zacharysgines@gmail.com</a>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
 # ---- Header ----
-st.markdown(
-    """
+current_page = get_query_value("page", "home")
+query_date = get_query_value("date")
+browser_timezone = get_query_value("tz")
+home_inputs = build_hidden_inputs(build_query_params(page="home"))
+methodology_inputs = build_hidden_inputs(build_query_params(page="methodology"))
+contact_inputs = build_hidden_inputs(build_query_params(page="contact"))
+
+home_menu_item = (
+    '<div class="nav-menu-item">'
+    '<a class="nav-link-button active" href="#">'
+    '<span class="material-symbols-outlined">home</span>'
+    '<span>Home</span>'
+    '</a>'
+    '</div>'
+    if current_page == "home"
+    else (
+        '<div class="nav-menu-item">'
+        '<form class="nav-link-form" method="get" onsubmit="return firstPitchStartPageTransition()">'
+        f'{home_inputs}'
+        '<button class="nav-link-button" type="submit">'
+        '<span class="material-symbols-outlined">home</span>'
+        '<span>Home</span>'
+        '</button>'
+        '</form>'
+        '</div>'
+    )
+)
+
+methodology_menu_item = (
+    '<div class="nav-menu-item">'
+    '<a class="nav-link-button active" href="#">'
+    '<span class="material-symbols-outlined">analytics</span>'
+    '<span>Methodology</span>'
+    '</a>'
+    '</div>'
+    if current_page == "methodology"
+    else (
+        '<div class="nav-menu-item">'
+        '<form class="nav-link-form" method="get" onsubmit="return firstPitchStartPageTransition()">'
+        f'{methodology_inputs}'
+        '<button class="nav-link-button" type="submit">'
+        '<span class="material-symbols-outlined">analytics</span>'
+        '<span>Methodology</span>'
+        '</button>'
+        '</form>'
+        '</div>'
+    )
+)
+
+contact_menu_item = (
+    '<div class="nav-menu-item">'
+    '<a class="nav-link-button active" href="#">'
+    '<span class="material-symbols-outlined">mail</span>'
+    '<span>Contact</span>'
+    '</a>'
+    '</div>'
+    if current_page == "contact"
+    else (
+        '<div class="nav-menu-item">'
+        '<form class="nav-link-form" method="get" onsubmit="return firstPitchStartPageTransition()">'
+        f'{contact_inputs}'
+        '<button class="nav-link-button" type="submit">'
+        '<span class="material-symbols-outlined">mail</span>'
+        '<span>Contact</span>'
+        '</button>'
+        '</form>'
+        '</div>'
+    )
+)
+
+header_html = f"""
+    <script>
+        function firstPitchStartPageTransition() {{
+            const overlay = document.getElementById('page-transition-overlay');
+            if (overlay) {{
+                overlay.classList.add('is-visible');
+            }}
+            return true;
+        }}
+    </script>
+    <div id="page-transition-overlay" class="page-transition-overlay" aria-hidden="true">
+        <div class="page-transition-card">
+            <div class="page-transition-spinner" aria-hidden="true"></div>
+            <div class="page-transition-title">First Pitch</div>
+            <div class="page-transition-subtitle">LOADING PAGE</div>
+        </div>
+    </div>
+    <div id="site-menu" class="menu-drawer">
+        <a class="menu-overlay" href="#" aria-label="Close menu"></a>
+        <div class="nav-panel-shell">
+            <div class="nav-close-row">
+                <a class="nav-close-button" href="#">Close</a>
+            </div>
+            <div class="nav-panel-brand">
+                <div class="nav-panel-title">First Pitch</div>
+            </div>
+            {home_menu_item}
+            {methodology_menu_item}
+            {contact_menu_item}
+        </div>
+    </div>
     <div class="top-banner">
+        <a class="header-menu-link" href="#site-menu" aria-label="Open menu">
+            <span class="material-symbols-outlined">menu</span>
+        </a>
         <div class="title-block">
             <span class="top-banner-title-row">
                 <span class="top-banner-title-icon">sports_baseball</span>
@@ -440,100 +1047,68 @@ st.markdown(
             <span class="subtitle">Discover the most exciting games of the day</span>
         </div>
     </div>
-    """,
-    unsafe_allow_html=True
-)
+"""
+
+st.markdown(header_html, unsafe_allow_html=True)
 
 # ---- Date selector ----
-st.markdown('<div class="date-filter-heading">PICK A DATE</div>', unsafe_allow_html=True)
-query_date = st.query_params.get("date")
-browser_timezone = st.query_params.get("tz")
+if current_page == "home":
+    st.markdown('<div class="date-filter-heading">PICK A DATE</div>', unsafe_allow_html=True)
 
-with st.container(key="date_toolbar"):
-    if "selected_date" not in st.session_state:
-        if query_date:
-            try:
-                st.session_state.selected_date = datetime.strptime(query_date, "%Y-%m-%d").date()
-            except ValueError:
+    with st.container(key="date_toolbar"):
+        if "selected_date" not in st.session_state:
+            if query_date:
+                try:
+                    st.session_state.selected_date = datetime.strptime(query_date, "%Y-%m-%d").date()
+                except ValueError:
+                    st.session_state.selected_date = date.today()
+            else:
                 st.session_state.selected_date = date.today()
-        else:
-            st.session_state.selected_date = date.today()
-    elif query_date:
-        try:
-            query_date_value = datetime.strptime(query_date, "%Y-%m-%d").date()
-            if query_date_value != st.session_state.selected_date:
-                st.session_state.selected_date = query_date_value
-        except ValueError:
-            pass
+        elif query_date:
+            try:
+                query_date_value = datetime.strptime(query_date, "%Y-%m-%d").date()
+                if query_date_value != st.session_state.selected_date:
+                    st.session_state.selected_date = query_date_value
+            except ValueError:
+                pass
 
-    picked_date = st.date_input(
-        "Game Date",
-        value=st.session_state.selected_date,
-        format="MM/DD/YYYY",
-        label_visibility="collapsed"
-    )
+        picked_date = st.date_input(
+            "Game Date",
+            value=st.session_state.selected_date,
+            format="MM/DD/YYYY",
+            label_visibility="collapsed"
+        )
 
-    if picked_date != st.session_state.selected_date:
-        st.session_state.selected_date = picked_date
-        st.query_params["date"] = picked_date.isoformat()
+        if picked_date != st.session_state.selected_date:
+            st.session_state.selected_date = picked_date
+            st.query_params["date"] = picked_date.isoformat()
 
-    selected_date = st.session_state.selected_date
+        selected_date = st.session_state.selected_date
 
-components.html(
-    """
-    <script>
-      const browserTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      const currentUrl = new URL(window.parent.location.href);
-      if (browserTz && currentUrl.searchParams.get("tz") !== browserTz) {
-        currentUrl.searchParams.set("tz", browserTz);
-        window.parent.location.replace(currentUrl.toString());
-      }
+    date_str = selected_date.strftime("%m/%d/%Y")
 
-      const applyDateInputMobileFix = () => {
-        const inputs = window.parent.document.querySelectorAll('div[data-testid="stDateInput"] input');
-        inputs.forEach((input) => {
-          input.readOnly = true;
-          input.setAttribute('inputmode', 'none');
-          input.style.caretColor = 'transparent';
-        });
-      };
+    if "last_loaded_date" not in st.session_state:
+        st.session_state.last_loaded_date = None
 
-      applyDateInputMobileFix();
-      new MutationObserver(() => {
-        applyDateInputMobileFix();
-      }).observe(window.parent.document.body, {
-        childList: true,
-        subtree: true,
-      });
-    </script>
-    """,
-    height=0,
-)
+    if st.session_state.last_loaded_date != date_str:
+        loading_placeholder = st.empty()
+        loading_placeholder.markdown(
+            """
+            <div class="loading-msg">
+                <span class="loading-spinner" aria-hidden="true"></span>
+                <span>Loading scores...</span>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        games = ScoreGames(date_str)
+        loading_placeholder.empty()
+    else:
+        games = ScoreGames(date_str)
 
-# Convert to MM/DD/YYYY for GetScores
-date_str = selected_date.strftime("%m/%d/%Y")
-
-# ---- Get games for selected date ----
-if "last_loaded_date" not in st.session_state:
-    st.session_state.last_loaded_date = None
-
-if st.session_state.last_loaded_date != date_str:
-    loading_placeholder = st.empty()
-    loading_placeholder.markdown(
-        """
-        <div class="loading-msg">
-            <span class="loading-spinner" aria-hidden="true"></span>
-            <span>Loading scores...</span>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-    games = ScoreGames(date_str)
-    loading_placeholder.empty()
+    st.session_state.last_loaded_date = date_str
 else:
-    games = ScoreGames(date_str)
-
-st.session_state.last_loaded_date = date_str
+    games = []
 
 # ---- Score color logic ----
 def score_class(score):
@@ -727,7 +1302,11 @@ def format_game_status(game, browser_timezone_name):
     return f'{scheduled_dt.strftime("%I:%M %p").lstrip("0")} {timezone_abbr}'.strip()
 
 # ---- Page content ----
-if games:
+if current_page == "methodology":
+    render_methodology_page()
+elif current_page == "contact":
+    render_contact_page()
+elif games:
     for game in games:
         score = game['score']
         color_class = score_class(score)

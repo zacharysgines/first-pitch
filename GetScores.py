@@ -71,18 +71,19 @@ def GetScores(standings, games, gamedate_obj):
         win_streak_score = away_win_streak_score + home_win_streak_score
         #Winning Percentage
         away_wp = away_team['win_perc']
-        home_wp = home_team['win_perc']    
-        away_wp_score = max(0, 53.057 * away_wp**3 - 70.386 * away_wp**2 + 30.373 * away_wp - 4.2451)
-        home_wp_score = max(0, 53.057 * home_wp**3 - 70.386 * home_wp**2 + 30.373 * home_wp - 4.2451)
+        home_wp = home_team['win_perc']
+        if away_wp < .45:
+            away_wp_score = 0
+        else:   
+            away_wp_score = .000007 * math.exp(15.091 * away_wp)
+        if home_wp < .45:
+            home_wp_score = 0
+        else:   
+            home_wp_score = .000007 * math.exp(15.091 * home_wp)
         wp_score = (away_wp_score + home_wp_score) / 2
         #Winning Percentage Difference
         team_diff = abs(away_wp - home_wp)
-        if team_diff <= .02:
-            team_diff_score = .1
-        elif team_diff <= .05:
-            team_diff_score = .05
-        else:
-            team_diff_score = 0
+        team_diff_score = max(0, 0.08 * (1 - (team_diff / 0.05)))
         #Min WP
         min_wp = min(away_wp, home_wp)
         if min_wp < .5:
