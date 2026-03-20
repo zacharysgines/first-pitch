@@ -429,6 +429,7 @@ st.markdown(
         div.st-key-date_toolbar {
             margin: 0.75rem auto 0.35rem auto;
             --date-input-width: 190px;
+            position: relative;
         }
 
         div.st-key-date_toolbar div[data-testid="stHorizontalBlock"] {
@@ -510,29 +511,14 @@ st.markdown(
             font-size: 16px;
             color: #1F2A44;
             -webkit-text-fill-color: #1F2A44;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231F2A44' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'/%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3Cline x1='8' y1='2' x2='8' y2='6'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 18px 18px;
         }
 
         div[data-testid="stDateInput"] label {
             display: none;
-        }
-
-        div[data-testid="stDateInput"]::after {
-            content: "calendar_today";
-            font-family: "Material Symbols Outlined" !important;
-            font-weight: normal;
-            font-style: normal;
-            font-variation-settings:
-                "FILL" 0,
-                "wght" 400,
-                "GRAD" 0,
-                "opsz" 20;
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 18px;
-            color: #1F2A44;
-            pointer-events: none;
         }
 
         /* Game card styling */
@@ -676,18 +662,18 @@ st.markdown(
             .header-menu-link {
                 top: 0.8rem;
                 left: 0.75rem;
-                width: 44px;
-                height: 44px;
-                min-height: 44px;
+                width: 40px;
+                height: 40px;
+                min-height: 40px;
             }
 
             .header-menu-link:hover,
             .header-menu-link:active,
             .header-menu-link:focus,
             .header-menu-link:focus-visible {
-                width: 44px;
-                height: 44px;
-                min-height: 44px;
+                width: 40px;
+                height: 40px;
+                min-height: 40px;
             }
 
             .nav-panel-shell {
@@ -819,6 +805,12 @@ def build_hidden_inputs(params):
     )
 
 
+def sync_selected_date_from_input():
+    selected = st.session_state.selected_date_input
+    st.session_state.selected_date = selected
+    st.query_params["date"] = selected.isoformat()
+
+
 def render_methodology_page():
     st.markdown(
         """
@@ -924,8 +916,7 @@ def render_contact_page():
         """
         <div class="info-shell">
             <div class="info-body contact-plain">
-                If you have any suggestions, problems, or comments, please reach out to me at
-                <a href="mailto:zacharysgines@gmail.com">zacharysgines@gmail.com</a>
+                If you have any suggestions, problems, or comments, please reach out to me at zacharysgines@gmail.com
             </div>
         </div>
         """,
@@ -1072,16 +1063,19 @@ if current_page == "home":
             except ValueError:
                 pass
 
-        picked_date = st.date_input(
-            "Game Date",
-            value=st.session_state.selected_date,
-            format="MM/DD/YYYY",
-            label_visibility="collapsed"
-        )
+        if (
+            "selected_date_input" not in st.session_state
+            or st.session_state.selected_date_input != st.session_state.selected_date
+        ):
+            st.session_state.selected_date_input = st.session_state.selected_date
 
-        if picked_date != st.session_state.selected_date:
-            st.session_state.selected_date = picked_date
-            st.query_params["date"] = picked_date.isoformat()
+        st.date_input(
+            "Game Date",
+            key="selected_date_input",
+            format="MM/DD/YYYY",
+            label_visibility="collapsed",
+            on_change=sync_selected_date_from_input,
+        )
 
         selected_date = st.session_state.selected_date
 
