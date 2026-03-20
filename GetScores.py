@@ -194,9 +194,10 @@ def GetScores(standings, games, gamedate_obj):
 def ScoreGames(gamedate, saved_scores = None, use_json = True):
     #Get gamedate as an object
     gamedate_obj = datetime.strptime(gamedate, "%m/%d/%Y")
+    current_year = datetime.now().year
 
     #If the month of the current gamedate is between November and February, we don't need to call the API
-    if gamedate_obj.month in (11, 12, 1, 2):
+    if gamedate_obj.month in (11, 12, 1, 2) or gamedate_obj.year not in (current_year, current_year - 1):
         return []
     
     #Check if this date already has an entry in the .json file. If so, get the scores from there instead of calculating them
@@ -271,5 +272,5 @@ def GetAllScores(starting_date, ending_date):
         print(i, 'out of', number_of_days, 'sets of scores calculated')
         print(f"Time elapsed: {hours:02}:{minutes:02}:{seconds:02}")
 
-GetAllScores('07/25/2025', '12/31/2025')
+GetAllScores('08/21/2026', '12/31/2026')
 #ScoreGames('09/23/2025')

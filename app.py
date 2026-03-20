@@ -455,10 +455,9 @@ with st.container(key="date_toolbar"):
             try:
                 st.session_state.selected_date = datetime.strptime(query_date, "%Y-%m-%d").date()
             except ValueError:
-                st.session_state.selected_date = date(2025, 7, 11)
+                st.session_state.selected_date = date.today()
         else:
-            # value=date.today(),  # original default
-            st.session_state.selected_date = date(2025, 7, 11)  # testing default (07/11/2025)
+            st.session_state.selected_date = date.today()
     elif query_date:
         try:
             query_date_value = datetime.strptime(query_date, "%Y-%m-%d").date()
@@ -774,4 +773,4 @@ if games:
         )
         st.markdown(card_html, unsafe_allow_html=True)
 else:
-    st.markdown('<div class="no-games-msg">No games scheduled.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="no-games-msg">No scores to display.</div>', unsafe_allow_html=True)
