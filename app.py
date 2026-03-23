@@ -33,6 +33,7 @@ st.markdown(
         /* WHOLE PAGE */
         html, body, [data-testid="stAppViewContainer"], .stApp {
             background-color: #F4F1E8 !important;
+            color-scheme: light !important;
         }
 
         div[data-testid="stMainBlockContainer"],
@@ -350,9 +351,17 @@ st.markdown(
         }
 
         .info-body {
-            color: #344055;
+            color: #344055 !important;
             font-size: 1rem;
             line-height: 1.65;
+        }
+
+        .info-body p,
+        .info-body li,
+        .info-body strong,
+        .info-list,
+        .info-list li {
+            color: inherit !important;
         }
 
         .contact-plain {
@@ -446,6 +455,7 @@ st.markdown(
             font-size: 0.8rem;
             letter-spacing: 0.12em;
             font-weight: 700;
+            color: #1F2A44 !important;
         }
 
         /* DATE DIVIDER */
@@ -493,6 +503,15 @@ st.markdown(
         /* CALENDAR ICON */
         div.st-key-date_toolbar div[data-baseweb="input"] {
             padding-right: 0 !important;
+            background-color: #F4F1E8 !important;
+            border: 1px solid #ccc !important;
+            border-radius: 7px !important;
+            box-shadow: none !important;
+        }
+
+        div.st-key-date_toolbar div[data-baseweb="input"]:focus-within {
+            border: 1px solid #ccc !important;
+            box-shadow: none !important;
         }
 
         div[data-testid="stDateInput"] {
@@ -515,6 +534,11 @@ st.markdown(
             background-repeat: no-repeat;
             background-position: right 12px center;
             background-size: 18px 18px;
+            caret-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+            box-shadow: none !important;
+            outline: none !important;
         }
 
         div[data-testid="stDateInput"] label {
@@ -570,12 +594,13 @@ st.markdown(
         .team-name {
             font-size: 1.2rem;
             font-weight: 700;
+            color: #1F2A44 !important;
         }
 
         .team-record {
             font-size: 1rem;
             font-weight: 400;
-            color: #555;
+            color: #555 !important;
         }
 
         .score-bubble {
@@ -816,6 +841,7 @@ def render_methodology_page():
         """
         <div class="info-shell">
             <div class="info-title">What is this app?</div>
+            <div class="info-body">
                 <p>
                     This app started as a way for me to get better at data analytics by working with something I 
                     loved in baseball, and continued growing until it became something I’m proud enough of to share 
@@ -827,6 +853,7 @@ def render_methodology_page():
                     each game, and then after all of this I would find later that day that I missed a significant 
                     game because I didn’t know that, say, Salvador Perez was one home run away from 300.
                 </p>
+            </div>
             <div class="info-title">How does it work?</div>
             <div class="info-body">
                 <p>
@@ -1003,6 +1030,44 @@ header_html = f"""
             }}
             return true;
         }}
+
+        function firstPitchDisableDateTextEntry() {{
+            const dateFields = window.parent.document.querySelectorAll('div[data-testid="stDateInput"]');
+
+            dateFields.forEach((field) => {{
+                const input = field.querySelector('input');
+                if (!input || input.dataset.firstPitchNoKeyboard === 'true') {{
+                    return;
+                }}
+
+                input.dataset.firstPitchNoKeyboard = 'true';
+                input.readOnly = true;
+                input.setAttribute('inputmode', 'none');
+                input.setAttribute('autocomplete', 'off');
+                input.setAttribute('autocapitalize', 'off');
+                input.setAttribute('spellcheck', 'false');
+
+                const forwardToPicker = (event) => {{
+                    event.preventDefault();
+                    input.blur();
+
+                    const pickerTrigger = field.querySelector('button[aria-label]') || field.querySelector('button');
+                    if (pickerTrigger) {{
+                        pickerTrigger.click();
+                    }}
+                }};
+
+                input.addEventListener('pointerdown', forwardToPicker);
+                input.addEventListener('touchstart', forwardToPicker, {{ passive: false }});
+                input.addEventListener('focus', () => input.blur());
+            }});
+        }}
+
+        firstPitchDisableDateTextEntry();
+        new MutationObserver(firstPitchDisableDateTextEntry).observe(window.parent.document.body, {{
+            childList: true,
+            subtree: true
+        }});
     </script>
     <div id="page-transition-overlay" class="page-transition-overlay" aria-hidden="true">
         <div class="page-transition-card">
