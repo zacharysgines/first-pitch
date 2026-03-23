@@ -2,22 +2,19 @@ import streamlit as st
 from GetScores import ScoreGames
 from datetime import date, datetime
 import html
-from urllib.parse import quote, urlencode
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
-from streamlit.errors import StreamlitSecretNotFoundError
 
+# Streamlit still handles layout/state, but most of the visual presentation in this
+# file is custom HTML/CSS injected with st.markdown. Treat this file more like a
+# single-page HTML app that happens to use Streamlit for state/query params/data.
 st.set_page_config(
     page_title="First Pitch",
     layout="wide",
     initial_sidebar_state="collapsed",
 )
 
-try:
-    CONTACT_EMAIL = st.secrets["contact_email"]
-except (StreamlitSecretNotFoundError, KeyError):
-    CONTACT_EMAIL = "your-email@example.com"
-
-# ---- Include Fonts ----
+# ---- Typography Assets ----
+# These <link> tags load the fonts/icons used by the custom HTML sections below.
 st.markdown(
     '<link href="https://fonts.googleapis.com/css2?family=Playball&display=swap" rel="stylesheet">'
     '<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">'
@@ -25,7 +22,9 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# ---- Custom CSS ----
+# ---- Global CSS ----
+# Streamlit generates the outer DOM, but nearly all styling here is applied to
+# Streamlit's wrappers and to raw HTML fragments rendered later in this file.
 st.markdown(
     """
     <style>
@@ -34,6 +33,7 @@ st.markdown(
         html, body, [data-testid="stAppViewContainer"], .stApp {
             background-color: #F4F1E8 !important;
             color-scheme: light !important;
+            forced-color-adjust: none !important;
         }
 
         div[data-testid="stMainBlockContainer"],
@@ -92,8 +92,6 @@ st.markdown(
             outline: none !important;
         }
 
-        .header-menu-form,
-        .nav-close-form,
         .nav-link-form {
             margin: 0;
         }
@@ -185,26 +183,11 @@ st.markdown(
             color: #F4F1E8;
         }
 
-        .nav-panel-kicker {
-            font-size: 0.78rem;
-            letter-spacing: 0.18em;
-            font-weight: 700;
-            opacity: 0.75;
-        }
-
         .nav-panel-title {
             font-family: "Playball", cursive !important;
             font-size: 2rem;
             line-height: 1.1;
             margin-top: 0.35rem;
-        }
-
-        .nav-panel-copy {
-            color: #F4F1E8;
-            font-size: 0.95rem;
-            line-height: 1.45;
-            opacity: 0.9;
-            margin-bottom: 1rem;
         }
 
         .nav-link-button {
@@ -327,22 +310,6 @@ st.markdown(
             padding: 0 1.5rem 2rem 1.5rem;
         }
 
-        .info-card {
-            background: #FFFFFF;
-            border-radius: 18px;
-            padding: 1.4rem 1.5rem;
-            box-shadow: 0 8px 26px rgba(31, 42, 68, 0.08);
-            margin-bottom: 1rem;
-        }
-
-        .info-kicker {
-            color: #D9A441;
-            font-size: 0.78rem;
-            font-weight: 800;
-            letter-spacing: 0.16em;
-            text-transform: uppercase;
-        }
-
         .info-title {
             color: #1F2A44;
             font-size: 2rem;
@@ -362,6 +329,7 @@ st.markdown(
         .info-list,
         .info-list li {
             color: inherit !important;
+            -webkit-text-fill-color: inherit !important;
         }
 
         .contact-plain {
@@ -383,11 +351,6 @@ st.markdown(
 
         .info-list li + li {
             margin-top: 0.55rem;
-        }
-
-        .contact-callout {
-            background: linear-gradient(135deg, #F8E7BD 0%, #F4F1E8 100%);
-            border: 1px solid rgba(217, 164, 65, 0.35);
         }
 
         /* HEADER TITLE CONTAINER */
@@ -456,6 +419,8 @@ st.markdown(
             letter-spacing: 0.12em;
             font-weight: 700;
             color: #1F2A44 !important;
+            -webkit-text-fill-color: #1F2A44 !important;
+            forced-color-adjust: none !important;
         }
 
         /* DATE DIVIDER */
@@ -500,13 +465,14 @@ st.markdown(
             font-size: 18px;
         }
 
-        /* CALENDAR ICON */
+        /* CALENDAR INPUT */
         div.st-key-date_toolbar div[data-baseweb="input"] {
             padding-right: 0 !important;
             background-color: #F4F1E8 !important;
             border: 1px solid #ccc !important;
             border-radius: 7px !important;
             box-shadow: none !important;
+            forced-color-adjust: none !important;
         }
 
         div.st-key-date_toolbar div[data-baseweb="input"]:focus-within {
@@ -522,23 +488,23 @@ st.markdown(
         }
 
         div[data-testid="stDateInput"] input {
-            background-color: #F4F1E8;
-            border: 1px solid #ccc;
+            background-color: #F4F1E8 !important;
+            border: 1px solid #ccc !important;
             border-radius: 7px;
             padding: 8px 40px 8px 14px;
             width: 100%;
             font-size: 16px;
-            color: #1F2A44;
-            -webkit-text-fill-color: #1F2A44;
+            color: #1F2A44 !important;
+            -webkit-text-fill-color: #1F2A44 !important;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231F2A44' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'/%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3Cline x1='8' y1='2' x2='8' y2='6'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 12px center;
             background-size: 18px 18px;
-            caret-color: transparent;
-            user-select: none;
-            -webkit-user-select: none;
             box-shadow: none !important;
             outline: none !important;
+            appearance: none !important;
+            -webkit-appearance: none !important;
+            forced-color-adjust: none !important;
         }
 
         div[data-testid="stDateInput"] label {
@@ -595,12 +561,16 @@ st.markdown(
             font-size: 1.2rem;
             font-weight: 700;
             color: #1F2A44 !important;
+            -webkit-text-fill-color: #1F2A44 !important;
+            forced-color-adjust: none !important;
         }
 
         .team-record {
             font-size: 1rem;
             font-weight: 400;
             color: #555 !important;
+            -webkit-text-fill-color: #555 !important;
+            forced-color-adjust: none !important;
         }
 
         .score-bubble {
@@ -801,6 +771,7 @@ st.markdown(
 )
 
 def get_query_value(key, default=None):
+    """Return a single query-param value even when Streamlit stores it as a list."""
     value = st.query_params.get(key, default)
     if isinstance(value, list):
         return value[0] if value else default
@@ -808,6 +779,7 @@ def get_query_value(key, default=None):
 
 
 def build_query_params(**updates):
+    """Preserve current navigation params while allowing specific overrides/removals."""
     params = {}
     for key in ("page", "date", "tz"):
         value = get_query_value(key)
@@ -824,6 +796,7 @@ def build_query_params(**updates):
 
 
 def build_hidden_inputs(params):
+    """Render hidden <input> tags for the small HTML forms used in the nav drawer."""
     return "".join(
         f'<input type="hidden" name="{html.escape(str(key), quote=True)}" value="{html.escape(str(value), quote=True)}">'
         for key, value in params.items()
@@ -831,12 +804,14 @@ def build_hidden_inputs(params):
 
 
 def sync_selected_date_from_input():
+    """Mirror the Streamlit date widget back into query params for shareable URLs."""
     selected = st.session_state.selected_date_input
     st.session_state.selected_date = selected
     st.query_params["date"] = selected.isoformat()
 
 
 def render_methodology_page():
+    """Render the static methodology page as raw HTML inside Streamlit."""
     st.markdown(
         """
         <div class="info-shell">
@@ -939,6 +914,7 @@ def render_methodology_page():
 
 
 def render_contact_page():
+    """Render the static contact page."""
     st.markdown(
         """
         <div class="info-shell">
@@ -950,7 +926,9 @@ def render_contact_page():
         unsafe_allow_html=True,
     )
 
-# ---- Header ----
+# ---- Query-State Bootstrap ----
+# This app uses query params instead of Streamlit multipage routing so the current
+# page/date/timezone can be shared via URL and preserved across header navigation.
 current_page = get_query_value("page", "home")
 query_date = get_query_value("date")
 browser_timezone = get_query_value("tz")
@@ -958,6 +936,8 @@ home_inputs = build_hidden_inputs(build_query_params(page="home"))
 methodology_inputs = build_hidden_inputs(build_query_params(page="methodology"))
 contact_inputs = build_hidden_inputs(build_query_params(page="contact"))
 
+# Each nav item is raw HTML so the drawer can use standard form submission and CSS
+# transitions instead of trying to coordinate multiple Streamlit widgets.
 home_menu_item = (
     '<div class="nav-menu-item">'
     '<a class="nav-link-button active" href="#">'
@@ -1021,6 +1001,10 @@ contact_menu_item = (
     )
 )
 
+# ---- Shared Header / Nav Drawer Markup ----
+# This string contains both:
+# 1. A tiny script for the page transition overlay + theme/date-input tweaks.
+# 2. The reusable top banner and left slide-out navigation drawer.
 header_html = f"""
     <script>
         function firstPitchStartPageTransition() {{
@@ -1031,43 +1015,77 @@ header_html = f"""
             return true;
         }}
 
-        function firstPitchDisableDateTextEntry() {{
-            const dateFields = window.parent.document.querySelectorAll('div[data-testid="stDateInput"]');
+        function firstPitchForceLightTheme() {{
+            const doc = window.parent.document;
+            const root = doc.documentElement;
 
+            root.style.colorScheme = 'light';
+            root.style.setProperty('color-scheme', 'light', 'important');
+            root.style.setProperty('forced-color-adjust', 'none', 'important');
+
+            const ensureMeta = (name, content) => {{
+                let meta = doc.head.querySelector(`meta[name="${{name}}"]`);
+                if (!meta) {{
+                    meta = doc.createElement('meta');
+                    meta.name = name;
+                    doc.head.appendChild(meta);
+                }}
+                meta.content = content;
+            }};
+
+            ensureMeta('color-scheme', 'light');
+            ensureMeta('supported-color-schemes', 'light');
+        }}
+
+        function firstPitchEnableMobileDatePickerRedirect() {{
+            const doc = window.parent.document;
+            const isTouchDevice = window.matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0;
+            if (!isTouchDevice) {{
+                return;
+            }}
+
+            const dateFields = doc.querySelectorAll('div[data-testid="stDateInput"]');
             dateFields.forEach((field) => {{
                 const input = field.querySelector('input');
-                if (!input || input.dataset.firstPitchNoKeyboard === 'true') {{
+                if (!input || input.dataset.firstPitchTouchRedirect === 'true') {{
                     return;
                 }}
 
-                input.dataset.firstPitchNoKeyboard = 'true';
+                input.dataset.firstPitchTouchRedirect = 'true';
                 input.readOnly = true;
                 input.setAttribute('inputmode', 'none');
                 input.setAttribute('autocomplete', 'off');
                 input.setAttribute('autocapitalize', 'off');
                 input.setAttribute('spellcheck', 'false');
 
-                const forwardToPicker = (event) => {{
+                const openPicker = (event) => {{
                     event.preventDefault();
                     input.blur();
-
-                    const pickerTrigger = field.querySelector('button[aria-label]') || field.querySelector('button');
-                    if (pickerTrigger) {{
-                        pickerTrigger.click();
+                    const pickerButton =
+                        field.querySelector('button[aria-label*="Choose"]') ||
+                        field.querySelector('button[aria-label*="Open"]') ||
+                        field.querySelector('button[aria-label*="calendar"]') ||
+                        field.querySelector('button');
+                    if (pickerButton) {{
+                        pickerButton.click();
                     }}
                 }};
 
-                input.addEventListener('pointerdown', forwardToPicker);
-                input.addEventListener('touchstart', forwardToPicker, {{ passive: false }});
+                input.addEventListener('touchstart', openPicker, {{ passive: false }});
+                input.addEventListener('mousedown', openPicker);
                 input.addEventListener('focus', () => input.blur());
             }});
         }}
 
-        firstPitchDisableDateTextEntry();
-        new MutationObserver(firstPitchDisableDateTextEntry).observe(window.parent.document.body, {{
+        firstPitchForceLightTheme();
+        new MutationObserver(() => {{
+            firstPitchForceLightTheme();
+            firstPitchEnableMobileDatePickerRedirect();
+        }}).observe(window.parent.document.body, {{
             childList: true,
             subtree: true
         }});
+        firstPitchEnableMobileDatePickerRedirect();
     </script>
     <div id="page-transition-overlay" class="page-transition-overlay" aria-hidden="true">
         <div class="page-transition-card">
@@ -1107,7 +1125,10 @@ header_html = f"""
 
 st.markdown(header_html, unsafe_allow_html=True)
 
-# ---- Date selector ----
+# ---- Home Page: Selected Date + Score Fetch ----
+# The home page is the only page that hits the scoring pipeline. The selected date
+# is kept in session_state so reruns do not reset the control, but the query param
+# remains the source of truth for shareable links.
 if current_page == "home":
     st.markdown('<div class="date-filter-heading">PICK A DATE</div>', unsafe_allow_html=True)
 
@@ -1169,8 +1190,9 @@ if current_page == "home":
 else:
     games = []
 
-# ---- Score color logic ----
+# ---- Game Card Helpers ----
 def score_class(score):
+    """Map a 0-100 game score to the CSS pill color used on each card."""
     if score <= 15:
         return "score-red"
     elif score <= 35:
@@ -1183,8 +1205,11 @@ def score_class(score):
         return "score-blue"
 
 def build_game_notes(game):
+    """Build the detail lines shown beneath each game card."""
     notes = []
     
+    # These helpers stay nested because they only exist to turn the score JSON
+    # for one game into the short note strings shown on that game's card.
     def format_era(era_value):
         return f"{float(era_value):.2f}"
 
@@ -1338,6 +1363,7 @@ def build_game_notes(game):
     return notes
 
 def format_game_status(game, browser_timezone_name):
+    """Return either live/final status text or a scheduled first-pitch time."""
     game_status = game.get("game_status", game.get("status", ""))
 
     if game_status in {"Final", "Completed Early"}:
@@ -1360,7 +1386,9 @@ def format_game_status(game, browser_timezone_name):
         timezone_abbr = "".join(word[0] for word in timezone_abbr.split() if word)
     return f'{scheduled_dt.strftime("%I:%M %p").lstrip("0")} {timezone_abbr}'.strip()
 
-# ---- Page content ----
+# ---- Final Page Render ----
+# At this point all shared state/header/date-selection work is done. The remaining
+# logic is just "which page should render" plus the home-page game-card loop.
 if current_page == "methodology":
     render_methodology_page()
 elif current_page == "contact":
@@ -1385,6 +1413,8 @@ elif games:
             pill_items.append('<span class="game-pill game-pill-division">Division Rivals</span>')
         pill_html = f'<div class="game-pill-row">{"".join(pill_items)}</div>' if pill_items else ""
 
+        # Build one self-contained HTML card so the CSS can control layout the
+        # same way a handwritten HTML page would.
         card_html = (
             '<div class="game-card">'
             '<div class="game-main-row">'

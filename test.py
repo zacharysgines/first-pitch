@@ -1,5 +1,6 @@
 """
-player making mlb debut
+SAVE MILESTONES
+UPDATE LINEUP CHANGES
 MVP player
 Cy Young Player
 RotY Player
@@ -11,9 +12,9 @@ Hot Streak Player
     - Consecutive scoreless innnings
     - ERA over last x games
 ERA milestone
+"On Pace" milestones
 Modern (and other) era records
 WAR data/better stats
-WC Score
 """
 
 import statsapi
