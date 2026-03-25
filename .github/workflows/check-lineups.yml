@@ -37,3 +37,4 @@ jobs:
           git add scores/lineups.json scores/game_scores.json
           git diff --cached --quiet || git commit -m "Update lineup snapshots"
           git push
+          
