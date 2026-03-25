@@ -33,6 +33,10 @@ pitcher_milestone_stat_list = {
     "strikeouts":      {"margin": 21, 'box_name': 'strikeOuts'},
 }
 
+def LoadLineups():
+    with open("scores/lineups.json", "r") as f:
+        return json.load(f)
+
 def Milestones(games, date_obj, teams):
     #Initialize milestones dictionary
     for team in teams:
@@ -45,42 +49,32 @@ def Milestones(games, date_obj, teams):
     #If date is later than today, don't get the milestones
     if date_obj.date() > datetime.today().date():
         return None
+
+    saved_lineups = LoadLineups()
     
     for game in games:
         away_team = teams[game['away_name']]
         home_team = teams[game['home_name']]
-        home_pitcher = game['home_probable_pitcher']
-        away_pitcher = game['away_probable_pitcher']
+        game_key = f"game_{game['game_id']}"
+        game_lineup = saved_lineups.get(game_key)
+
+        if not game_lineup:
+            continue
 
         #Add all the milestones that need to be scored into the teams dictionary
-        GetMilestonePlayers(game['game_id'], away_team, home_team, away_pitcher, home_pitcher, teams)
+        for player in game_lineup.get('away_lineup', []):
+            GetMilestones(player['id'], away_team, player['name'], teams, 'hitting', batter_milestone_stat_list, player)
 
-    return None
+        for player in game_lineup.get('home_lineup', []):
+            GetMilestones(player['id'], home_team, player['name'], teams, 'hitting', batter_milestone_stat_list, player)
 
-def GetMilestonePlayers(gameid, away_team, home_team, away_pitcher, home_pitcher, teams):
-    #Get boxscores to find lineups
-    box = statsapi.boxscore_data(gameid)
+        away_pitcher = game_lineup.get('away_pitcher')
+        if away_pitcher:
+            GetMilestones(away_pitcher['id'], away_team, away_pitcher['name'], teams, 'pitching', pitcher_milestone_stat_list, away_pitcher)
 
-    #Do the following for the home and away team to use only one API call for each
-    for team_status in ('away', 'home'):
-        if team_status == 'away':
-            teamname = away_team
-            starting_pitcher = away_pitcher
-        else:
-            teamname = home_team
-            starting_pitcher = home_pitcher
-
-        #Look through each batter
-        for player in box[team_status]['players'].values():
-            #Get the id and name for this player
-            player_name = player['person']['fullName']                           
-            player_id = player['person']['id']
-
-            #Check if they're in the batting order or the starting pitcher to see if they're playing in this game
-            if player.get('battingOrder'):
-                 GetMilestones(player_id, teamname, player_name, teams, 'hitting', batter_milestone_stat_list, player)
-            if player_name == starting_pitcher:
-                GetMilestones(player_id, teamname, player_name, teams, 'pitching', pitcher_milestone_stat_list, player)
+        home_pitcher = game_lineup.get('home_pitcher')
+        if home_pitcher:
+            GetMilestones(home_pitcher['id'], home_team, home_pitcher['name'], teams, 'pitching', pitcher_milestone_stat_list, home_pitcher)
 
     return None
 
@@ -95,13 +89,7 @@ def GetMilestones(player_id, teamname, player_name, teams, player_type, mileston
     if player_career.get('stats'):
         career_stat_block = player_career['stats'][0].get('stats', {})
 
-    #Change 'hitting' to 'batting' for the next dictionary read
-    if player_type == 'hitting':
-        new_player_type = 'batting' 
-    else:
-        new_player_type = 'pitching'
-
-    season_stat_block = player.get('seasonStats', {}).get(new_player_type, {})
+    season_stat_block = player.get('stats', {})
     #For each stat we want to track, find that player's value and save it to their dictionary
     for stat, info in milestone_stat_list.items():        
         season_stats[stat] = season_stat_block.get(info['box_name'], 0)
@@ -117,10 +105,15 @@ def GetMilestones(player_id, teamname, player_name, teams, player_type, mileston
         AddMilestone(career_record, info['margin'], career_stats[stat], teamname, 'career', stat, player_name)
     
     if career_stat_block.get('gamesPlayed', 0) == 0:
+        if player_type == 'pitching':
+            player_position = 'SP'
+        else:
+            player_position = player.get('position')
+
         player = {
             'name': player_name,
             'org': None,
-            'pos': player['position']['abbreviation'],
+            'pos': player_position,
             'mlb_rank': None,
             'org_rank': None,
             'pos_rank': None,

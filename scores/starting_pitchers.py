@@ -1,5 +1,6 @@
 import pandas as pd
 import statsapi
+import unicodedata
 
 def LoadSPProjections():
     #Load sp_projections.csv
@@ -8,6 +9,13 @@ def LoadSPProjections():
         sp_projections = df.to_dict(orient='records')
     
     return sp_projections
+
+def NormalizeName(name):
+    if not isinstance(name, str):
+        return ""
+
+    normalized = unicodedata.normalize("NFKD", name.casefold())
+    return "".join(char for char in normalized if not unicodedata.combining(char))
 
 def Starting_Pitchers(games, teams, date_obj):
     #Load projections for starting pitchers
@@ -73,8 +81,10 @@ def Get_SP_Stats(date_obj, pitchers, team_id, pitcher_team, pitcher_name, teams,
 
 def GetProjectedSPStats(sp_projections, pitcher_name, current_team, teams):
     possible_pitchers = []
+    normalized_pitcher_name = NormalizeName(pitcher_name)
+
     for pitcher in sp_projections:
-        if pitcher['Name'] == pitcher_name:
+        if NormalizeName(pitcher['Name']) == normalized_pitcher_name:
             possible_pitchers.append(pitcher)
     
     if len(possible_pitchers) > 1:
