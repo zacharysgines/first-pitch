@@ -30,7 +30,7 @@ jobs:
       - name: Run lineup check
         run: python scripts/check_lineups.py
 
-            - name: Commit updated lineup files
+      - name: Commit updated lineup files
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
