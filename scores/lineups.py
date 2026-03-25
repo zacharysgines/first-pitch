@@ -93,13 +93,13 @@ def GetAllLineups(games):
     if not games:
         return None
 
-    # first_game_datetime = games[0].get("game_datetime")
-    # if not first_game_datetime:
-    #     return None
+    first_game_datetime = games[0].get("game_datetime")
+    if not first_game_datetime:
+        return None
 
-    # scheduled_date = datetime.fromisoformat(first_game_datetime.replace("Z", "+00:00")).astimezone(DISPLAY_TIMEZONE).date()
-    # if scheduled_date != datetime.now(DISPLAY_TIMEZONE).date():
-    #     return None
+    scheduled_date = datetime.fromisoformat(first_game_datetime.replace("Z", "+00:00")).astimezone(DISPLAY_TIMEZONE).date()
+    if scheduled_date != datetime.now(DISPLAY_TIMEZONE).date():
+        return None
 
     game_lineups = {}
 
