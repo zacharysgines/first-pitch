@@ -9,12 +9,14 @@ from scores.records import Records
 from scores.playoffs import Playoff_Imp
 from scores.win_streaks import Winning_Streak
 from scores.starting_pitchers import Starting_Pitchers
-from scores.milestones import Milestones    
+from scores.milestones import Milestones
+from scores.lineups import GetAllLineups
 
 DISPLAY_TIMEZONE = ZoneInfo("America/Denver")
 
 def GetScores(standings, games, gamedate_obj):
     #Run each function to get individual score components
+    GetAllLineups(games)
     teams = GetTeams(standings)
     Records(teams, standings)
     Playoff_Imp(standings, teams)
@@ -201,16 +203,16 @@ def ScoreGames(gamedate, saved_scores = None, use_json = True):
     if gamedate_obj.month in (11, 12, 1, 2) or gamedate_obj.year not in (current_year, current_year - 1):
         return []
     
+    #Load existing scores unless the caller already provided them.
+    # `use_json=False` should bypass the cached return path, not wipe the file.
+    if saved_scores is None:
+        saved_scores = LoadScores()
+
     #Check if this date already has an entry in the .json file. If so, get the scores from there instead of calculating them
     if use_json:
-        if saved_scores == None:
-            saved_scores = LoadScores()
-
         for entry in saved_scores:
             if entry["gamedate"] == gamedate:
                 return entry["games"]
-    else:
-        saved_scores = []
         
     #Pull games and standings from API
     games = statsapi.schedule(date=gamedate)
@@ -228,6 +230,9 @@ def ScoreGames(gamedate, saved_scores = None, use_json = True):
     standings = statsapi.standings_data(date=gamedate)
 
     game_scores = GetScores(standings, games, gamedate_obj)
+
+    #Replace an existing entry for this date so recomputes do not create duplicates.
+    saved_scores = [entry for entry in saved_scores if entry["gamedate"] != gamedate]
 
     #Insert all the sorted scores for this day and the date into all_scores and save those scores to the .json file
     saved_scores.insert(0, {
@@ -274,4 +279,4 @@ def GetAllScores(starting_date, ending_date):
         print(f"Time elapsed: {hours:02}:{minutes:02}:{seconds:02}")
 
 #GetAllScores('08/21/2026', '12/31/2026')
-#ScoreGames('09/23/2025')
+#ScoreGames('07/11/2025', use_json=False)
