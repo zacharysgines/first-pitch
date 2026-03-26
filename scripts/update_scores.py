@@ -10,7 +10,7 @@ from SaveLoad import LoadScores, SaveScores
 
 def update_scores():
     today = date.today()
-    end_date = today + timedelta(days=31)
+    end_date = today + timedelta(days=14)
     kept_scores = []
     
     all_scores = LoadScores()
