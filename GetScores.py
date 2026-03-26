@@ -31,26 +31,13 @@ def GetScores(standings, games, gamedate_obj):
         if game['game_type'] != 'R':
             continue
 
-        #Game Status
-        game_status = game['status']
-        if game_status == 'Final' or game_status == 'Completed Early':
-            status = 'Final'
-        elif game_status == 'In Progress':
-            inning_num = str(game['current_inning'])
-            inning_state = game['inning_state']
-            if inning_state == 'Top':
-                status = 'Top' + ' ' + inning_num
-            elif inning_state == 'Bottom':
-                status = 'Bot' + ' ' + inning_num
-            else:
-                status = 'Mid' + ' ' + inning_num
-        else:
-            gamedatetime = datetime.fromisoformat(game['game_datetime'].replace("Z", "+00:00"))
-            local_dt = gamedatetime.astimezone(DISPLAY_TIMEZONE)
-            timezone_abbr = local_dt.tzname() or ""
-            if " " in timezone_abbr:
-                timezone_abbr = "".join(word[0] for word in timezone_abbr.split() if word)
-            status = f'{local_dt.strftime("%I:%M %p").lstrip("0")} {timezone_abbr}'.strip()
+        # Always display scheduled first-pitch time rather than live game state.
+        gamedatetime = datetime.fromisoformat(game['game_datetime'].replace("Z", "+00:00"))
+        local_dt = gamedatetime.astimezone(DISPLAY_TIMEZONE)
+        timezone_abbr = local_dt.tzname() or ""
+        if " " in timezone_abbr:
+            timezone_abbr = "".join(word[0] for word in timezone_abbr.split() if word)
+        status = f'{local_dt.strftime("%I:%M %p").lstrip("0")} {timezone_abbr}'.strip()
 
         #Team Definitions
         away_team_name = game['away_name']

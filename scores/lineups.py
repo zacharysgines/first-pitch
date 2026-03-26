@@ -6,6 +6,14 @@ from zoneinfo import ZoneInfo
 
 DISPLAY_TIMEZONE = ZoneInfo("America/Denver")
 
+
+def LoadSavedLineups():
+    try:
+        with open("scores/lineups.json", "r") as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
+
 def GetLineup(game):
     gameid = game['game_id']
     away_team = game['away_name']
@@ -101,15 +109,24 @@ def GetAllLineups(games):
     if scheduled_date != datetime.now(DISPLAY_TIMEZONE).date():
         return None
 
+    saved_lineups = LoadSavedLineups()
     game_lineups = {}
-
-    # Clear any previously saved lineups before repopulating this file.
-    with open("scores/lineups.json", "w") as f:
-        json.dump({}, f, indent=4)
 
     for game in games:
         gameid = game["game_id"]
         game_key = f"game_{gameid}"
+        game_datetime = game.get("game_datetime")
+
+        # Preserve the original pregame snapshot once a game has started.
+        # Same-day reruns should only refresh lineups for games that have not
+        # started yet, otherwise debut flags and pregame milestone baselines can
+        # disappear as live stats begin updating.
+        if game_datetime:
+            scheduled_dt = datetime.fromisoformat(game_datetime.replace("Z", "+00:00"))
+            if scheduled_dt <= datetime.now(timezone.utc) and game_key in saved_lineups:
+                game_lineups[game_key] = saved_lineups[game_key]
+                continue
+
         game_lineups[game_key] = GetLineup(game)
 
     with open("scores/lineups.json", "w") as f:
@@ -119,8 +136,7 @@ def GetAllLineups(games):
 
 
 def LineupsChanged(games):
-    with open("scores/lineups.json", "r") as f:
-        saved_lineups = json.load(f)
+    saved_lineups = LoadSavedLineups()
 
     for game in games:
         game_datetime = game.get("game_datetime")
