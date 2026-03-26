@@ -232,7 +232,7 @@ def ScoreGames(gamedate, saved_scores = None, use_json = True):
     game_scores = GetScores(standings, games, gamedate_obj)
 
     #Replace an existing entry for this date so recomputes do not create duplicates.
-    saved_scores = [entry for entry in saved_scores if entry["gamedate"] != gamedate]
+    saved_scores[:] = [entry for entry in saved_scores if entry["gamedate"] != gamedate]
 
     #Insert all the sorted scores for this day and the date into all_scores and save those scores to the .json file
     saved_scores.insert(0, {
@@ -267,7 +267,8 @@ def GetAllScores(starting_date, ending_date):
         
         #Get the scores for the current date
         ScoreGames(gamedate, saved_scores)
-                    
+        #saved_scores = LoadScores()
+                     
         #After getting the scores, print the current time running, how many scores we've gotten, and how many there are total to get        
         current_time = time.time()
         elapsed_seconds = int(current_time - start_time)

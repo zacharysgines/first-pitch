@@ -24,6 +24,7 @@ def Winning_Streak(standings, teams, date_obj):
         return None
 
     win_streaks = LoadWinStreaks()
+    streak_year = date_obj.year
 
     for team in teams:
         #Intially define their winning streak to be true and 0 games. Set the start of the streak date to today
@@ -35,6 +36,8 @@ def Winning_Streak(standings, teams, date_obj):
         while winning_streak:
             #Decrease the date by one
             streak_date -= timedelta(days=1)
+            if streak_date.year < streak_year:
+                break
             streak_date_str = streak_date.strftime("%m/%d/%Y")
             #Track if we found this date in the .json file. If we didn't, we need to add the results for that date into the .json file
             found_entry = False
@@ -92,6 +95,8 @@ def AddWinStreakEntry(streak_date_str, win_streaks):
     #Look through every game this day.
     if prior_games:
         for game in prior_games:
+            if game.get('game_type') != 'R':
+                continue
             #If there's no winning team listed, then that game got postponed, so skip it.
             if 'winning_team' not in game or 'losing_team' not in game:
                 continue
