@@ -706,20 +706,6 @@
                 }
             },
             {
-                "id": 666624,
-                "name": "Christopher Morel",
-                "position": "1B",
-                "stats": {
-                    "runs": 0,
-                    "doubles": 0,
-                    "triples": 0,
-                    "home_runs": 0,
-                    "hits": 0,
-                    "steals": 0,
-                    "rbi": 0
-                }
-            },
-            {
                 "id": 805300,
                 "name": "Jakob Marsee",
                 "position": "CF",
@@ -762,6 +748,20 @@
                 }
             },
             {
+                "id": 683357,
+                "name": "Owen Caissie",
+                "position": "DH",
+                "stats": {
+                    "runs": 0,
+                    "doubles": 0,
+                    "triples": 0,
+                    "home_runs": 0,
+                    "hits": 0,
+                    "steals": 0,
+                    "rbi": 0
+                }
+            },
+            {
                 "id": 682663,
                 "name": "Agust\u00edn Ram\u00edrez",
                 "position": "C",
@@ -778,7 +778,7 @@
             {
                 "id": 681393,
                 "name": "Connor Norby",
-                "position": "DH",
+                "position": "1B",
                 "stats": {
                     "runs": 0,
                     "doubles": 0,
@@ -836,7 +836,7 @@
                 "ip": "0.0"
             }
         },
-        "lineup_hash": "504262af5e834326b336ef36df0a1170",
+        "lineup_hash": "6705dc0594c76f99e59b29eb3564a4d6",
         "lineup_confirmed": false
     },
     "game_824946": {
@@ -1709,7 +1709,134 @@
         "away_team": "Arizona Diamondbacks",
         "home_team": "Los Angeles Dodgers",
         "away_lineup": [],
-        "home_lineup": [],
+        "home_lineup": [
+            {
+                "id": 669257,
+                "name": "Will Smith",
+                "position": "C",
+                "stats": {
+                    "runs": 1,
+                    "doubles": 0,
+                    "triples": 0,
+                    "home_runs": 1,
+                    "hits": 2,
+                    "steals": 0,
+                    "rbi": 3
+                }
+            },
+            {
+                "id": 663656,
+                "name": "Kyle Tucker",
+                "position": "RF",
+                "stats": {
+                    "runs": 1,
+                    "doubles": 1,
+                    "triples": 0,
+                    "home_runs": 0,
+                    "hits": 1,
+                    "steals": 0,
+                    "rbi": 1
+                }
+            },
+            {
+                "id": 571970,
+                "name": "Max Muncy",
+                "position": "3B",
+                "stats": {
+                    "runs": 1,
+                    "doubles": 0,
+                    "triples": 0,
+                    "home_runs": 0,
+                    "hits": 1,
+                    "steals": 0,
+                    "rbi": 0
+                }
+            },
+            {
+                "id": 518692,
+                "name": "Freddie Freeman",
+                "position": "1B",
+                "stats": {
+                    "runs": 0,
+                    "doubles": 0,
+                    "triples": 0,
+                    "home_runs": 0,
+                    "hits": 0,
+                    "steals": 0,
+                    "rbi": 0
+                }
+            },
+            {
+                "id": 660271,
+                "name": "Shohei Ohtani",
+                "position": "DH",
+                "stats": {
+                    "runs": 1,
+                    "doubles": 0,
+                    "triples": 0,
+                    "home_runs": 0,
+                    "hits": 1,
+                    "steals": 0,
+                    "rbi": 0
+                }
+            },
+            {
+                "id": 606192,
+                "name": "Teoscar Hern\u00e1ndez",
+                "position": "LF",
+                "stats": {
+                    "runs": 1,
+                    "doubles": 0,
+                    "triples": 0,
+                    "home_runs": 0,
+                    "hits": 1,
+                    "steals": 0,
+                    "rbi": 0
+                }
+            },
+            {
+                "id": 681624,
+                "name": "Andy Pages",
+                "position": "CF",
+                "stats": {
+                    "runs": 1,
+                    "doubles": 0,
+                    "triples": 0,
+                    "home_runs": 1,
+                    "hits": 2,
+                    "steals": 0,
+                    "rbi": 3
+                }
+            },
+            {
+                "id": 605141,
+                "name": "Mookie Betts",
+                "position": "SS",
+                "stats": {
+                    "runs": 1,
+                    "doubles": 0,
+                    "triples": 0,
+                    "home_runs": 0,
+                    "hits": 1,
+                    "steals": 0,
+                    "rbi": 1
+                }
+            },
+            {
+                "id": 690976,
+                "name": "Alex Freeland",
+                "position": "2B",
+                "stats": {
+                    "runs": 0,
+                    "doubles": 0,
+                    "triples": 0,
+                    "home_runs": 0,
+                    "hits": 0,
+                    "steals": 0,
+                    "rbi": 0
+                }
+            }
+        ],
         "away_pitcher": {
             "id": 669194,
             "name": "Ryne Nelson",
@@ -1728,7 +1855,7 @@
                 "ip": "0.0"
             }
         },
-        "lineup_hash": "86c778c79ef68dc151d7b6ab0c9e53f4",
+        "lineup_hash": "b548e6c1247ef5f5ecd503d2363a9fc0",
         "lineup_confirmed": false
     }
 }
