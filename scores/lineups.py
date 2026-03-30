@@ -10,9 +10,22 @@ DISPLAY_TIMEZONE = ZoneInfo("America/Denver")
 def LoadSavedLineups():
     try:
         with open("scores/lineups.json", "r") as f:
-            return json.load(f)
+            saved_lineups = json.load(f)
     except (FileNotFoundError, json.JSONDecodeError):
-        return {}
+        return {"date": None, "games": {}}
+
+    if isinstance(saved_lineups, dict) and "games" in saved_lineups:
+        saved_lineups.setdefault("date", None)
+        return saved_lineups
+
+    return {"date": None, "games": saved_lineups}
+
+def SaveLineups(lineup_date, game_lineups):
+    with open("scores/lineups.json", "w") as f:
+        json.dump({
+            "date": lineup_date,
+            "games": game_lineups
+        }, f, indent=4)
 
 def GetLineup(game):
     gameid = game['game_id']
@@ -106,37 +119,46 @@ def GetAllLineups(games):
         return None
 
     scheduled_date = datetime.fromisoformat(first_game_datetime.replace("Z", "+00:00")).astimezone(DISPLAY_TIMEZONE).date()
-    if scheduled_date != datetime.now(DISPLAY_TIMEZONE).date():
+    scheduled_date_str = scheduled_date.strftime("%m/%d/%Y")
+    current_date = datetime.now(DISPLAY_TIMEZONE).date()
+
+    # Only persist lineup snapshots for today's games. Historical/future scoring
+    # should not overwrite the current-day lineup cache used by LineupsChanged().
+    if scheduled_date != current_date:
         return None
 
     saved_lineups = LoadSavedLineups()
+    if saved_lineups.get("date") == scheduled_date_str:
+        return None
+
     game_lineups = {}
 
     for game in games:
         gameid = game["game_id"]
         game_key = f"game_{gameid}"
-        game_datetime = game.get("game_datetime")
-
-        # Preserve the original pregame snapshot once a game has started.
-        # Same-day reruns should only refresh lineups for games that have not
-        # started yet, otherwise debut flags and pregame milestone baselines can
-        # disappear as live stats begin updating.
-        if game_datetime:
-            scheduled_dt = datetime.fromisoformat(game_datetime.replace("Z", "+00:00"))
-            if scheduled_dt <= datetime.now(timezone.utc) and game_key in saved_lineups:
-                game_lineups[game_key] = saved_lineups[game_key]
-                continue
 
         game_lineups[game_key] = GetLineup(game)
 
-    with open("scores/lineups.json", "w") as f:
-        json.dump(game_lineups, f, indent=4)
+    SaveLineups(scheduled_date_str, game_lineups)
 
     return None
 
 
 def LineupsChanged(games):
     saved_lineups = LoadSavedLineups()
+    saved_games = saved_lineups.get("games", {})
+    lineup_date = saved_lineups.get("date")
+    changed = False
+
+    first_game_datetime = games[0].get("game_datetime") if games else None
+    if not first_game_datetime:
+        return False
+
+    scheduled_date = datetime.fromisoformat(first_game_datetime.replace("Z", "+00:00")).astimezone(DISPLAY_TIMEZONE).date()
+    scheduled_date_str = scheduled_date.strftime("%m/%d/%Y")
+
+    if lineup_date != scheduled_date_str:
+        return False
 
     for game in games:
         game_datetime = game.get("game_datetime")
@@ -151,9 +173,13 @@ def LineupsChanged(games):
         current_game_data = GetLineup(game)
         current_hash = current_game_data["lineup_hash"]
 
-        saved_hash = saved_lineups.get(game_key, {}).get("lineup_hash")
+        saved_hash = saved_games.get(game_key, {}).get("lineup_hash")
 
         if current_hash != saved_hash:
-            return True
+            saved_games[game_key] = current_game_data
+            changed = True
 
-    return False
+    if changed:
+        SaveLineups(scheduled_date_str, saved_games)
+
+    return changed
