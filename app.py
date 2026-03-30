@@ -1264,6 +1264,15 @@ def build_game_notes(game):
 
         return None
 
+    def displayable_rank(value):
+        if value is None:
+            return None
+
+        try:
+            return None if value != value else int(value)
+        except (TypeError, ValueError):
+            return None
+
     def format_debut_note(player):
         name = player.get('name')
         pos = player.get('pos')
@@ -1273,20 +1282,20 @@ def build_game_notes(game):
 
         name_text = html.escape(str(name))
         pos_text = html.escape(str(pos))
-        mlb_rank = player.get('mlb_rank')
-        org_rank = player.get('org_rank')
-        pos_rank = player.get('pos_rank')
+        mlb_rank = displayable_rank(player.get('mlb_rank'))
+        org_rank = displayable_rank(player.get('org_rank'))
+        pos_rank = displayable_rank(player.get('pos_rank'))
         org = player.get('org')
 
         rank_bits = []
         if mlb_rank is not None:
-            rank_bits.append(f"#{html.escape(str(int(mlb_rank)))} MLB")
+            rank_bits.append(f"#{html.escape(str(mlb_rank))} MLB")
         if org_rank is not None and org:
             rank_bits.append(
-                f"#{html.escape(str(int(org_rank)))} {html.escape(str(org))}"
+                f"#{html.escape(str(org_rank))} {html.escape(str(org))}"
             )
         if pos_rank is not None:
-            rank_bits.append(f"#{html.escape(str(int(pos_rank)))} {pos_text}")
+            rank_bits.append(f"#{html.escape(str(pos_rank))} {pos_text}")
 
         rank_text = f" ({', '.join(rank_bits)})" if rank_bits else ""
 

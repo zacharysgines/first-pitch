@@ -33,9 +33,19 @@ pitcher_milestone_stat_list = {
     "strikeouts":      {"margin": 21, 'box_name': 'strikeOuts'},
 }
 
+def CleanProspectValue(value):
+    if pd.isna(value):
+        return None
+    return value
+
 def LoadLineups():
     with open("scores/lineups.json", "r") as f:
-        return json.load(f)
+        saved_lineups = json.load(f)
+
+    if isinstance(saved_lineups, dict) and "games" in saved_lineups:
+        return saved_lineups["games"]
+
+    return saved_lineups
 
 def Milestones(games, date_obj, teams):
     #Initialize milestones dictionary
@@ -121,16 +131,16 @@ def GetMilestones(player_id, teamname, player_name, teams, player_type, mileston
         }
         for prospect in prospects:
             if prospect['Name'] == player_name:
-                rank = prospect['Rank']
-                org_rank = prospect['OrgRank']
-                pos_rank = prospect['PosRank']
+                rank = CleanProspectValue(prospect['Rank'])
+                org_rank = CleanProspectValue(prospect['OrgRank'])
+                pos_rank = CleanProspectValue(prospect['PosRank'])
                 fv = prospect['FV']
 
-                player['org'] = prospect['Org']
-                player['pos'] = prospect['Pos']
+                player['org'] = CleanProspectValue(prospect['Org'])
+                player['pos'] = CleanProspectValue(prospect['Pos']) or player_position
                 player['org_rank'] = org_rank
                 player['pos_rank'] = pos_rank                
-                if math.isnan(rank) == False:
+                if rank is not None:
                     player['mlb_rank'] = rank                                        
                 
                 player['score'] = .0094 * math.exp(.0576 * fv)

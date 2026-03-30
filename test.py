@@ -72,7 +72,7 @@ import hashlib
 milestone_score = .0094 * math.exp(.0576 * 50)
 print('Milestone Score:', milestone_score)
 
-unadjusted_score = .1581134488995094 - .05 + milestone_score
+unadjusted_score = .20616598067555558 - .00 + milestone_score
 print("Unadjusted Score:",  unadjusted_score)
 
 overall_score = min(100, 100*((math.log(1+unadjusted_score))/(math.log(3))))
