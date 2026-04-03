@@ -1,6 +1,6 @@
 import streamlit as st
 from GetScores import ScoreGames
-from datetime import date, datetime, timedelta, timezone
+from datetime import date, datetime
 import html
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
@@ -926,36 +926,12 @@ def render_contact_page():
         unsafe_allow_html=True,
     )
 
-
-def get_user_display_timezone():
-    """Return the best available timezone for the current Streamlit client."""
-    user_timezone_name = getattr(st.context, "timezone", None)
-    if user_timezone_name:
-        try:
-            return ZoneInfo(user_timezone_name)
-        except ZoneInfoNotFoundError:
-            pass
-
-    offset_minutes = getattr(st.context, "timezone_offset", None)
-    if offset_minutes is not None:
-        return timezone(timedelta(minutes=offset_minutes))
-
-    return ZoneInfo("America/Denver")
-
-
-def get_default_selected_date():
-    """Return today's date using a 2 AM Mountain Time rollover."""
-    mountain_now = datetime.now(ZoneInfo("America/Denver"))
-    if mountain_now.hour < 2:
-        mountain_now -= timedelta(days=1)
-    return mountain_now.date()
-
-
 # ---- Query-State Bootstrap ----
 # This app uses query params instead of Streamlit multipage routing so the current
 # page/date/timezone can be shared via URL and preserved across header navigation.
 current_page = get_query_value("page", "home")
 query_date = get_query_value("date")
+browser_timezone = get_query_value("tz")
 home_inputs = build_hidden_inputs(build_query_params(page="home"))
 methodology_inputs = build_hidden_inputs(build_query_params(page="methodology"))
 contact_inputs = build_hidden_inputs(build_query_params(page="contact"))
@@ -1162,9 +1138,9 @@ if current_page == "home":
                 try:
                     st.session_state.selected_date = datetime.strptime(query_date, "%Y-%m-%d").date()
                 except ValueError:
-                    st.session_state.selected_date = get_default_selected_date()
+                    st.session_state.selected_date = date.today()
             else:
-                st.session_state.selected_date = get_default_selected_date()
+                st.session_state.selected_date = date.today()
         elif query_date:
             try:
                 query_date_value = datetime.strptime(query_date, "%Y-%m-%d").date()
@@ -1395,11 +1371,25 @@ def build_game_notes(game):
 
     return notes
 
-def format_game_status(game):
-    game_datetime = game.get("game_datetime")
+def format_game_status(game, browser_timezone_name):
+    """Return either live/final status text or a scheduled first-pitch time."""
+    game_status = game.get("game_status", game.get("status", ""))
 
-    display_timezone = get_user_display_timezone()
-    scheduled_dt = datetime.fromisoformat(game_datetime.replace("Z", "+00:00")).astimezone(display_timezone)
+    if game_status in {"Final", "Completed Early"}:
+        return "Final"
+    if game_status == "In Progress":
+        return game.get("status", "In Progress")
+
+    game_datetime = game.get("game_datetime")
+    if not game_datetime:
+        return game.get("status", "")
+
+    try:
+        browser_timezone = ZoneInfo(browser_timezone_name) if browser_timezone_name else ZoneInfo("America/Denver")
+    except ZoneInfoNotFoundError:
+        browser_timezone = ZoneInfo("America/Denver")
+
+    scheduled_dt = datetime.fromisoformat(game_datetime.replace("Z", "+00:00")).astimezone(browser_timezone)
     timezone_abbr = scheduled_dt.tzname() or ""
     if " " in timezone_abbr:
         timezone_abbr = "".join(word[0] for word in timezone_abbr.split() if word)
@@ -1417,7 +1407,7 @@ elif games:
         score = game['score']
         color_class = score_class(score)
         notes = build_game_notes(game)
-        game_status = html.escape(str(format_game_status(game)))
+        game_status = html.escape(str(format_game_status(game, browser_timezone)))
         notes_html = "".join(
             f"<div class='game-note-item'>{note}</div>"
             for note in notes
