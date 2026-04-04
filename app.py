@@ -1,6 +1,6 @@
 import streamlit as st
 from GetScores import ScoreGames
-from datetime import date, datetime
+from datetime import date, datetime, timedelta, timezone
 import html
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
@@ -926,12 +926,28 @@ def render_contact_page():
         unsafe_allow_html=True,
     )
 
+
+def get_user_display_timezone():
+    """Return the best available timezone for the current Streamlit client."""
+    user_timezone_name = getattr(st.context, "timezone", None)
+    if user_timezone_name:
+        try:
+            return ZoneInfo(user_timezone_name)
+        except ZoneInfoNotFoundError:
+            pass
+
+    offset_minutes = getattr(st.context, "timezone_offset", None)
+    if offset_minutes is not None:
+        return timezone(timedelta(minutes=offset_minutes))
+
+    return ZoneInfo("America/Denver")
+
+
 # ---- Query-State Bootstrap ----
 # This app uses query params instead of Streamlit multipage routing so the current
 # page/date/timezone can be shared via URL and preserved across header navigation.
 current_page = get_query_value("page", "home")
 query_date = get_query_value("date")
-browser_timezone = get_query_value("tz")
 home_inputs = build_hidden_inputs(build_query_params(page="home"))
 methodology_inputs = build_hidden_inputs(build_query_params(page="methodology"))
 contact_inputs = build_hidden_inputs(build_query_params(page="contact"))
@@ -1371,7 +1387,7 @@ def build_game_notes(game):
 
     return notes
 
-def format_game_status(game, browser_timezone_name):
+def format_game_status(game):
     """Return either live/final status text or a scheduled first-pitch time."""
     game_status = game.get("game_status", game.get("status", ""))
 
@@ -1384,12 +1400,8 @@ def format_game_status(game, browser_timezone_name):
     if not game_datetime:
         return game.get("status", "")
 
-    try:
-        browser_timezone = ZoneInfo(browser_timezone_name) if browser_timezone_name else ZoneInfo("America/Denver")
-    except ZoneInfoNotFoundError:
-        browser_timezone = ZoneInfo("America/Denver")
-
-    scheduled_dt = datetime.fromisoformat(game_datetime.replace("Z", "+00:00")).astimezone(browser_timezone)
+    display_timezone = get_user_display_timezone()
+    scheduled_dt = datetime.fromisoformat(game_datetime.replace("Z", "+00:00")).astimezone(display_timezone)
     timezone_abbr = scheduled_dt.tzname() or ""
     if " " in timezone_abbr:
         timezone_abbr = "".join(word[0] for word in timezone_abbr.split() if word)
@@ -1407,7 +1419,7 @@ elif games:
         score = game['score']
         color_class = score_class(score)
         notes = build_game_notes(game)
-        game_status = html.escape(str(format_game_status(game, browser_timezone)))
+        game_status = html.escape(str(format_game_status(game)))
         notes_html = "".join(
             f"<div class='game-note-item'>{note}</div>"
             for note in notes

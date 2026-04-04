@@ -2,7 +2,6 @@ import statsapi
 from datetime import datetime, timedelta
 import time
 import math
-from zoneinfo import ZoneInfo
 from SaveLoad import LoadScores, SaveScores
 from scores.teams import GetTeams
 from scores.records import Records
@@ -11,8 +10,6 @@ from scores.win_streaks import Winning_Streak
 from scores.starting_pitchers import Starting_Pitchers
 from scores.milestones import Milestones
 from scores.lineups import GetAllLineups
-
-DISPLAY_TIMEZONE = ZoneInfo("America/Denver")
 
 def GetScores(standings, games, gamedate_obj):
     #Run each function to get individual score components
@@ -31,13 +28,9 @@ def GetScores(standings, games, gamedate_obj):
         if game['game_type'] != 'R':
             continue
 
-        # Always display scheduled first-pitch time rather than live game state.
-        gamedatetime = datetime.fromisoformat(game['game_datetime'].replace("Z", "+00:00"))
-        local_dt = gamedatetime.astimezone(DISPLAY_TIMEZONE)
-        timezone_abbr = local_dt.tzname() or ""
-        if " " in timezone_abbr:
-            timezone_abbr = "".join(word[0] for word in timezone_abbr.split() if word)
-        status = f'{local_dt.strftime("%I:%M %p").lstrip("0")} {timezone_abbr}'.strip()
+        # Preserve the scheduled UTC timestamp so the app can format it per-user.
+        gamedatetime = game['game_datetime']
+        status = "Scheduled"
 
         #Team Definitions
         away_team_name = game['away_name']
@@ -138,6 +131,7 @@ def GetScores(standings, games, gamedate_obj):
         #Add the scores for this game to the game_scores list
         game_scores.append({
             'status': status,
+            'game_datetime': gamedatetime,
             'away_team_name': away_team_name,
             'home_team_name': home_team_name,
             'away_wins': away_wins,
@@ -199,7 +193,10 @@ def ScoreGames(gamedate, saved_scores = None, use_json = True):
     if use_json:
         for entry in saved_scores:
             if entry["gamedate"] == gamedate:
-                return entry["games"]
+                cached_games = entry["games"]
+                if all(game.get("game_datetime") for game in cached_games):
+                    return cached_games
+                break
         
     #Pull games and standings from API
     games = statsapi.schedule(date=gamedate)
