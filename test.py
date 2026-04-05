@@ -1,4 +1,5 @@
 """
+Adjust divisional scores to use min wp instead of games back
 SAVE MILESTONES
 UPDATE LINEUP CHANGES
 MVP player

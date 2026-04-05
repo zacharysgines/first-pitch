@@ -1343,13 +1343,13 @@ def build_game_notes(game):
                 f": {home_era_text} ERA (projected)"
             )
 
-    if game['away_win_streak'] >= 5:
+    if game['away_win_streak'] >= 6:
         notes.append(
             f"<strong>{html.escape(str(game['away_team_name']))}</strong>"
             f": {html.escape(str(game['away_win_streak']))} game winning streak"
         )
 
-    if game['home_win_streak'] >= 5:
+    if game['home_win_streak'] >= 6:
         notes.append(
             f"<strong>{html.escape(str(game['home_team_name']))}</strong>"
             f": {html.escape(str(game['home_win_streak']))} game winning streak"
@@ -1424,7 +1424,7 @@ elif games:
             f"<div class='game-note-item'>{note}</div>"
             for note in notes
         )
-        has_playoff_implications = game['away_playoff_imp'] >= 0.25 or game['home_playoff_imp'] >= 0.25
+        has_playoff_implications = game.get('playoff_imp_score', 0) >= 0.2
         has_division_rivals = game['max_games_back'] is not None and game['max_games_back'] <= 5
         details_html = f'<div class="game-details">{notes_html}</div>' if notes else ""
         pill_items = []
