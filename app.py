@@ -1353,8 +1353,8 @@ def load_lineups_snapshot():
         "games": games,
     }
 
-def has_lineup_snapshot_for_game(lineups_games, game):
-    """Return True only when both saved starting lineups exist for this matchup."""
+def get_lineup_announcement_note(lineups_games, game):
+    """Return the appropriate lineup announcement note for this matchup."""
     away_team = str(game.get("away_team_name", "")).strip()
     home_team = str(game.get("home_team_name", "")).strip()
 
@@ -1367,9 +1367,18 @@ def has_lineup_snapshot_for_game(lineups_games, game):
         ):
             away_lineup = lineup_game.get("away_lineup")
             home_lineup = lineup_game.get("home_lineup")
-            return bool(away_lineup) and bool(home_lineup)
+            has_away_lineup = bool(away_lineup)
+            has_home_lineup = bool(home_lineup)
 
-    return False
+            if not has_away_lineup and not has_home_lineup:
+                return "Lineups have not been announced"
+            if not has_away_lineup:
+                return f"{format_breakdown_team_name(away_team)} lineup has not been announced"
+            if not has_home_lineup:
+                return f"{format_breakdown_team_name(home_team)} lineup has not been announced"
+            return None
+
+    return None
 
 def build_game_notes(game):
     """Build the detail lines shown beneath each game card."""
@@ -1650,7 +1659,6 @@ elif games:
         color_class = score_class(score)
         notes = build_game_notes(game)
         game_status = html.escape(str(format_game_status(game)))
-        has_lineup_snapshot = has_lineup_snapshot_for_game(lineups_games_for_date, game)
         notes_html = "".join(
             f"<div class='game-note-item'>{note}</div>"
             for note in notes
@@ -1783,10 +1791,11 @@ elif games:
         breakdown_rows.sort(key=lambda row: row["value"], reverse=True)
         breakdown_rows_html = "".join(row["html"] for row in breakdown_rows)
         lineup_note_html = ""
-        if lineups_games_for_date and not has_lineup_snapshot:
+        lineup_announcement_note = get_lineup_announcement_note(lineups_games_for_date, game)
+        if lineup_announcement_note:
             lineup_note_html = (
                 '<div class="game-expand-lineup-note">'
-                'Lineups have not been announced for this game'
+                f'{lineup_announcement_note}'
                 '</div>'
             )
 
