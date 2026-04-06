@@ -2,6 +2,8 @@ import streamlit as st
 from GetScores import ScoreGames
 from datetime import date, datetime, timedelta, timezone
 import html
+import json
+from pathlib import Path
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 # Streamlit still handles layout/state, but most of the visual presentation in this
@@ -522,11 +524,28 @@ st.markdown(
             position: relative;
         }
 
+        .game-card summary {
+            list-style: none;
+            cursor: pointer;
+        }
+
+        .game-card summary::-webkit-details-marker {
+            display: none;
+        }
+
         .game-main-row {
             padding: 1rem 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
+        }
+
+        .game-card-summary {
+            position: relative;
+        }
+
+        .game-card-summary:hover {
+            background-color: #faf8f2;
         }
 
         .team-wrapper {
@@ -646,8 +665,92 @@ st.markdown(
             border: 1.5px solid #1F2A44;
         }
 
+        .game-expand-panel {
+            border-top: 1px solid #d6d6d6;
+            background: linear-gradient(180deg, #fcfbf7 0%, #f2eee3 100%);
+            padding: 1.5rem 1rem 1rem 1rem;
+        }
+
+        .game-expand-title {
+            color: #1F2A44;
+            font-size: 0.95rem;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            line-height: 1;
+        }
+
+        .game-expand-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .game-expand-lineup-note {
+            color: #8A5A24;
+            font-size: 0.88rem;
+            font-weight: 700;
+            font-style: italic;
+            line-height: 1;
+            text-align: right;
+            transform: translateY(-1px);
+        }
+
+        .game-breakdown-list {
+            margin-top: 1.75rem;
+        }
+
+        .game-breakdown-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 0.45rem 0;
+        }
+
+        .game-breakdown-row:first-child {
+            padding-top: 0;
+        }
+
+        .game-breakdown-label {
+            color: #344055;
+            font-size: 0.94rem;
+            font-weight: 600;
+        }
+
+        .game-breakdown-connector {
+            flex: 1 1 auto;
+            min-width: 1.75rem;
+            border-top: 1px solid rgba(31, 42, 68, 0.18);
+            transform: translateY(1px);
+        }
+
+        .game-breakdown-value {
+            color: #1F2A44;
+            font-size: 0.94rem;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
         /* Responsive layout for phones */
         @media (max-width: 700px) {
+            .game-expand-panel {
+                padding-top: 1.1rem;
+            }
+
+            .game-expand-header {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 0.3rem;
+            }
+
+            .game-expand-lineup-note {
+                width: 100%;
+                text-align: left;
+                transform: none;
+            }
+
             .top-banner {
                 width: 100%;
                 margin: -4.15rem 0 1rem 0;
@@ -756,6 +859,10 @@ st.markdown(
 
             .game-pill-row {
                 margin: 0 0.65rem 0.7rem 0.65rem;
+            }
+
+            .game-expand-panel {
+                padding: 1.5rem 0.85rem 0.9rem 0.85rem;
             }
         }
 
@@ -1204,6 +1311,7 @@ if current_page == "home":
 
     st.session_state.last_loaded_date = date_str
 else:
+    date_str = None
     games = []
 
 # ---- Game Card Helpers ----
@@ -1219,6 +1327,49 @@ def score_class(score):
         return "score-green"
     else:
         return "score-blue"
+
+@st.cache_data(show_spinner=False)
+def load_lineups_snapshot():
+    """Load the latest lineup snapshot saved by the lineup polling script."""
+    lineups_path = Path("scores/lineups.json")
+    if not lineups_path.exists():
+        return {"date": None, "games": {}}
+
+    try:
+        with lineups_path.open("r", encoding="utf-8") as f:
+            lineups_data = json.load(f)
+    except (OSError, json.JSONDecodeError):
+        return {"date": None, "games": {}}
+
+    if not isinstance(lineups_data, dict):
+        return {"date": None, "games": {}}
+
+    games = lineups_data.get("games")
+    if not isinstance(games, dict):
+        games = {}
+
+    return {
+        "date": lineups_data.get("date"),
+        "games": games,
+    }
+
+def has_lineup_snapshot_for_game(lineups_games, game):
+    """Return True only when both saved starting lineups exist for this matchup."""
+    away_team = str(game.get("away_team_name", "")).strip()
+    home_team = str(game.get("home_team_name", "")).strip()
+
+    for lineup_game in lineups_games.values():
+        if not isinstance(lineup_game, dict):
+            continue
+        if (
+            str(lineup_game.get("away_team", "")).strip() == away_team
+            and str(lineup_game.get("home_team", "")).strip() == home_team
+        ):
+            away_lineup = lineup_game.get("away_lineup")
+            home_lineup = lineup_game.get("home_lineup")
+            return bool(away_lineup) and bool(home_lineup)
+
+    return False
 
 def build_game_notes(game):
     """Build the detail lines shown beneath each game card."""
@@ -1343,13 +1494,13 @@ def build_game_notes(game):
                 f": {home_era_text} ERA (projected)"
             )
 
-    if game['away_win_streak'] >= 6:
+    if game['away_win_streak'] >= 5:
         notes.append(
             f"<strong>{html.escape(str(game['away_team_name']))}</strong>"
             f": {html.escape(str(game['away_win_streak']))} game winning streak"
         )
 
-    if game['home_win_streak'] >= 6:
+    if game['home_win_streak'] >= 5:
         notes.append(
             f"<strong>{html.escape(str(game['home_team_name']))}</strong>"
             f": {html.escape(str(game['home_win_streak']))} game winning streak"
@@ -1407,9 +1558,88 @@ def format_game_status(game):
         timezone_abbr = "".join(word[0] for word in timezone_abbr.split() if word)
     return f'{scheduled_dt.strftime("%I:%M %p").lstrip("0")} {timezone_abbr}'.strip()
 
+def format_breakdown_score(value):
+    """Render scoring-component contributions with a consistent card-friendly format."""
+    return f"{value:.1f}"
+
+def format_breakdown_team_name(team_name):
+    """Shorten full MLB team names for the expanded scoring breakdown."""
+    team_text = str(team_name).strip()
+    if not team_text:
+        return ""
+
+    words = team_text.split()
+    if len(words) >= 2 and " ".join(words[-2:]) in {"White Sox", "Red Sox", "Blue Jays"}:
+        return html.escape(" ".join(words[-2:]))
+
+    return html.escape(words[-1])
+
+def build_breakdown_row(label, value):
+    """Build one breakdown row and keep the numeric value available for sorting."""
+    row_html = (
+        '<div class="game-breakdown-row">'
+        f'<div class="game-breakdown-label">{label}</div>'
+        '<div class="game-breakdown-connector"></div>'
+        f'<div class="game-breakdown-value">{format_breakdown_score(value)}</div>'
+        '</div>'
+    )
+    return {"value": value, "html": row_html}
+
+def format_pitcher_breakdown_label(starter, era, era_source):
+    """Build the pitcher label used in the scoring breakdown rows."""
+    if starter is None or era is None:
+        return None
+
+    starter_text = html.escape(str(starter))
+    era_text = html.escape(f"{float(era):.2f}")
+    if era_source == "projected":
+        return f"{starter_text}: {era_text} ERA (projected)"
+    return f"{starter_text}: {era_text} ERA"
+
+def format_win_streak_breakdown_label(team_name, win_streak):
+    """Build the win-streak label used in the scoring breakdown rows."""
+    team_text = format_breakdown_team_name(team_name)
+    streak_value = 0 if win_streak is None else win_streak
+    streak_text = html.escape(str(streak_value))
+    return f"{team_text}: {streak_text} game winning streak"
+
+def format_team_strength_breakdown_label(team_name):
+    """Build the team-strength label used in the scoring breakdown rows."""
+    team_text = format_breakdown_team_name(team_name)
+    return f"{team_text} team strength"
+
+def format_team_difference_breakdown_label():
+    """Build the team-difference label used in the scoring breakdown rows."""
+    return "Team difference"
+
+def format_division_score_breakdown_label():
+    """Build the division-score label used in the scoring breakdown rows."""
+    return "Division score"
+
+def format_wild_card_score_breakdown_label():
+    """Build the wild-card-score label used in the scoring breakdown rows."""
+    return "Matchup strength"
+
+def format_milestone_breakdown_label(team_name):
+    """Build the milestone label used in the scoring breakdown rows."""
+    team_text = format_breakdown_team_name(team_name)
+    return f"{team_text} milestones"
+
+def format_prospect_breakdown_label(team_name):
+    """Build the debut label used in the scoring breakdown rows."""
+    team_text = format_breakdown_team_name(team_name)
+    return f"{team_text} debuts"
+
 # ---- Final Page Render ----
 # At this point all shared state/header/date-selection work is done. The remaining
 # logic is just "which page should render" plus the home-page game-card loop.
+lineups_snapshot = load_lineups_snapshot()
+lineups_games_for_date = (
+    lineups_snapshot.get("games", {})
+    if current_page == "home" and lineups_snapshot.get("date") == date_str
+    else {}
+)
+
 if current_page == "methodology":
     render_methodology_page()
 elif current_page == "contact":
@@ -1420,6 +1650,7 @@ elif games:
         color_class = score_class(score)
         notes = build_game_notes(game)
         game_status = html.escape(str(format_game_status(game)))
+        has_lineup_snapshot = has_lineup_snapshot_for_game(lineups_games_for_date, game)
         notes_html = "".join(
             f"<div class='game-note-item'>{note}</div>"
             for note in notes
@@ -1434,10 +1665,146 @@ elif games:
             pill_items.append('<span class="game-pill game-pill-division">Division Rivals</span>')
         pill_html = f'<div class="game-pill-row">{"".join(pill_items)}</div>' if pill_items else ""
 
+        unadjusted_score = game.get('unadjusted_score', 0) or 0
+        if unadjusted_score > 0:
+            away_playoff_component = score * (game.get('away_playoff_imp', 0) / unadjusted_score)
+            home_playoff_component = score * (game.get('home_playoff_imp', 0) / unadjusted_score)
+            away_wp_component = score * (game.get('away_wp_score', 0) / unadjusted_score)
+            home_wp_component = score * (game.get('home_wp_score', 0) / unadjusted_score)
+            team_diff_component = score * (game.get('team_diff', 0) / unadjusted_score)
+            division_component = score * (game.get('division_score', 0) / unadjusted_score)
+            wild_card_component = score * (game.get('min_wp_score', 0) / unadjusted_score)
+            away_milestone_component = score * (game.get('away_milestone_score', 0) / unadjusted_score)
+            home_milestone_component = score * (game.get('home_milestone_score', 0) / unadjusted_score)
+            away_prospect_component = score * (game.get('away_prospect_score', 0) / unadjusted_score)
+            home_prospect_component = score * (game.get('home_prospect_score', 0) / unadjusted_score)
+            away_win_streak_component = score * (game.get('away_win_streak_score', 0) / unadjusted_score)
+            home_win_streak_component = score * (game.get('home_win_streak_score', 0) / unadjusted_score)
+            away_era_component = score * (game.get('away_era_score', 0) / unadjusted_score)
+            home_era_component = score * (game.get('home_era_score', 0) / unadjusted_score)
+        else:
+            away_playoff_component = 0
+            home_playoff_component = 0
+            away_wp_component = 0
+            home_wp_component = 0
+            team_diff_component = 0
+            division_component = 0
+            wild_card_component = 0
+            away_milestone_component = 0
+            home_milestone_component = 0
+            away_prospect_component = 0
+            home_prospect_component = 0
+            away_win_streak_component = 0
+            home_win_streak_component = 0
+            away_era_component = 0
+            home_era_component = 0
+
+        breakdown_rows = [
+            build_breakdown_row(
+                f'Playoff implications for {format_breakdown_team_name(game["away_team_name"])}',
+                away_playoff_component,
+            ),
+            build_breakdown_row(
+                f'Playoff implications for {format_breakdown_team_name(game["home_team_name"])}',
+                home_playoff_component,
+            ),
+            build_breakdown_row(
+                format_team_strength_breakdown_label(game["away_team_name"]),
+                away_wp_component,
+            ),
+            build_breakdown_row(
+                format_team_strength_breakdown_label(game["home_team_name"]),
+                home_wp_component,
+            ),
+            build_breakdown_row(
+                format_team_difference_breakdown_label(),
+                team_diff_component,
+            ),
+            build_breakdown_row(
+                format_division_score_breakdown_label(),
+                division_component,
+            ),
+            build_breakdown_row(
+                format_wild_card_score_breakdown_label(),
+                wild_card_component,
+            ),
+            build_breakdown_row(
+                format_milestone_breakdown_label(game["away_team_name"]),
+                away_milestone_component,
+            ),
+            build_breakdown_row(
+                format_milestone_breakdown_label(game["home_team_name"]),
+                home_milestone_component,
+            ),
+            build_breakdown_row(
+                format_prospect_breakdown_label(game["away_team_name"]),
+                away_prospect_component,
+            ),
+            build_breakdown_row(
+                format_prospect_breakdown_label(game["home_team_name"]),
+                home_prospect_component,
+            ),
+            build_breakdown_row(
+                format_win_streak_breakdown_label(game["away_team_name"], game.get("away_win_streak", 0)),
+                away_win_streak_component,
+            ),
+            build_breakdown_row(
+                format_win_streak_breakdown_label(game["home_team_name"], game.get("home_win_streak", 0)),
+                home_win_streak_component,
+            ),
+        ]
+
+        away_pitcher_label = format_pitcher_breakdown_label(
+            game.get('away_starter'),
+            game.get('away_era'),
+            game.get('away_era_source'),
+        )
+        if away_pitcher_label:
+            breakdown_rows.append(
+                build_breakdown_row(
+                    away_pitcher_label,
+                    away_era_component,
+                )
+            )
+
+        home_pitcher_label = format_pitcher_breakdown_label(
+            game.get('home_starter'),
+            game.get('home_era'),
+            game.get('home_era_source'),
+        )
+        if home_pitcher_label:
+            breakdown_rows.append(
+                build_breakdown_row(
+                    home_pitcher_label,
+                    home_era_component,
+                )
+            )
+
+        breakdown_rows.sort(key=lambda row: row["value"], reverse=True)
+        breakdown_rows_html = "".join(row["html"] for row in breakdown_rows)
+        lineup_note_html = ""
+        if lineups_games_for_date and not has_lineup_snapshot:
+            lineup_note_html = (
+                '<div class="game-expand-lineup-note">'
+                'Lineups have not been announced for this game'
+                '</div>'
+            )
+
         # Build one self-contained HTML card so the CSS can control layout the
         # same way a handwritten HTML page would.
+        expanded_html = (
+            '<div class="game-expand-panel">'
+            '<div class="game-expand-header">'
+            '<div class="game-expand-title">Scoring Breakdown</div>'
+            f'{lineup_note_html}'
+            '</div>'
+            f'<div class="game-breakdown-list">{breakdown_rows_html}</div>'
+            '</div>'
+        )
+
         card_html = (
-            '<div class="game-card">'
+            '<details class="game-card">'
+            '<summary class="game-card-summary">'
             '<div class="game-main-row">'
             '<div class="team-wrapper">'
             f'<div class="game-time">{game_status}</div>'
@@ -1458,7 +1825,9 @@ elif games:
             '</div>'
             f'{details_html}'
             f'{pill_html}'
-            '</div>'
+            '</summary>'
+            f'{expanded_html}'
+            '</details>'
         )
         st.markdown(card_html, unsafe_allow_html=True)
 else:

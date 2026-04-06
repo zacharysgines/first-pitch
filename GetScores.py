@@ -48,8 +48,14 @@ def GetScores(standings, games, gamedate_obj):
         #Win Streak
         away_win_streak = away_team['winning_streak']
         home_win_streak = home_team['winning_streak']
-        away_win_streak_score = 0.002 * away_win_streak**2 - 0.0047 * away_win_streak + 0.0083
-        home_win_streak_score = 0.002 * home_win_streak**2 - 0.0047 * home_win_streak + 0.0083
+        if away_win_streak == 0:
+            away_win_streak_score = 0
+        else:
+            away_win_streak_score = 0.002 * away_win_streak**2 - 0.0047 * away_win_streak + 0.0083
+        if home_win_streak == 0:
+            home_win_streak_score = 0
+        else:
+            home_win_streak_score = 0.002 * home_win_streak**2 - 0.0047 * home_win_streak + 0.0083
         win_streak_score = away_win_streak_score + home_win_streak_score
         #Winning Percentage
         away_wp = away_team['win_perc']
@@ -139,24 +145,34 @@ def GetScores(standings, games, gamedate_obj):
             'away_losses': away_losses,
             'home_losses': home_losses,            
             'away_wp': away_wp,
-            'home_wp': home_wp,            
+            'home_wp': home_wp,
+            'away_wp_score': away_wp_score,  
+            'home_wp_score': home_wp_score,          
             'away_starter': away_starter,
             'home_starter': home_starter,
             'away_era': away_era,
             'home_era': home_era,
             'away_era_source': away_era_source,
             'home_era_source': home_era_source,
+            'home_era_score': home_era_score,
+            'away_era_score': away_era_score,
             'away_playoff_imp': away_playoff_imp_score,
             'home_playoff_imp': home_playoff_imp_score,
             'away_win_streak': away_win_streak,
             'home_win_streak': home_win_streak,
+            'away_win_streak_score': away_win_streak_score,
+            'home_win_streak_score': home_win_streak_score,
             'max_games_back': max_games_back,
             'away_career_milestones': away_team['milestones']['career'],
             'away_season_milestones': away_team['milestones']['season'],
             'home_career_milestones': home_team['milestones']['career'],
             'home_season_milestones': home_team['milestones']['season'],
+            'away_milestone_score': away_milestone_score,
+            'home_milestone_score': home_milestone_score,
             'away_debuts': away_team['debuts'],
             'home_debuts': home_team['debuts'],
+            'away_prospect_score': away_prospect_score,
+            'home_prospect_score': home_prospect_score,
             'playoff_imp_score': playoff_imp_score,
             'win_streak_score': win_streak_score,                        
             'wp_score': wp_score,
