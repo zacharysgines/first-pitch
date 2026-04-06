@@ -747,8 +747,13 @@ st.markdown(
 
             .game-expand-lineup-note {
                 width: 100%;
+                margin-top: 0.35rem;
                 text-align: left;
                 transform: none;
+            }
+
+            .game-breakdown-list {
+                margin-top: 1.45rem;
             }
 
             .top-banner {
