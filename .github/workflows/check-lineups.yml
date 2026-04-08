@@ -2,8 +2,9 @@ name: Check Lineups
 
 on:
   schedule:
-    - cron: "37 16-23 * * *"
-    - cron: "37 0-1 * * *"
+    - cron: "30 12 * * *"
+    - cron: "0,30 13-23 * * *"
+    - cron: "0,30 0-1 * * *"
   workflow_dispatch:
 
 concurrency:
