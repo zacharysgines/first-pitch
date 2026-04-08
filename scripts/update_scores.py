@@ -1,6 +1,7 @@
 from datetime import date, datetime, timedelta
 import sys
 from pathlib import Path
+import json
 
 ROOT_DIR = Path(__file__).resolve().parents[1]  
 sys.path.insert(0, str(ROOT_DIR))
@@ -23,6 +24,13 @@ def update_scores():
             kept_scores.append(entry)
 
     SaveScores(kept_scores)
+
+    LINEUPS_PATH = Path("scores/lineups.json")
+
+    LINEUPS_PATH.write_text(
+        json.dumps({"date": None, "games": {}}, indent=4),
+        encoding="utf-8",
+    )
 
     start_str = today.strftime("%m/%d/%Y")
     end_str = end_date.strftime("%m/%d/%Y")

@@ -24,6 +24,8 @@ from datetime import datetime, timedelta
 import json
 import math
 import hashlib
+from pathlib import Path
+
 
 # def LoadProjections():
 #     #Load projections.csv
@@ -63,8 +65,19 @@ import hashlib
     
 #     return teams
 
-# gamedate = '07/11/2025'
-# date_obj = datetime.strptime(gamedate, "%m/%d/%Y")
+def GetProspects():
+    PROSPECTS_CSV = 'scores\prospects.csv'
+
+    try:
+        df = pd.read_csv(PROSPECTS_CSV, encoding="utf-8")
+    except UnicodeDecodeError:
+        df = pd.read_csv(PROSPECTS_CSV, encoding="cp1252")
+    prospects = df.to_dict(orient='records')
+
+    return prospects
+
+gamedate = '07/11/2025'
+date_obj = datetime.strptime(gamedate, "%m/%d/%Y")
 
 # games = statsapi.schedule(gamedate)
 # standings = statsapi.standings_data(date=gamedate)
@@ -80,3 +93,13 @@ print('Prospect Score:', new_prospect_score)
 print('Unadjusted Score:', new_unadjusted_score)
 print('Score:', score)
 
+
+prospects = GetProspects()
+
+for prospect in prospects:
+    if prospect['Name'] == 'Munetaka Murakami':
+        print(prospect)
+        rank = prospect['Rank']
+        print(rank)
+        if pd.isna(rank):
+            print(prospect)

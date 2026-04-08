@@ -131,18 +131,21 @@ def GetMilestones(player_id, teamname, player_name, teams, player_type, mileston
         }
         for prospect in prospects:
             if prospect['Name'] == player_name:
-                rank = CleanProspectValue(prospect['Rank'])
-                org_rank = CleanProspectValue(prospect['OrgRank'])
-                pos_rank = CleanProspectValue(prospect['PosRank'])
+                rank = prospect['Rank']
+                org_rank = prospect['OrgRank']
+                pos_rank = prospect['PosRank']
                 fv = prospect['FV']
 
-                player['org'] = CleanProspectValue(prospect['Org'])
-                player['pos'] = CleanProspectValue(prospect['Pos']) or player_position
-                player['org_rank'] = org_rank
-                player['pos_rank'] = pos_rank                
-                if rank is not None:
-                    player['mlb_rank'] = rank                                        
-                
+                player['org'] = prospect['Org']
+                player['pos'] = prospect['Pos']
+
+                if pd.notna(rank):
+                    player['mlb_rank'] = rank
+                if pd.notna(org_rank):
+                    player['org_rank'] = org_rank
+                if pd.notna(pos_rank):
+                    player['pos_rank'] = pos_rank                
+                                
                 player['score'] = .0094 * math.exp(.0576 * fv)
         
         teamname['debuts'].append(player)                        
