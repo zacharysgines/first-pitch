@@ -11,6 +11,62 @@ from scores.starting_pitchers import Starting_Pitchers
 from scores.milestones import Milestones
 from scores.lineups import GetAllLineups
 
+def ScoreGames(gamedate, saved_scores = None, use_json = True):
+    #Get gamedate as an object
+    gamedate_obj = datetime.strptime(gamedate, "%m/%d/%Y")
+    current_year = datetime.now().year
+
+    #If the month of the current gamedate is between November and February, we don't need to call the API
+    if gamedate_obj.month in (11, 12, 1, 2) or gamedate_obj.year not in (current_year, current_year - 1):
+        return []
+    
+    #If we don't already have the existing scores from the .json file, load them.
+    if saved_scores is None:
+        saved_scores = LoadScores()
+
+    #Check if this date already has an entry in the .json file. If so, get the scores from there instead of calculating them
+    #If 'use_json = false', we're just going to recompute this day instead of getting those scores from the .json file
+    if use_json:
+        for entry in saved_scores:
+            if entry["gamedate"] == gamedate:
+                cached_games = entry["games"]
+                if all(game.get("game_datetime") for game in cached_games):
+                    return cached_games
+                break
+        
+    #Pull games from API
+    games = statsapi.schedule(date=gamedate)
+    if not games:
+        return []
+    
+    #Go through each game for this date. If none of them are regular season games, don't get the scores for this date.
+    rs_games = False
+    for game in games:
+        if game['game_type'] == 'R':
+            rs_games = True
+            break
+    if rs_games == False:
+        return []
+    
+    #If there are games on this day, get the standings for this day
+    standings = statsapi.standings_data(date=gamedate)
+
+    #Run GetScores() to get the scoring for each game this day
+    game_scores = GetScores(standings, games, gamedate_obj)
+
+    #Replace an existing entry for this date so recomputes do not create duplicates.
+    saved_scores[:] = [entry for entry in saved_scores if entry["gamedate"] != gamedate]
+
+    #Insert all the sorted scores for this day and the date into all_scores and save those scores to the .json file
+    saved_scores.insert(0, {
+        'gamedate': gamedate,
+        'games': game_scores
+    })
+
+    SaveScores(saved_scores)
+
+    return game_scores
+
 def GetScores(standings, games, gamedate_obj):
     #Run each function to get individual score components
     GetAllLineups(games)
@@ -21,7 +77,7 @@ def GetScores(standings, games, gamedate_obj):
     Starting_Pitchers(games, teams, gamedate_obj)
     Milestones(games, gamedate_obj, teams)
 
-    #Get a list to put each game's scores into
+    #Get a list to put each game's scoring info into
     game_scores = []
 
     for game in games:
@@ -29,6 +85,7 @@ def GetScores(standings, games, gamedate_obj):
             continue
 
         # Preserve the scheduled UTC timestamp so the app can format it per-user.
+        gameid = game['game_id']
         gamedatetime = game['game_datetime']
         status = "Scheduled"
 
@@ -136,6 +193,7 @@ def GetScores(standings, games, gamedate_obj):
                                                                                     #Adjust higher to get less 100s, lower to get more 100s) 
         #Add the scores for this game to the game_scores list
         game_scores.append({
+            'game_id': gameid,
             'status': status,
             'game_datetime': gamedatetime,
             'away_team_name': away_team_name,
@@ -191,59 +249,6 @@ def GetScores(standings, games, gamedate_obj):
 
     return game_scores
 
-def ScoreGames(gamedate, saved_scores = None, use_json = True):
-    #Get gamedate as an object
-    gamedate_obj = datetime.strptime(gamedate, "%m/%d/%Y")
-    current_year = datetime.now().year
-
-    #If the month of the current gamedate is between November and February, we don't need to call the API
-    if gamedate_obj.month in (11, 12, 1, 2) or gamedate_obj.year not in (current_year, current_year - 1):
-        return []
-    
-    #Load existing scores unless the caller already provided them.
-    # `use_json=False` should bypass the cached return path, not wipe the file.
-    if saved_scores is None:
-        saved_scores = LoadScores()
-
-    #Check if this date already has an entry in the .json file. If so, get the scores from there instead of calculating them
-    if use_json:
-        for entry in saved_scores:
-            if entry["gamedate"] == gamedate:
-                cached_games = entry["games"]
-                if all(game.get("game_datetime") for game in cached_games):
-                    return cached_games
-                break
-        
-    #Pull games and standings from API
-    games = statsapi.schedule(date=gamedate)
-    if not games:
-        return []
-    
-    rs_games = False
-    for game in games:
-        if game['game_type'] == 'R':
-            rs_games = True
-            break
-    if rs_games == False:
-        return []
-    
-    standings = statsapi.standings_data(date=gamedate)
-
-    game_scores = GetScores(standings, games, gamedate_obj)
-
-    #Replace an existing entry for this date so recomputes do not create duplicates.
-    saved_scores[:] = [entry for entry in saved_scores if entry["gamedate"] != gamedate]
-
-    #Insert all the sorted scores for this day and the date into all_scores and save those scores to the .json file
-    saved_scores.insert(0, {
-        'gamedate': gamedate,
-        'games': game_scores
-    })
-
-    SaveScores(saved_scores)
-
-    return game_scores
-
 def GetAllScores(starting_date, ending_date):
     saved_scores = LoadScores()
 
@@ -279,5 +284,138 @@ def GetAllScores(starting_date, ending_date):
         print(i, 'out of', number_of_days, 'sets of scores calculated')
         print(f"Time elapsed: {hours:02}:{minutes:02}:{seconds:02}")
 
+def UpdateScores(gamedate, games, games_to_update):
+    #Get scores from game_scores.json
+    saved_scores = LoadScores()
+    gamedate_obj = datetime.strptime(gamedate, "%m/%d/%Y")
+
+    #Find todays entry in game_scores
+    todays_entry = None
+    for entry in saved_scores:
+        if entry["gamedate"] == gamedate:
+            todays_entry = entry
+            break
+
+    if todays_entry is None:
+        return None
+
+    #Run each function to get individual score components
+    standings = statsapi.standings_data(date=gamedate)
+    teams = GetTeams(standings)
+    Starting_Pitchers(games, teams, gamedate_obj)
+    Milestones(games, gamedate_obj, teams)
+
+    todays_games = todays_entry["games"]
+    scheduled_games = {}
+
+    for scheduled_game in games:
+        if scheduled_game['game_type'] != 'R':
+            continue
+
+        scheduled_games[scheduled_game['game_id']] = scheduled_game
+
+    for game in todays_games:
+        game_updated = False
+        game_id = game.get('game_id')
+        scheduled_game = scheduled_games.get(game_id)
+        game_changes = games_to_update.get(game_id, {})
+
+        if scheduled_game:
+            away_team_name = scheduled_game['away_name']
+            home_team_name = scheduled_game['home_name']
+        else:
+            away_team_name = game['away_team_name']
+            home_team_name = game['home_team_name']
+
+        if game_changes.get("away") and away_team_name in teams:
+            away_team = teams[away_team_name]
+            if away_team.get('pitcher_name'):
+                away_starter = away_team['pitcher_name']
+                away_era = away_team['pitcher_era']
+                away_era_source = away_team['era_source']
+                away_era_score = max(0,  -.012 * away_era**3 + 0.1904 * away_era**2 - 1.008 * away_era + 1.8161)
+            else:
+                away_starter = None
+                away_era = None
+                away_era_source = None
+                away_era_score = 0
+
+            away_milestone_score = 0
+            for scope in ('career', 'season'):
+                for milestone in away_team['milestones'][scope]:
+                    away_milestone_score += milestone['milestone_score']
+
+            away_prospect_score = 0
+            for prospect in away_team['debuts']:
+                away_prospect_score += prospect['score']
+
+            game['away_starter'] = away_starter
+            game['away_era'] = away_era
+            game['away_era_source'] = away_era_source
+            game['away_era_score'] = away_era_score
+            game['away_career_milestones'] = away_team['milestones']['career']
+            game['away_season_milestones'] = away_team['milestones']['season']
+            game['away_milestone_score'] = away_milestone_score
+            game['away_debuts'] = away_team['debuts']
+            game['away_prospect_score'] = away_prospect_score
+            game_updated = True
+
+        if game_changes.get("home") and home_team_name in teams:
+            home_team = teams[home_team_name]
+            if home_team.get('pitcher_name'):
+                home_starter = home_team['pitcher_name']
+                home_era = home_team['pitcher_era']
+                home_era_source = home_team['era_source']
+                home_era_score = max(0, -.012 * home_era**3 + 0.1904 * home_era**2 - 1.008 * home_era + 1.8161)
+            else:
+                home_starter = None
+                home_era = None
+                home_era_source = None
+                home_era_score = 0
+
+            home_milestone_score = 0
+            for scope in ('career', 'season'):
+                for milestone in home_team['milestones'][scope]:
+                    home_milestone_score += milestone['milestone_score']
+
+            home_prospect_score = 0
+            for prospect in home_team['debuts']:
+                home_prospect_score += prospect['score']
+
+            game['home_starter'] = home_starter
+            game['home_era'] = home_era
+            game['home_era_source'] = home_era_source
+            game['home_era_score'] = home_era_score
+            game['home_career_milestones'] = home_team['milestones']['career']
+            game['home_season_milestones'] = home_team['milestones']['season']
+            game['home_milestone_score'] = home_milestone_score
+            game['home_debuts'] = home_team['debuts']
+            game['home_prospect_score'] = home_prospect_score
+            game_updated = True
+
+        if not game_updated:
+            continue
+
+        game['era_score'] = game['away_era_score'] + game['home_era_score']
+        game['milestone_score'] = game['away_milestone_score'] + game['home_milestone_score']
+        game['prospect_score'] = game['away_prospect_score'] + game['home_prospect_score']
+        game['unadjusted_score'] = (
+            game['playoff_imp_score']
+            + game['win_streak_score']
+            + game['wp_score']
+            + game['team_diff']
+            + game['era_score']
+            + game['division_score']
+            + game['milestone_score']
+            + game['prospect_score']
+            + game['min_wp_score']
+        )
+        game['score'] = min(100, 100*((math.log(1 + game['unadjusted_score'])) / (math.log(3))))
+
+    todays_games.sort(key=lambda x: x['score'], reverse=True)
+    SaveScores(saved_scores)
+
+    return todays_games
+
 #GetAllScores('08/21/2026', '12/31/2026')
-#ScoreGames('07/11/2025', use_json=False)
+#ScoreGames('04/08/2026', use_json=False)

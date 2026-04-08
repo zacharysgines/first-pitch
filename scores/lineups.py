@@ -144,22 +144,20 @@ def GetAllLineups(games):
     return None
 
 
-def LineupsChanged(games):
+def LineupsChanged(games, gamedate):
+    #Get what we currently have saved in lineups.json
     saved_lineups = LoadSavedLineups()
     saved_games = saved_lineups.get("games", {})
     lineup_date = saved_lineups.get("date")
     changed = False
+    games_to_update = {}
 
-    first_game_datetime = games[0].get("game_datetime") if games else None
-    if not first_game_datetime:
-        return False
+    #If the date in lineups.json is not today, then don't check the lineups. 
+    if lineup_date != gamedate:
+        print("lineups.json does not have the correct date. Check failed.")
+        return {}
 
-    scheduled_date = datetime.fromisoformat(first_game_datetime.replace("Z", "+00:00")).astimezone(DISPLAY_TIMEZONE).date()
-    scheduled_date_str = scheduled_date.strftime("%m/%d/%Y")
-
-    if lineup_date != scheduled_date_str:
-        return False
-
+    #For each game, get the game's start time. If that start time has passed, don't check if this lineup has changed. Otherwise, check.
     for game in games:
         game_datetime = game.get("game_datetime")
         if game_datetime:
@@ -170,16 +168,35 @@ def LineupsChanged(games):
         gameid = game["game_id"]
         game_key = f"game_{gameid}"
 
+        #Get the updated hash for this game
         current_game_data = GetLineup(game)
         current_hash = current_game_data["lineup_hash"]
 
-        saved_hash = saved_games.get(game_key, {}).get("lineup_hash")
+        #Get the hash for this game saved in lineups.json
+        saved_game_data = saved_games.get(game_key, {})
+        saved_hash = saved_game_data.get("lineup_hash")
 
+        #If the hash's don't match, update lineups.json with the new game data.
         if current_hash != saved_hash:
+            away_changed = (
+                current_game_data.get("away_lineup") != saved_game_data.get("away_lineup")
+                or current_game_data.get("away_pitcher") != saved_game_data.get("away_pitcher")
+            )
+            home_changed = (
+                current_game_data.get("home_lineup") != saved_game_data.get("home_lineup")
+                or current_game_data.get("home_pitcher") != saved_game_data.get("home_pitcher")
+            )
+
+            games_to_update[gameid] = {
+                "away": away_changed,
+                "home": home_changed
+            }
+
             saved_games[game_key] = current_game_data
             changed = True
 
+    #If any of the lineups have changed, save the new lineups in lineups.json
     if changed:
-        SaveLineups(scheduled_date_str, saved_games)
+        SaveLineups(gamedate, saved_games)
 
-    return changed
+    return games_to_update

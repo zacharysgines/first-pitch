@@ -1,22 +1,27 @@
 from datetime import date
 import sys
 from pathlib import Path
+import statsapi
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT_DIR))
 
-from GetScores import ScoreGames
+from GetScores import UpdateScores
 from scores.lineups import LineupsChanged
-import statsapi
 
 def check_lineups():
+    #Get todays date as an object
     today = date.today()
-    gamedate = today.strftime("%m/%d/%Y")
-    games = statsapi.schedule(date=gamedate)
+    today_str = today.strftime("%m/%d/%Y")
 
+    #Get all the games for today
+    games = statsapi.schedule(date=today_str)
+
+    #If there are no games, don't do anything
     if not games:
         return []
     
+    #If none of the games today are regular season games, don't do anything
     rs_games = False
     for game in games:
         if game['game_type'] == 'R':
@@ -25,9 +30,11 @@ def check_lineups():
     if rs_games == False:
         return []
 
-    if LineupsChanged(games):
-        print("Lineups have changed. Rerunning current days games.")
-        ScoreGames(gamedate, use_json=False)
+    #If there are games today, run LineupsChanged() to see if any of the lineups have changed. If they have, run UpdateScores with the list of games that have changed.
+    games_to_update = LineupsChanged(games, today_str)
+    if games_to_update:
+        print("Lineups have changed. Updating current days games.")
+        UpdateScores(today_str, games, games_to_update)
     else:
         print("Lineups have not changed.")
 
