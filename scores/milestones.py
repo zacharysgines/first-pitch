@@ -4,7 +4,6 @@ from pathlib import Path
 import statsapi
 import math
 import pandas as pd
-from scores.lineups import GetSavedLineupsForDate
 
 #Load milestone_records.json
 with open("scores/milestone_records.json", "r") as f:
@@ -34,6 +33,20 @@ pitcher_milestone_stat_list = {
     "strikeouts":      {"margin": 21, 'box_name': 'strikeOuts'},
 }
 
+def CleanProspectValue(value):
+    if pd.isna(value):
+        return None
+    return value
+
+def LoadLineups():
+    with open("scores/lineups.json", "r") as f:
+        saved_lineups = json.load(f)
+
+    if isinstance(saved_lineups, dict) and "games" in saved_lineups:
+        return saved_lineups["games"]
+
+    return saved_lineups
+
 def Milestones(games, date_obj, teams):
     #Initialize milestones dictionary
     for team in teams:
@@ -47,7 +60,7 @@ def Milestones(games, date_obj, teams):
     if date_obj.date() > datetime.today().date():
         return None
 
-    saved_lineups = GetSavedLineupsForDate(date_obj.strftime("%m/%d/%Y"))
+    saved_lineups = LoadLineups()
     
     for game in games:
         away_team = teams[game['away_name']]
@@ -124,8 +137,7 @@ def GetMilestones(player_id, teamname, player_name, teams, player_type, mileston
                 fv = prospect['FV']
 
                 player['org'] = prospect['Org']
-                if prospect['Pos'] != 'UTIL':
-                    player['pos'] = prospect['Pos']
+                player['pos'] = prospect['Pos']
 
                 if pd.notna(rank):
                     player['mlb_rank'] = rank
