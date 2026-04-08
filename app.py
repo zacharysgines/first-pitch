@@ -1333,8 +1333,7 @@ def score_class(score):
     else:
         return "score-blue"
 
-@st.cache_data(show_spinner=False)
-def load_lineups_snapshot(_cache_buster=None):
+def load_lineups_snapshot():
     """Load the latest lineup snapshot saved by the lineup polling script."""
     lineups_path = Path("scores/lineups.json")
     if not lineups_path.exists():
@@ -1358,33 +1357,10 @@ def load_lineups_snapshot(_cache_buster=None):
         "games": games,
     }
 
-def get_lineups_snapshot():
-    """Invalidate the cached lineup snapshot when the JSON file changes on disk."""
-    lineups_path = Path("scores/lineups.json")
-    cache_buster = None
-    try:
-        cache_buster = lineups_path.stat().st_mtime_ns
-    except OSError:
-        cache_buster = None
-    return load_lineups_snapshot(cache_buster)
-
 def get_lineup_announcement_note(lineups_games, game):
     """Return the appropriate lineup announcement note for this matchup."""
     away_team = str(game.get("away_team_name", "")).strip()
     home_team = str(game.get("home_team_name", "")).strip()
-    game_datetime = game.get("game_datetime")
-
-    if game_datetime:
-        try:
-            scheduled_date = (
-                datetime.fromisoformat(game_datetime.replace("Z", "+00:00"))
-                .astimezone(get_user_display_timezone())
-                .date()
-            )
-            if scheduled_date > datetime.now(get_user_display_timezone()).date():
-                return "Lineups have not been announced"
-        except ValueError:
-            pass
 
     for lineup_game in lineups_games.values():
         if not isinstance(lineup_game, dict):
@@ -1406,7 +1382,7 @@ def get_lineup_announcement_note(lineups_games, game):
                 return f"{format_breakdown_team_name(home_team)} lineup has not been announced"
             return None
 
-    return None
+    return "Lineups have not been announced"
 
 def build_game_notes(game):
     """Build the detail lines shown beneath each game card."""
@@ -1670,7 +1646,7 @@ def format_prospect_breakdown_label(team_name):
 # ---- Final Page Render ----
 # At this point all shared state/header/date-selection work is done. The remaining
 # logic is just "which page should render" plus the home-page game-card loop.
-lineups_snapshot = get_lineups_snapshot()
+lineups_snapshot = load_lineups_snapshot()
 lineups_games_for_date = (
     lineups_snapshot.get("games", {})
     if current_page == "home" and lineups_snapshot.get("date") == date_str
