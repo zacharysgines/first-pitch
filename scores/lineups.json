@@ -1405,7 +1405,134 @@
             "away_team": "Colorado Rockies",
             "home_team": "San Diego Padres",
             "away_lineup": [],
-            "home_lineup": [],
+            "home_lineup": [
+                {
+                    "id": 666023,
+                    "name": "Freddy Fermin",
+                    "position": "C",
+                    "stats": {
+                        "runs": 4,
+                        "doubles": 2,
+                        "triples": 0,
+                        "home_runs": 0,
+                        "hits": 4,
+                        "steals": 0,
+                        "rbi": 1
+                    }
+                },
+                {
+                    "id": 592206,
+                    "name": "Nick Castellanos",
+                    "position": "DH",
+                    "stats": {
+                        "runs": 1,
+                        "doubles": 3,
+                        "triples": 0,
+                        "home_runs": 0,
+                        "hits": 6,
+                        "steals": 0,
+                        "rbi": 5
+                    }
+                },
+                {
+                    "id": 701538,
+                    "name": "Jackson Merrill",
+                    "position": "CF",
+                    "stats": {
+                        "runs": 7,
+                        "doubles": 2,
+                        "triples": 0,
+                        "home_runs": 2,
+                        "hits": 9,
+                        "steals": 2,
+                        "rbi": 7
+                    }
+                },
+                {
+                    "id": 657757,
+                    "name": "Gavin Sheets",
+                    "position": "LF",
+                    "stats": {
+                        "runs": 4,
+                        "doubles": 4,
+                        "triples": 0,
+                        "home_runs": 0,
+                        "hits": 7,
+                        "steals": 1,
+                        "rbi": 2
+                    }
+                },
+                {
+                    "id": 592518,
+                    "name": "Manny Machado",
+                    "position": "3B",
+                    "stats": {
+                        "runs": 6,
+                        "doubles": 2,
+                        "triples": 0,
+                        "home_runs": 1,
+                        "hits": 7,
+                        "steals": 0,
+                        "rbi": 4
+                    }
+                },
+                {
+                    "id": 664034,
+                    "name": "Ty France",
+                    "position": "1B",
+                    "stats": {
+                        "runs": 0,
+                        "doubles": 0,
+                        "triples": 0,
+                        "home_runs": 0,
+                        "hits": 1,
+                        "steals": 0,
+                        "rbi": 0
+                    }
+                },
+                {
+                    "id": 665487,
+                    "name": "Fernando Tatis Jr.",
+                    "position": "RF",
+                    "stats": {
+                        "runs": 6,
+                        "doubles": 3,
+                        "triples": 0,
+                        "home_runs": 0,
+                        "hits": 9,
+                        "steals": 3,
+                        "rbi": 4
+                    }
+                },
+                {
+                    "id": 593428,
+                    "name": "Xander Bogaerts",
+                    "position": "SS",
+                    "stats": {
+                        "runs": 2,
+                        "doubles": 2,
+                        "triples": 0,
+                        "home_runs": 1,
+                        "hits": 11,
+                        "steals": 0,
+                        "rbi": 4
+                    }
+                },
+                {
+                    "id": 630105,
+                    "name": "Jake Cronenworth",
+                    "position": "2B",
+                    "stats": {
+                        "runs": 5,
+                        "doubles": 1,
+                        "triples": 0,
+                        "home_runs": 1,
+                        "hits": 7,
+                        "steals": 0,
+                        "rbi": 3
+                    }
+                }
+            ],
             "away_pitcher": {
                 "id": 623474,
                 "name": "Jimmy Herget",
@@ -1424,7 +1551,7 @@
                     "ip": "12.0"
                 }
             },
-            "lineup_hash": "0c731b3ab7f5c3d35c6785b6891767af",
+            "lineup_hash": "1a4121b86cfcdfc3b003759003b8740c",
             "lineup_confirmed": false
         }
     }
