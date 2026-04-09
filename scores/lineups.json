@@ -898,7 +898,15 @@
             "home_team": "San Diego Padres",
             "away_lineup": [],
             "home_lineup": [],
-            "away_pitcher": null,
+            "away_pitcher": {
+                "id": 623474,
+                "name": "Jimmy Herget",
+                "stats": {
+                    "strikeouts": 6,
+                    "era": "1.50",
+                    "ip": "6.0"
+                }
+            },
             "home_pitcher": {
                 "id": 681190,
                 "name": "Randy V\u00e1squez",
@@ -908,7 +916,7 @@
                     "ip": "12.0"
                 }
             },
-            "lineup_hash": "d588f20ce609f1d1906e95fe055148f7",
+            "lineup_hash": "0c731b3ab7f5c3d35c6785b6891767af",
             "lineup_confirmed": false
         }
     }
