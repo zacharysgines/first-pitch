@@ -76,6 +76,8 @@ def playoff_imp(standings, teams):
 
                 teams[team['name']]['playoff_imp'] = playoff_imp
     else:
-        teams[team['name']]['playoff_imp'] = 0
+        projections = LoadProjections()
+        for team in projections:
+            teams[team['Name']]['playoff_imp'] = 0
 
     return None

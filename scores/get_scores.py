@@ -259,14 +259,14 @@ def update_scores(gamedate, games, games_to_update):
     #Get scores from game_scores.json
     saved_scores = load_scores()
 
-    #Find todays entry in game_scores. If we don't find this date in saved_scores, there's nothing to
+    #Get a reference to todays entry in game_scores. If we don't find this date in saved_scores, there's nothing to
     #update so just end the function.
-    todays_entry = None
+    saved_games = None
     for entry in saved_scores:
         if entry["gamedate"] == gamedate:
-            todays_entry = entry
+            saved_games = entry["games"]
             break
-    if todays_entry is None:
+    if saved_games is None:
         return None
 
     #Run each function needed to update scores to get individual score components 
@@ -275,119 +275,87 @@ def update_scores(gamedate, games, games_to_update):
     starting_pitchers(games, teams, gamedate_obj)
     milestones(games, gamedate_obj, teams)
 
-    #
-    todays_games = todays_entry["games"]
-    scheduled_games = {}
+    #Create a dictionary to hold all the current game information
+    current_games = {}
 
     for game in games:
         #If this game is not a regular season game, skip the update for that game
         if game['game_type'] != 'R':
             continue
         
-        scheduled_games[scheduled_game['game_id']] = game
+        #Create a key in current_games that is this game's ID, and have that key value be a dictionary holding this game's info from games.
+        current_games[game['game_id']] = game
 
-    for game in todays_games:
-        game_updated = False
-        game_id = game.get('game_id')   #Get id for this game in game_scores.json
-        scheduled_game = scheduled_games.get(game_id)   
-        game_changes = games_to_update.get(game_id, {})
+    for saved_game in saved_games:
+        game_updated = False    #Track whether this game gets updated so we can recalculate the scores only if needed
+        game_id = saved_game.get('game_id')   #Get id for this game in game_scores.json
+        current_game = current_games.get(game_id)   #Find the current game that shares this game_id   
+        game_to_update = games_to_update.get(game_id, {})     #Find the game in games_to_update that shares this game_id
 
-        if scheduled_game:
-            away_team_name = scheduled_game['away_name']
-            home_team_name = scheduled_game['home_name']
-        else:
-            away_team_name = game['away_team_name']
-            home_team_name = game['home_team_name']
+        #Get the away team and home team name for this game
+        away_team_name = saved_game['away_team_name']
+        home_team_name = saved_game['home_team_name']
 
-        if game_changes.get("away") and away_team_name in teams:
-            away_team = teams[away_team_name]
-            if away_team.get('pitcher_name'):
-                away_starter = away_team['pitcher_name']
-                away_era = away_team['pitcher_era']
-                away_era_source = away_team['era_source']
-                away_era_score = max(0,  -.012 * away_era**3 + 0.1904 * away_era**2 - 1.008 * away_era + 1.8161)
-            else:
-                away_starter = None
-                away_era = None
-                away_era_source = None
-                away_era_score = 0
+        #If the away team needs to be updated for this game
+        if game_to_update.get("away"):
+            #Get the updated info for this team from teams
+            away_team_info = teams[away_team_name]
 
-            away_milestone_score = 0
-            for scope in ('career', 'season'):
-                for milestone in away_team['milestones'][scope]:
-                    away_milestone_score += milestone['milestone_score']
-
-            away_prospect_score = 0
-            for prospect in away_team['debuts']:
-                away_prospect_score += prospect['score']
-
-            game['away_starter'] = away_starter
-            game['away_era'] = away_era
-            game['away_era_source'] = away_era_source
-            game['away_era_score'] = away_era_score
-            game['away_career_milestones'] = away_team['milestones']['career']
-            game['away_season_milestones'] = away_team['milestones']['season']
-            game['away_milestone_score'] = away_milestone_score
-            game['away_debuts'] = away_team['debuts']
-            game['away_prospect_score'] = away_prospect_score
+            #Update this game with the new information
+            saved_game['away_starter'] = away_team_info['pitcher_name']
+            saved_game['away_era'] = away_team_info['pitcher_era']
+            saved_game['away_era_source'] = away_team_info['era_source']
+            saved_game['away_era_score'] = away_team_info['era_score']
+            saved_game['away_career_milestones'] = away_team_info['milestones']['career']
+            saved_game['away_season_milestones'] = away_team_info['milestones']['season']
+            saved_game['away_milestone_score'] = away_team_info['milestone_score']
+            saved_game['away_debuts'] = away_team_info['debuts']
+            saved_game['away_prospect_score'] = away_team_info['debut_score']
             game_updated = True
 
-        if game_changes.get("home") and home_team_name in teams:
-            home_team = teams[home_team_name]
-            if home_team.get('pitcher_name'):
-                home_starter = home_team['pitcher_name']
-                home_era = home_team['pitcher_era']
-                home_era_source = home_team['era_source']
-                home_era_score = max(0, -.012 * home_era**3 + 0.1904 * home_era**2 - 1.008 * home_era + 1.8161)
-            else:
-                home_starter = None
-                home_era = None
-                home_era_source = None
-                home_era_score = 0
+        #If the home team needs to be updated for this game
+        if game_to_update.get("home"):
+            #Get the updated info for this team from teams
+            home_team_info = teams[home_team_name]
 
-            home_milestone_score = 0
-            for scope in ('career', 'season'):
-                for milestone in home_team['milestones'][scope]:
-                    home_milestone_score += milestone['milestone_score']
-
-            home_prospect_score = 0
-            for prospect in home_team['debuts']:
-                home_prospect_score += prospect['score']
-
-            game['home_starter'] = home_starter
-            game['home_era'] = home_era
-            game['home_era_source'] = home_era_source
-            game['home_era_score'] = home_era_score
-            game['home_career_milestones'] = home_team['milestones']['career']
-            game['home_season_milestones'] = home_team['milestones']['season']
-            game['home_milestone_score'] = home_milestone_score
-            game['home_debuts'] = home_team['debuts']
-            game['home_prospect_score'] = home_prospect_score
+            #Update this game with the new information
+            saved_game['home_starter'] = home_team_info['pitcher_name']
+            saved_game['home_era'] = home_team_info['pitcher_era']
+            saved_game['home_era_source'] = home_team_info['era_source']
+            saved_game['home_era_score'] = home_team_info['era_score']
+            saved_game['home_career_milestones'] = home_team_info['milestones']['career']
+            saved_game['home_season_milestones'] = home_team_info['milestones']['season']
+            saved_game['home_milestone_score'] = home_team_info['milestone_score']
+            saved_game['home_debuts'] = home_team_info['debuts']
+            saved_game['home_prospect_score'] = home_team_info['debut_score']
             game_updated = True
 
+        #If this game didn't get updated, don't recalculate the scoring, just move to the next game.
         if not game_updated:
             continue
 
-        game['era_score'] = game['away_era_score'] + game['home_era_score']
-        game['milestone_score'] = game['away_milestone_score'] + game['home_milestone_score']
-        game['prospect_score'] = game['away_prospect_score'] + game['home_prospect_score']
-        game['unadjusted_score'] = (
-            game['playoff_imp_score']
-            + game['win_streak_score']
-            + game['wp_score']
-            + game['team_diff']
-            + game['era_score']
-            + game['division_score']
-            + game['milestone_score']
-            + game['prospect_score']
-            + game['min_wp_score']
+        #Get the new overall scores for this game after each team has been recalculated
+        saved_game['era_score'] = saved_game['away_era_score'] + saved_game['home_era_score']
+        saved_game['milestone_score'] = saved_game['away_milestone_score'] + saved_game['home_milestone_score']
+        saved_game['prospect_score'] = saved_game['away_prospect_score'] + saved_game['home_prospect_score']
+        saved_game['unadjusted_score'] = (
+            saved_game['playoff_imp_score']
+            + saved_game['win_streak_score']
+            + saved_game['wp_score']
+            + saved_game['team_diff']
+            + saved_game['era_score']
+            + saved_game['division_score']
+            + saved_game['milestone_score']
+            + saved_game['prospect_score']
+            + saved_game['min_wp_score']
         )
-        game['score'] = min(100, 100*((math.log(1 + game['unadjusted_score'])) / (math.log(3))))
+        saved_game['score'] = min(100, 100*((math.log(1 + saved_game['unadjusted_score'])) / (math.log(3))))
 
-    todays_games.sort(key=lambda x: x['score'], reverse=True)
+    #Re-sort all the games and resave them to the .json file
+    saved_games.sort(key=lambda x: x['score'], reverse=True)
     save_scores(saved_scores)
 
-    return todays_games
+    return saved_games
 
 #get_all_scores('08/21/2026', '12/31/2026')
 #score_games('04/08/2026', use_json=False)
