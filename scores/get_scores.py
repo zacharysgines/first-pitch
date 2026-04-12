@@ -11,7 +11,7 @@ ROOT_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT_DIR))
 
 from save_load import load_scores, save_scores
-from teams.teams import get_teams
+from teams_info.teams_info import get_teams_info
 from records.records import records
 from playoffs.playoffs import playoff_imp
 from win_streaks.win_streaks import winning_streak
@@ -114,13 +114,13 @@ def score_games(gamedate, saved_scores = None, use_json = True):
 
 def get_scores(standings, games, gamedate_obj):
     #Run each function to get individual score components
-    teams = get_teams(standings)                    #Initialize the teams dictionary to hold all scoring info
+    teams_info = get_teams_info(standings)                    #Initialize the teams_info dictionary to hold all scoring info
     get_all_lineups(games)                          #Get lineups for today
-    records(teams, standings)                       #Get each team's current or projected record 
-    playoff_imp(standings, teams)                   #Calculate playoff implications for each team
-    winning_streak(standings, teams, gamedate_obj)  #Find winning streaks for each team
-    starting_pitchers(games, teams, gamedate_obj)   #Get the starters for today's games
-    milestones(games, gamedate_obj, teams)          #Find any milestones, record chases or prospect debuts
+    records(teams_info, standings)                       #Get each team's current or projected record 
+    playoff_imp(standings, teams_info)                   #Calculate playoff implications for each team
+    winning_streak(standings, teams_info, gamedate_obj)  #Find winning streaks for each team
+    starting_pitchers(games, teams_info, gamedate_obj)   #Get the starters for today's games
+    milestones(games, gamedate_obj, teams_info)          #Find any milestones, record chases or prospect debuts
 
     #Get a list to put each game's scoring info into
     game_scores = []
@@ -137,28 +137,28 @@ def get_scores(standings, games, gamedate_obj):
         #Team Definitions
         away_team_name = game['away_name']
         home_team_name = game['home_name']
-        away_team = teams[away_team_name]
-        home_team = teams[home_team_name]
+        away_team_info = teams_info[away_team_name]
+        home_team_info = teams_info[home_team_name]
         #Record
-        away_wins = away_team['wins']
-        away_losses = away_team['losses']
-        home_wins = home_team['wins']
-        home_losses = home_team['losses']
+        away_wins = away_team_info['wins']
+        away_losses = away_team_info['losses']
+        home_wins = home_team_info['wins']
+        home_losses = home_team_info['losses']
         #Playoff Implications
-        away_playoff_imp_score = away_team['playoff_imp']
-        home_playoff_imp_score = home_team['playoff_imp'] 
+        away_playoff_imp_score = away_team_info['playoff_imp']
+        home_playoff_imp_score = home_team_info['playoff_imp'] 
         playoff_imp_score = away_playoff_imp_score + home_playoff_imp_score
         #Win Streak
-        away_win_streak = away_team['winning_streak']
-        away_win_streak_score = away_team['win_streak_score']
-        home_win_streak = home_team['winning_streak']
-        home_win_streak_score = home_team['win_streak_score']
+        away_win_streak = away_team_info['winning_streak']
+        away_win_streak_score = away_team_info['win_streak_score']
+        home_win_streak = home_team_info['winning_streak']
+        home_win_streak_score = home_team_info['win_streak_score']
         win_streak_score = away_win_streak_score + home_win_streak_score
         #Winning Percentage
-        away_wp = away_team['win_perc']
-        home_wp = home_team['win_perc']
-        away_wp_score = away_team['wp_score']
-        home_wp_score = home_team['wp_score']
+        away_wp = away_team_info['win_perc']
+        home_wp = home_team_info['win_perc']
+        away_wp_score = away_team_info['wp_score']
+        home_wp_score = home_team_info['wp_score']
         wp_score = (away_wp_score + home_wp_score) / 2
         #Winning Percentage Difference
         team_diff = abs(away_wp - home_wp)
@@ -170,27 +170,27 @@ def get_scores(standings, games, gamedate_obj):
         else:
             min_wp_score = 8.9545 * min_wp**2 - 7.0217 * min_wp + 1.3316
         #Divisional Score
-        if away_team['division'] == home_team['division']:
+        if away_team_info['division'] == home_team_info['division']:
             division_score = min_wp_score
         else:
             division_score = 0
         #Starting Pitcher ERA
-        away_starter = away_team['pitcher_name']
-        away_era = away_team['pitcher_era']
-        away_era_source = away_team['era_source']
-        away_era_score = away_team['era_score']
-        home_starter = home_team['pitcher_name']
-        home_era = home_team['pitcher_era']
-        home_era_source = home_team['era_source']
-        home_era_score = home_team['era_score']
+        away_starter = away_team_info['pitcher_name']
+        away_era = away_team_info['pitcher_era']
+        away_era_source = away_team_info['era_source']
+        away_era_score = away_team_info['era_score']
+        home_starter = home_team_info['pitcher_name']
+        home_era = home_team_info['pitcher_era']
+        home_era_source = home_team_info['era_source']
+        home_era_score = home_team_info['era_score']
         era_score = away_era_score + home_era_score
         #Milestones
-        away_milestone_score = away_team['milestone_score']
-        home_milestone_score = home_team['milestone_score']
+        away_milestone_score = away_team_info['milestone_score']
+        home_milestone_score = home_team_info['milestone_score']
         milestone_score = away_milestone_score + home_milestone_score
         #Prospects
-        away_prospect_score = away_team['debut_score']
-        home_prospect_score = home_team['debut_score']
+        away_prospect_score = away_team_info['debut_score']
+        home_prospect_score = home_team_info['debut_score']
         prospect_score = away_prospect_score + home_prospect_score
         #SCORING
         unadjusted_score = playoff_imp_score + win_streak_score + wp_score + team_diff_score + era_score + division_score + milestone_score + prospect_score + min_wp_score
@@ -224,14 +224,14 @@ def get_scores(standings, games, gamedate_obj):
             'home_win_streak': home_win_streak,
             'away_win_streak_score': away_win_streak_score,
             'home_win_streak_score': home_win_streak_score,
-            'away_career_milestones': away_team['milestones']['career'],
-            'away_season_milestones': away_team['milestones']['season'],
-            'home_career_milestones': home_team['milestones']['career'],
-            'home_season_milestones': home_team['milestones']['season'],
+            'away_career_milestones': away_team_info['milestones']['career'],
+            'away_season_milestones': away_team_info['milestones']['season'],
+            'home_career_milestones': home_team_info['milestones']['career'],
+            'home_season_milestones': home_team_info['milestones']['season'],
             'away_milestone_score': away_milestone_score,
             'home_milestone_score': home_milestone_score,
-            'away_debuts': away_team['debuts'],
-            'home_debuts': home_team['debuts'],
+            'away_debuts': away_team_info['debuts'],
+            'home_debuts': home_team_info['debuts'],
             'away_prospect_score': away_prospect_score,
             'home_prospect_score': home_prospect_score,
             'playoff_imp_score': playoff_imp_score,
@@ -271,9 +271,9 @@ def update_scores(gamedate, games, games_to_update):
 
     #Run each function needed to update scores to get individual score components 
     standings = statsapi.standings_data(date=gamedate)
-    teams = get_teams(standings)
-    starting_pitchers(games, teams, gamedate_obj)
-    milestones(games, gamedate_obj, teams)
+    teams_info = get_teams_info(standings)
+    starting_pitchers(games, teams_info, gamedate_obj)
+    milestones(games, gamedate_obj, teams_info)
 
     #Create a dictionary to hold all the current game information
     current_games = {}
@@ -299,7 +299,7 @@ def update_scores(gamedate, games, games_to_update):
         #If the away team needs to be updated for this game
         if game_to_update.get("away"):
             #Get the updated info for this team from teams
-            away_team_info = teams[away_team_name]
+            away_team_info = teams_info[away_team_name]
 
             #Update this game with the new information
             saved_game['away_starter'] = away_team_info['pitcher_name']
@@ -315,8 +315,8 @@ def update_scores(gamedate, games, games_to_update):
 
         #If the home team needs to be updated for this game
         if game_to_update.get("home"):
-            #Get the updated info for this team from teams
-            home_team_info = teams[home_team_name]
+            #Get the updated info for this team from teams_info
+            home_team_info = teams_info[home_team_name]
 
             #Update this game with the new information
             saved_game['home_starter'] = home_team_info['pitcher_name']
