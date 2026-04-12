@@ -6,7 +6,7 @@ import statsapi
 ROOT_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT_DIR))
 
-from GetScores import UpdateScores
+from scores.get_scores import UpdateScores
 from scores.lineups import LineupsChanged
 
 def check_lineups():

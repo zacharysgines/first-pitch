@@ -1,5 +1,5 @@
 import streamlit as st
-from GetScores import ScoreGames
+from scores.get_scores import ScoreGames
 from datetime import date, datetime, timedelta, timezone
 import html
 import json
