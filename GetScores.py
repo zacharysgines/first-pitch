@@ -159,15 +159,8 @@ def GetScores(standings, games, gamedate_obj):
         era_score = away_era_score + home_era_score
         #Divisional Score
         if away_team['division'] == home_team['division']:
-            away_games_back = away_team['games_back']
-            home_games_back = home_team['games_back']
-            max_games_back = max(away_games_back, home_games_back)
-            if max_games_back < 8:
-                division_score = max(0, .0004 * max_games_back**3 - 0.0053 * max_games_back**2 - 0.0036 * max_games_back + 0.1517)
-            else:
-                division_score = 0
+            division_score = 2.5 * (.6 * min_wp_score + .4 * team_diff_score)
         else:
-            max_games_back = None
             division_score = 0
         #Milestones
         away_milestone_score = 0
@@ -220,7 +213,6 @@ def GetScores(standings, games, gamedate_obj):
             'home_win_streak': home_win_streak,
             'away_win_streak_score': away_win_streak_score,
             'home_win_streak_score': home_win_streak_score,
-            'max_games_back': max_games_back,
             'away_career_milestones': away_team['milestones']['career'],
             'away_season_milestones': away_team['milestones']['season'],
             'home_career_milestones': home_team['milestones']['career'],
@@ -418,4 +410,4 @@ def UpdateScores(gamedate, games, games_to_update):
     return todays_games
 
 #GetAllScores('08/21/2026', '12/31/2026')
-#ScoreGames('04/08/2026', use_json=False)
+ScoreGames('04/12/2026', use_json=False)
