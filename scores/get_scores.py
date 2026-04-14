@@ -114,8 +114,8 @@ def score_games(gamedate, saved_scores = None, use_json = True):
 
 def get_scores(standings, games, gamedate_obj):
     #Run each function to get individual score components
-    teams_info = get_teams_info(standings)                    #Initialize the teams_info dictionary to hold all scoring info
-    get_all_lineups(games)                          #Get lineups for today
+    teams_info = get_teams_info(standings)               #Initialize the teams_info dictionary to hold all scoring info
+    get_all_lineups(games, gamedate_obj)                 #Get lineups for today
     records(teams_info, standings)                       #Get each team's current or projected record 
     playoff_imp(standings, teams_info)                   #Calculate playoff implications for each team
     winning_streak(standings, teams_info, gamedate_obj)  #Find winning streaks for each team

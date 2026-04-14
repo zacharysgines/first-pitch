@@ -19,3 +19,23 @@ def load_projections():
         df = pd.read_csv(f)
         projections = df.to_dict(orient='records')    
     return projections 
+
+def load_saved_lineups():
+    try:
+        with open("scores/lineups.json", "r") as f:
+            saved_lineups = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {"date": None, "games": {}}
+
+    if isinstance(saved_lineups, dict) and "games" in saved_lineups:
+        saved_lineups.setdefault("date", None)
+        return saved_lineups
+
+    return {"date": None, "games": saved_lineups}
+
+def save_lineups(lineup_date, game_lineups):
+    with open("scores/lineups.json", "w") as f:
+        json.dump({
+            "date": lineup_date,
+            "games": game_lineups
+        }, f, indent=4)
