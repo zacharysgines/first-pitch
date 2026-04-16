@@ -3,11 +3,12 @@ import math
 
 def playoff_imp(standings, teams):
     #Initialize dictionary to hold first and second place teams in each division and 4th place team in wild card
-    gb_ref = {}
-    gb_ref['divisions'] = {}
-    gb_ref['leagues'] = {}
+    gb_ref = {
+        'divisions': {},
+        'leagues': {}
+    }
     
-    #If there haven't been any games this year, use Playoff_Imp_Proj function instead
+    #If there haven't been any games this year, use playoff_imp_proj() instead
     if standings:
         #First pass: get first place and second place teams for each division, and 4th place wild card team for each league 
         for division in standings.values():
