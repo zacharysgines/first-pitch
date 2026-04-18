@@ -39,3 +39,16 @@ def save_lineups(lineup_date, game_lineups):
             "date": lineup_date,
             "games": game_lineups
         }, f, indent=4)
+
+def load_win_streaks():
+    #Load win_streaks.json
+    with open("scores/win_streaks.json", "r") as f:
+        raw_text = f.read().strip()
+        if not raw_text:
+            return []
+        win_streaks = json.loads(raw_text)
+    return win_streaks
+
+def save_win_streaks(win_streaks):
+    with open("scores/win_streaks.json", "w") as f:
+        json.dump(win_streaks, f, indent=2)
