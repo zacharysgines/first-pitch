@@ -182,8 +182,8 @@ def GetScores(standings, games, gamedate_obj):
 
         #SCORING
         unadjusted_score = playoff_imp_score + win_streak_score + wp_score + team_diff_score + era_score + division_score + milestone_score + prospect_score + min_wp_score
-        score = min(100, 100*((math.log(1+unadjusted_score))/(math.log(3))))              #Final Adjustment (in denominatior, ln(x), x = 1 + 99th percentile score. 
-                                                                                    #Adjust higher to get less 100s, lower to get more 100s) 
+        score = min(100, 100*((math.log(1+unadjusted_score))/(math.log(2.33))))              #Final Adjustment (in denominatior, ln(x), x = 1 + 99th percentile score. 
+                                                                                             #Adjust higher to get less 100s, lower to get more 100s) 
         #Add the scores for this game to the game_scores list
         game_scores.append({
             'game_id': gameid,
@@ -410,4 +410,4 @@ def UpdateScores(gamedate, games, games_to_update):
     return todays_games
 
 #GetAllScores('08/21/2026', '12/31/2026')
-#ScoreGames('04/12/2026', use_json=False)
+#ScoreGames('04/18/2026', use_json=False)
