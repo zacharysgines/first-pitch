@@ -410,4 +410,4 @@ def UpdateScores(gamedate, games, games_to_update):
     return todays_games
 
 #GetAllScores('08/21/2026', '12/31/2026')
-ScoreGames('04/12/2026', use_json=False)
+#ScoreGames('04/12/2026', use_json=False)
