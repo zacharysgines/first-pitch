@@ -402,7 +402,7 @@ def UpdateScores(gamedate, games, games_to_update):
             + game['prospect_score']
             + game['min_wp_score']
         )
-        game['score'] = min(100, 100*((math.log(1 + game['unadjusted_score'])) / (math.log(3))))
+        game['score'] = min(100, 100*((math.log(1 + game['unadjusted_score'])) / (math.log(2.33))))
 
     todays_games.sort(key=lambda x: x['score'], reverse=True)
     SaveScores(saved_scores)
