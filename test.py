@@ -1,7 +1,5 @@
 """
-Adjust divisional scores to use min wp instead of games back
 SAVE MILESTONES
-UPDATE LINEUP CHANGES
 MVP player
 Cy Young Player
 RotY Player
@@ -25,6 +23,7 @@ import json
 import math
 import hashlib
 from pathlib import Path
+import pybaseball
 
 
 # def LoadProjections():
@@ -65,16 +64,26 @@ from pathlib import Path
     
 #     return teams
 
-def GetProspects():
-    PROSPECTS_CSV = 'scores\prospects.csv'
+# def GetProspects():
+#     PROSPECTS_CSV = 'scores\prospects.csv'
 
-    try:
-        df = pd.read_csv(PROSPECTS_CSV, encoding="utf-8")
-    except UnicodeDecodeError:
-        df = pd.read_csv(PROSPECTS_CSV, encoding="cp1252")
-    prospects = df.to_dict(orient='records')
+#     try:
+#         df = pd.read_csv(PROSPECTS_CSV, encoding="utf-8")
+#     except UnicodeDecodeError:
+#         df = pd.read_csv(PROSPECTS_CSV, encoding="cp1252")
+#     prospects = df.to_dict(orient='records')
 
-    return prospects
+#     return prospects
+
+#fv = 40
+# original_prospect_score = 0
+# unadjusted_score = 0.24395779497136927
+# new_prospect_score = .0094 * math.exp(.0576 * fv)
+# new_unadjusted_score = unadjusted_score - original_prospect_score + new_prospect_score
+# score = min(100, 100*((math.log(1+new_unadjusted_score))/(math.log(3))))
+# print('Prospect Score:', new_prospect_score)
+# print('Unadjusted Score:', new_unadjusted_score)
+# print('Score:', score)
 
 gamedate = '07/11/2025'
 date_obj = datetime.strptime(gamedate, "%m/%d/%Y")
@@ -83,23 +92,21 @@ date_obj = datetime.strptime(gamedate, "%m/%d/%Y")
 # standings = statsapi.standings_data(date=gamedate)
 # teams = GetTeams(standings)
 
-fv = 40
-original_prospect_score = 0
-unadjusted_score = 0.24395779497136927
-new_prospect_score = .0094 * math.exp(.0576 * fv)
-new_unadjusted_score = unadjusted_score - original_prospect_score + new_prospect_score
-score = min(100, 100*((math.log(1+new_unadjusted_score))/(math.log(3))))
-print('Prospect Score:', new_prospect_score)
-print('Unadjusted Score:', new_unadjusted_score)
-print('Score:', score)
+url = "https://www.baseball-reference.com/data/war_daily_pitch.txt"
 
-
-prospects = GetProspects()
-
-for prospect in prospects:
-    if prospect['Name'] == 'Munetaka Murakami':
-        print(prospect)
-        rank = prospect['Rank']
-        print(rank)
-        if pd.isna(rank):
-            print(prospect)
+war_raw = pd.read_csv(url)
+war_tab = war_raw[war_raw["year_ID"] == 2026].copy()
+war_agg = (
+    war_tab
+    .groupby(["mlb_ID", "year_ID"], as_index=False)
+    .agg({
+        "name_common": "first",
+        "WAR": "sum",
+        "IPouts": "sum",
+        "team_ID": "last"
+    })
+)
+war_agg = war_agg.dropna(subset=["mlb_ID"])
+war_agg["mlb_ID"] = war_agg["mlb_ID"].astype(int)
+war_lookup = dict(zip(war_agg["mlb_ID"], war_agg["WAR"]))
+print(war_lookup)
