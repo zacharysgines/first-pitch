@@ -105,14 +105,14 @@ def GetScores(standings, games, gamedate_obj):
         #Win Streak
         away_win_streak = away_team['winning_streak']
         home_win_streak = home_team['winning_streak']
-        if away_win_streak == 0:
+        if away_win_streak <= 2:
             away_win_streak_score = 0
         else:
-            away_win_streak_score = 0.002 * away_win_streak**2 - 0.0047 * away_win_streak + 0.0083
-        if home_win_streak == 0:
+            away_win_streak_score = min(1, -0.0006 * away_win_streak**3 + 0.018 * away_win_streak**2 - 0.0763 * away_win_streak + 0.0957)
+        if home_win_streak <= 2:
             home_win_streak_score = 0
         else:
-            home_win_streak_score = 0.002 * home_win_streak**2 - 0.0047 * home_win_streak + 0.0083
+            home_win_streak_score = min(1, -0.0006 * home_win_streak**3 + 0.018 * home_win_streak**2 - 0.0763 * home_win_streak + 0.0957)
         win_streak_score = away_win_streak_score + home_win_streak_score
         #Winning Percentage
         away_wp = away_team['win_perc']
@@ -410,4 +410,4 @@ def UpdateScores(gamedate, games, games_to_update):
     return todays_games
 
 #GetAllScores('08/21/2026', '12/31/2026')
-#ScoreGames('04/18/2026', use_json=False)
+ScoreGames('04/22/2026', use_json=False)
