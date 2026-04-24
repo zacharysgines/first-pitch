@@ -1675,7 +1675,7 @@ elif games:
             for note in notes
         )
         has_playoff_implications = game.get('playoff_imp_score', 0) >= 0.2
-        has_division_rivals = game['max_games_back'] is not None and game['max_games_back'] <= 5
+        has_division_rivals = game.get('division_score', 0) >= 0.10
         details_html = f'<div class="game-details">{notes_html}</div>' if notes else ""
         pill_items = []
         if has_playoff_implications:

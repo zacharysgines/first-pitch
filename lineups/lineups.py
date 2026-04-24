@@ -156,7 +156,7 @@ def lineups_changed(games, gamedate_str):
         current_hash = current_game_data["lineup_hash"]
 
         #Get the hash for this game saved in lineups.json
-        saved_game_data = saved_games.get(gameid, {})
+        saved_game_data = saved_games.get(str(gameid), {})
         saved_hash = saved_game_data.get("lineup_hash")
 
         #If the hash's don't match, update lineups.json with the new game data.

@@ -43,7 +43,7 @@ def milestones(games, gamedate_str, teams_info):
         home_team_info = teams_info[game['home_name']]
         #Find this game in the saved lineups. If you can't find it, don't get the milestones for this game.
         game_id = game['game_id']
-        game_lineup = saved_games.get(game_id)
+        game_lineup = saved_games.get(str(game_id))
         if not game_lineup:
             continue
 

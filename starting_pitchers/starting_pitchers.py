@@ -118,12 +118,10 @@ def get_sp_stats(gamedate_str, pitcher, team_name, pitcher_name, teams_info, sp_
 def get_projected_sp_stats(sp_projections, pitcher_name, team_name, teams_info):
     #Initialize a list to hold any pitcher who has this name
     possible_pitchers = []
-    #Remove any special characters from the pitcher's name to match names
-    pitcher_name = normalize_name(pitcher_name)
 
     for pitcher_proj in sp_projections:
         #For each pitcher in the projections csv, if their name and team matches the current pitcher we're looking at, add them to the list of possible pitchers. 
-        if normalize_name(pitcher_proj['Name']) == pitcher_name and pitcher_proj['Team'] == team_name:
+        if normalize_name(pitcher_proj['Name']) == normalize_name(pitcher_name) and pitcher_proj['Team'] == team_name:
             possible_pitchers.append(pitcher_proj)
     
     #If we ended up with only one matching pitcher, get that pitcher's projected ERA and save all their info to team_info
