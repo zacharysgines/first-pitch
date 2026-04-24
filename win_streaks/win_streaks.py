@@ -10,34 +10,36 @@ sys.path.insert(0, str(ROOT_DIR))
 
 from save_load import load_win_streaks, save_win_streaks
 
-def winning_streak(standings, teams_info, date_obj):
+def win_streak(standings, teams_info, gamedate_str):
+    #Get gamedate as an object
+    gamedate_obj = datetime.strptime(gamedate_str, "%m/%d/%Y").date()
     #If the current date we're getting scores for is later than today, or if it's the first day of the season, then don't get a score for winning streaks
-    if (not standings) or (date_obj.date() > datetime.today().date()):
+    if (not standings) or (gamedate_obj > datetime.today().date()):
         for team in teams_info:
             team_info = teams_info[team]
-            team_info['winning_streak'] = 0
+            team_info['win_streak'] = 0
             team_info['win_streak_score'] = 0
         return None
 
     wins_log = load_win_streaks()   #Get each teams wins/loss log for the year
-    streak_year = date_obj.year     #Get the current year so we don't track streaks going back to last year
+    streak_year = gamedate_obj.year     #Get the current year so we don't track streaks going back to last year
 
     for team in teams_info:
         team_info = teams_info[team]
 
         #Intially define their winning streak to be true and 0 games. Set the start of the streak date to today
-        winning_streak = True
+        win_streak = True
         streak_count = 0
-        streak_date = date_obj.date()
+        streak_date_obj = gamedate_obj
 
         #While the winning streak is still true, keep going back one day at a time and see if the team won and add 1 to "streak_count"
-        while winning_streak:
+        while win_streak:
             #Decrease the date by one
-            streak_date -= timedelta(days=1)
-            streak_date_str = streak_date.strftime("%m/%d/%Y")
+            streak_date_obj -= timedelta(days=1)
+            streak_date_str = streak_date_obj.strftime("%m/%d/%Y")
 
             #If the date we're looking at is last year, stop counting their winning streak
-            if streak_date.year < streak_year:
+            if streak_date_obj.year < streak_year:
                 break
 
             #Track if we found this date in the .json file. If we didn't, we need to add the results for that date into the .json file
@@ -49,14 +51,14 @@ def winning_streak(standings, teams_info, date_obj):
                 if entry['gamedate'] == streak_date_str:
                     found_entry = True
                     results = entry['results']
-                    winning_streak, won_games = find_team_result(results, team)
+                    win_streak, won_games = find_team_result(results, team)
                     streak_count += won_games
                     break
                     
             #If you didn't find this date in the .json file, we need to add that date in there and return back this team's result for that date
             if found_entry == False:
                 wins_log, results = add_win_streak_entry(streak_date_str, wins_log)
-                winning_streak, won_games = find_team_result(results, team)
+                win_streak, won_games = find_team_result(results, team)
                 streak_count += won_games
 
         #After the while loop ends, calculate the streak score
@@ -65,7 +67,7 @@ def winning_streak(standings, teams_info, date_obj):
         else:
             win_streak_score = min(1, -0.0006 * streak_count**3 + 0.018 * streak_count**2 - 0.0763 * streak_count + 0.0957)
 
-        team_info['winning_streak'] = streak_count
+        team_info['win_streak'] = streak_count
         team_info['win_streak_score'] = win_streak_score
 
     #Save any dates that were added back into the .json file
@@ -76,8 +78,8 @@ def winning_streak(standings, teams_info, date_obj):
 def find_team_result(results, team):
     #Track how many games this team has won today
     won_games_today = 0
-    #Initalize winning_streak to be true and set to false if they lost a game on this date
-    winning_streak = True
+    #Initalize win_streak to be true and set to false if they lost a game on this date
+    win_streak = True
 
     #Find this team's results for this day
     for result_team, result in results.items():
@@ -88,7 +90,7 @@ def find_team_result(results, team):
                 if result['game_2'] == 'w':
                     won_games_today += 1
                 else:
-                    winning_streak = False
+                    win_streak = False
                     break
             #If the team won their second game of the double header or if they didn't play a double header, check the first game of that day to see if they won and add 
             #one to "won_games_today"
@@ -96,10 +98,10 @@ def find_team_result(results, team):
                 won_games_today += 1
             #If this team lost, end the winning streak
             else:
-                winning_streak = False
+                win_streak = False
             break
 
-    return winning_streak, won_games_today
+    return win_streak, won_games_today
             
 def add_win_streak_entry(streak_date_str, wins_log):
     #Track team results for this day and the result for the team that prompted getting this date 

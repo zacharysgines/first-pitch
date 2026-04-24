@@ -14,12 +14,13 @@ sys.path.insert(0, str(ROOT_DIR))
 from save_load import load_saved_lineups, save_lineups
 
 
-def get_all_lineups(games, gamedate_obj):
+def get_all_lineups(games, gamedate_str):
     #Get today's date
-    current_date = datetime.now(ZoneInfo("America/Denver")).date()
+    current_date_obj = datetime.now(ZoneInfo("America/Denver")).date()
+    current_date_str = current_date_obj.strftime("%m/%d/%Y")
 
     #If this game is not today, don't get the lineups (lineups are only known day of game)
-    if gamedate_obj != current_date:
+    if gamedate_str != current_date_str:
         return None
 
     #Create a dictionary to hold all games and their lineups
@@ -33,7 +34,7 @@ def get_all_lineups(games, gamedate_obj):
         game_lineups[gameid] = get_lineup(game)
 
     #Save all the lineups for this date to lineups.json
-    save_lineups(gamedate_obj, game_lineups)
+    save_lineups(gamedate_str, game_lineups)
 
     return None
 
@@ -128,16 +129,16 @@ def get_lineup(game):
     return game_lineup
 
 
-def lineups_changed(games, gamedate):
+def lineups_changed(games, gamedate_str):
     #Get what we currently have saved in lineups.json
     saved_lineups = load_saved_lineups()
     saved_games = saved_lineups.get("games", {})
-    lineup_date = saved_lineups.get("date")
+    lineup_date_str = saved_lineups.get("date")
     changed = False
     games_to_update = {}
 
     #If the date in lineups.json is not today, then don't check the lineups. 
-    if lineup_date != gamedate:
+    if lineup_date_str != gamedate_str:
         return {}
 
     #For each game, get the game's start time. If that start time has passed, don't check if this lineup has changed. Otherwise, check.
@@ -182,6 +183,6 @@ def lineups_changed(games, gamedate):
 
     #If any of the lineups have changed, save the new lineups in lineups.json
     if changed:
-        save_lineups(gamedate, saved_games)
+        save_lineups(lineup_date_str, saved_games)
 
     return games_to_update

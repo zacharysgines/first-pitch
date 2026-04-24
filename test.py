@@ -1,22 +1,23 @@
-"""
-Adjust divisional scores to use min wp instead of games back
-SAVE MILESTONES
-UPDATE LINEUP CHANGES
-MVP player
-Cy Young Player
-RotY Player
-Hot Streak Player
-    - Consecutive games with home run
-    - Hitting streak
-    - On base streak
-    - OPS over last x games
-    - Consecutive scoreless innnings
-    - ERA over last x games
-ERA milestone
-"On Pace" milestones
-Modern (and other) era records
-WAR data/better stats
-"""
+# """
+# Adjust divisional scores to use min wp instead of games back
+# SAVE MILESTONES
+# UPDATE LINEUP CHANGES
+# MVP player
+# Cy Young Player
+# RotY Player
+# Hot Streak Player
+#     - Consecutive games with home run
+#     - Hitting streak
+#     - On base streak
+#     - OPS over last x games
+#     - Consecutive scoreless innnings
+#     - ERA over last x games
+# ERA milestone
+# "On Pace" milestones
+# Modern (and other) era records
+# WAR data/better stats
+# Automated prospect list
+# """
 
 import statsapi
 import pandas as pd
@@ -27,13 +28,13 @@ import hashlib
 from pathlib import Path
 
 
-# def LoadProjections():
-#     #Load projections.csv
-#     with open('projected_records.csv', 'r', encoding='utf-8') as f:
-#         df = pd.read_csv(f)
-#         projections = df.to_dict(orient='records')
+# # def LoadProjections():
+# #     #Load projections.csv
+# #     with open('projected_records.csv', 'r', encoding='utf-8') as f:
+# #         df = pd.read_csv(f)
+# #         projections = df.to_dict(orient='records')
     
-#     return projections
+# #     return projections
 
 # def GetTeams(standings):
 #     #Initialize the teams dictionary
@@ -65,41 +66,62 @@ from pathlib import Path
     
 #     return teams
 
-def GetProspects():
-    PROSPECTS_CSV = 'scores\prospects.csv'
+# # def GetProspects():
+# #     PROSPECTS_CSV = 'scores\prospects.csv'
 
-    try:
-        df = pd.read_csv(PROSPECTS_CSV, encoding="utf-8")
-    except UnicodeDecodeError:
-        df = pd.read_csv(PROSPECTS_CSV, encoding="cp1252")
-    prospects = df.to_dict(orient='records')
+# #     try:
+# #         df = pd.read_csv(PROSPECTS_CSV, encoding="utf-8")
+# #     except UnicodeDecodeError:
+# #         df = pd.read_csv(PROSPECTS_CSV, encoding="cp1252")
+# #     prospects = df.to_dict(orient='records')
 
-    return prospects
+# #     return prospects
 
-gamedate = '07/11/2025'
+# # fv = 40
+# # original_prospect_score = 0
+# # unadjusted_score = 0.24395779497136927
+# # new_prospect_score = .0094 * math.exp(.0576 * fv)
+# # new_unadjusted_score = unadjusted_score - original_prospect_score + new_prospect_score
+# # score = min(100, 100*((math.log(1+new_unadjusted_score))/(math.log(3))))
+# # print('Prospect Score:', new_prospect_score)
+# # print('Unadjusted Score:', new_unadjusted_score)
+# # print('Score:', score)
+
+gamedate = '04/26/2026'
 date_obj = datetime.strptime(gamedate, "%m/%d/%Y")
 
-# games = statsapi.schedule(gamedate)
+games = statsapi.schedule(gamedate)
 # standings = statsapi.standings_data(date=gamedate)
 # teams = GetTeams(standings)
 
-fv = 40
-original_prospect_score = 0
-unadjusted_score = 0.24395779497136927
-new_prospect_score = .0094 * math.exp(.0576 * fv)
-new_unadjusted_score = unadjusted_score - original_prospect_score + new_prospect_score
-score = min(100, 100*((math.log(1+new_unadjusted_score))/(math.log(3))))
-print('Prospect Score:', new_prospect_score)
-print('Unadjusted Score:', new_unadjusted_score)
-print('Score:', score)
+# pitchers = statsapi.lookup_player("Diaz")
+
+# for pitcher in pitchers:
+#     print(pitcher)
 
 
-prospects = GetProspects()
-
-for prospect in prospects:
-    if prospect['Name'] == 'Munetaka Murakami':
-        print(prospect)
-        rank = prospect['Rank']
-        print(rank)
-        if pd.isna(rank):
-            print(prospect)
+#For each game, get each teams id
+for game in games:
+    #Get team details
+    home_team_id = game['home_id']
+    away_team_id = game['away_id']
+    home_team_name = game['home_name']
+    away_team_name = game['away_name']
+    #Get bio details for each teams starting pitcher
+    home_pitcher_name = game['home_probable_pitcher']
+    away_pitcher_name = game['away_probable_pitcher']
+    if home_pitcher_name != '':
+        home_pitcher = statsapi.lookup_player(home_pitcher_name)
+    else:
+        home_pitcher = None
+    if away_pitcher_name != '':
+        away_pitcher = statsapi.lookup_player(away_pitcher_name)
+    else:
+        away_pitcher = None
+    
+    if home_pitcher != None:
+        for pitcher in home_pitcher:
+            print(pitcher)
+    if away_pitcher != None:
+        for pitcher in away_pitcher:
+            print(pitcher)

@@ -14,19 +14,19 @@ from save_load import load_scores, save_scores
 from teams_info.teams_info import get_teams_info
 from records.records import records
 from playoffs.playoffs import playoff_imp
-from win_streaks.win_streaks import winning_streak
+from win_streaks.win_streaks import win_streak
 from starting_pitchers.starting_pitchers import starting_pitchers
 from milestones.milestones import milestones
 from lineups.lineups import get_all_lineups
 
 
-def score_all_games(starting_date, ending_date):
+def score_all_games(starting_date_str, ending_date_str):
     #Get all scores from game_scores.json 
     saved_scores = load_scores()
 
     #Convert date strings to date objects
-    start_date_obj = datetime.strptime(starting_date, "%m/%d/%Y").date()
-    end_date_obj = datetime.strptime(ending_date, "%m/%d/%Y").date()
+    start_date_obj = datetime.strptime(starting_date_str, "%m/%d/%Y").date()
+    end_date_obj = datetime.strptime(ending_date_str, "%m/%d/%Y").date()
     #Calculate how many days are being run
     number_of_days = (end_date_obj - start_date_obj).days + 1
     #Inital date object
@@ -38,12 +38,12 @@ def score_all_games(starting_date, ending_date):
 
     #Run score_games for each date between the start and end date (inclusive)
     for i in range(1, number_of_days + 1):
-        #Add one to the date
+        #Add one to the date and convert it to a string
         rolling_date_obj += timedelta(days=1)
-        gamedate = rolling_date_obj.strftime("%m/%d/%Y")
+        gamedate_str = rolling_date_obj.strftime("%m/%d/%Y")
         
         #Get the scores for the current date
-        score_games(gamedate, saved_scores)
+        score_games(gamedate_str, saved_scores)
                      
         #After getting the scores, print the current time running, how many scores we've gotten, and how many there are total to get        
         current_time = time.time()
@@ -51,16 +51,16 @@ def score_all_games(starting_date, ending_date):
         hours, remainder = divmod(elapsed_seconds, 3600)
         minutes, seconds = divmod(remainder, 60)
         print()
-        print('Date:', gamedate)
+        print('Date:', gamedate_str)
         print(i, 'out of', number_of_days, 'sets of scores calculated')
         print(f"Time elapsed: {hours:02}:{minutes:02}:{seconds:02}")
 
     return None
 
 
-def score_games(gamedate, saved_scores = None, use_json = True):
+def score_games(gamedate_str, saved_scores = None, use_json = True):
     #Get gamedate as an object
-    gamedate_obj = datetime.strptime(gamedate, "%m/%d/%Y")
+    gamedate_obj = datetime.strptime(gamedate_str, "%m/%d/%Y").date()
     current_year = datetime.now().year
     #If the month of the current gamedate is between November and February, we don't need to call the API
     if gamedate_obj.month in (11, 12, 1, 2) or gamedate_obj.year not in (current_year, current_year - 1):
@@ -74,14 +74,14 @@ def score_games(gamedate, saved_scores = None, use_json = True):
     #If 'use_json = false', don't check the .json file for this date
     if use_json:
         for entry in saved_scores:
-            if entry["gamedate"] == gamedate:
+            if entry["gamedate"] == gamedate_str:
                 cached_games = entry["games"]
                 if all(game.get("game_datetime") for game in cached_games):
                     return cached_games
                 break
         
     #Pull list of this date's games from the API
-    games = statsapi.schedule(date=gamedate)
+    games = statsapi.schedule(date=gamedate_str)
     if not games:
         return []
     
@@ -95,32 +95,32 @@ def score_games(gamedate, saved_scores = None, use_json = True):
         return []
     
     #If there are games on this day, get the standings for this day
-    standings = statsapi.standings_data(date=gamedate)
+    standings = statsapi.standings_data(date=gamedate_str)
 
     #Run get_scores() to get the scoring for each game this day
-    game_scores = get_scores(standings, games, gamedate_obj)
+    game_scores = get_scores(standings, games, gamedate_str)
 
     #Go through all the scores in game_scores.json and remove the date we just recomputed
-    saved_scores[:] = [entry for entry in saved_scores if entry["gamedate"] != gamedate]
+    saved_scores[:] = [entry for entry in saved_scores if entry["gamedate"] != gamedate_str]
 
     #Insert the sorted scores for this day into saved_scores and save those scores to the .json file
     saved_scores.insert(0, {
-        'gamedate': gamedate,
+        'gamedate': gamedate_str,
         'games': game_scores
     })
     save_scores(saved_scores)
 
     return game_scores
 
-def get_scores(standings, games, gamedate_obj):
+def get_scores(standings, games, gamedate_str):
     #Run each function to get individual score components
     teams_info = get_teams_info(standings)               #Initialize the teams_info dictionary to hold all scoring info
-    get_all_lineups(games, gamedate_obj)                 #Get lineups for today
+    get_all_lineups(games, gamedate_str)                 #Get lineups for today
     records(teams_info, standings)                       #Get each team's current or projected record 
     playoff_imp(standings, teams_info)                   #Calculate playoff implications for each team
-    winning_streak(standings, teams_info, gamedate_obj)  #Find winning streaks for each team
-    starting_pitchers(games, teams_info, gamedate_obj)   #Get the starters for today's games
-    milestones(games, gamedate_obj, teams_info)          #Find any milestones, record chases or prospect debuts
+    win_streak(standings, teams_info, gamedate_str)  #Find winning streaks for each team
+    starting_pitchers(games, teams_info, gamedate_str)   #Get the starters for today's games
+    milestones(games, gamedate_str, teams_info)          #Find any milestones, record chases or prospect debuts
 
     #Get a list to put each game's scoring info into
     game_scores = []
@@ -133,7 +133,7 @@ def get_scores(standings, games, gamedate_obj):
 
         #Game Info
         gameid = game['game_id']
-        gamedatetime = game['game_datetime']
+        game_datetime = game['game_datetime']
         #Team Definitions
         away_team_name = game['away_name']
         home_team_name = game['home_name']
@@ -149,9 +149,9 @@ def get_scores(standings, games, gamedate_obj):
         home_playoff_imp_score = home_team_info['playoff_imp'] 
         playoff_imp_score = away_playoff_imp_score + home_playoff_imp_score
         #Win Streak
-        away_win_streak = away_team_info['winning_streak']
+        away_win_streak = away_team_info['win_streak']
         away_win_streak_score = away_team_info['win_streak_score']
-        home_win_streak = home_team_info['winning_streak']
+        home_win_streak = home_team_info['win_streak']
         home_win_streak_score = home_team_info['win_streak_score']
         win_streak_score = away_win_streak_score + home_win_streak_score
         #Winning Percentage
@@ -199,7 +199,7 @@ def get_scores(standings, games, gamedate_obj):
         #Add the scores for this game to the game_scores list
         game_scores.append({
             'game_id': gameid,
-            'game_datetime': gamedatetime,
+            'game_datetime': game_datetime,
             'away_team_name': away_team_name,
             'home_team_name': home_team_name,
             'away_wins': away_wins,
@@ -252,44 +252,41 @@ def get_scores(standings, games, gamedate_obj):
 
     return game_scores
 
-def update_scores(gamedate, games, games_to_update): 
-    #Get game date as a string
-    gamedate_obj = datetime.strptime(gamedate, "%m/%d/%Y")
-
+def update_scores(gamedate_str, games, games_to_update): 
     #Get scores from game_scores.json
-    saved_scores = load_scores()
+    all_saved_scores = load_scores()
 
     #Get a reference to todays entry in game_scores. If we don't find this date in saved_scores, there's nothing to
     #update so just end the function.
-    saved_games = None
-    for entry in saved_scores:
-        if entry["gamedate"] == gamedate:
-            saved_games = entry["games"]
+    saved_scores = None
+    for entry in all_saved_scores:
+        if entry["gamedate"] == gamedate_str:
+            saved_scores = entry["games"]
             break
-    if saved_games is None:
+    if saved_scores is None:
         return None
 
     #Run each function needed to update scores to get individual score components 
-    standings = statsapi.standings_data(date=gamedate)
+    standings = statsapi.standings_data(date=gamedate_str)
     teams_info = get_teams_info(standings)
-    starting_pitchers(games, teams_info, gamedate_obj)
-    milestones(games, gamedate_obj, teams_info)
+    starting_pitchers(games, teams_info, gamedate_str)
+    milestones(games, gamedate_str, teams_info)
 
-    #Create a dictionary to hold all the current game information
-    current_games = {}
+    #Create a dictionary to hold all the live game information
+    live_games = {}
 
     for game in games:
         #If this game is not a regular season game, skip the update for that game
         if game['game_type'] != 'R':
             continue
         
-        #Create a key in current_games that is this game's ID, and have that key value be a dictionary holding this game's info from games.
-        current_games[game['game_id']] = game
+        #Create a key in live_games that is this game's ID, and have that key value be a dictionary holding this game's info from games.
+        live_games[game['game_id']] = game
 
-    for saved_game in saved_games:
-        game_updated = False    #Track whether this game gets updated so we can recalculate the scores only if needed
-        game_id = saved_game.get('game_id')   #Get id for this game in game_scores.json
-        current_game = current_games.get(game_id)   #Find the current game that shares this game_id   
+    for saved_game in saved_scores:
+        #Track whether this game gets updated so we can recalculate the scores only if needed
+        game_updated = False                                   
+        game_id = saved_game.get('game_id')                   #Get id for this game in game_scores.json
         game_to_update = games_to_update.get(game_id, {})     #Find the game in games_to_update that shares this game_id
 
         #Get the away team and home team name for this game
@@ -298,10 +295,10 @@ def update_scores(gamedate, games, games_to_update):
 
         #If the away team needs to be updated for this game
         if game_to_update.get("away"):
-            #Get the updated info for this team from teams
+            #Get the updated info for this team from teams after having rerun the necessary functions
             away_team_info = teams_info[away_team_name]
 
-            #Update this game with the new information
+            #Update this game with the new information and set game_updated to True so we can recalculate the score
             saved_game['away_starter'] = away_team_info['pitcher_name']
             saved_game['away_era'] = away_team_info['pitcher_era']
             saved_game['away_era_source'] = away_team_info['era_source']
@@ -349,13 +346,13 @@ def update_scores(gamedate, games, games_to_update):
             + saved_game['prospect_score']
             + saved_game['min_wp_score']
         )
-        saved_game['score'] = min(100, 100*((math.log(1 + saved_game['unadjusted_score'])) / (math.log(3))))
+        saved_game['score'] = min(100, 100*((math.log(1 + saved_game['unadjusted_score'])) / (math.log(2.33))))
 
     #Re-sort all the games and resave them to the .json file
-    saved_games.sort(key=lambda x: x['score'], reverse=True)
-    save_scores(saved_scores)
+    saved_scores.sort(key=lambda x: x['score'], reverse=True)
+    save_scores(all_saved_scores)
 
-    return saved_games
+    return saved_scores
 
 #get_all_scores('08/21/2026', '12/31/2026')
 #score_games('04/08/2026', use_json=False)

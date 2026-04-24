@@ -1,5 +1,13 @@
-from save_load import load_projections
 import math
+import sys
+from pathlib import Path
+
+#Find the project root path and add that path to Python's import path so we can find the files we
+#need to import from
+ROOT_DIR = Path(__file__).resolve().parents[1]  
+sys.path.insert(0, str(ROOT_DIR))
+
+from save_load import load_projections
 
 def records(teams, standings):
     #Make sure there's standings. If not, it's the first day of the season, use projections.
@@ -27,6 +35,7 @@ def records(teams, standings):
                             win_perc = round(proj_team['Wins'] / 162, 3)
                             team_info['win_perc'] = win_perc
                             break
+                calc_score(win_perc, team_info)
     #If it's the first day of the season, use projected records
     else:
         projections = load_projections()
@@ -37,6 +46,10 @@ def records(teams, standings):
             win_perc = round(team['Wins'] / 162, 3)
             team_info['win_perc'] = win_perc
 
+            calc_score(win_perc, team_info)
+
+
+def calc_score(win_perc, team_info):
     #After getting the winning percentage either through the team record or through projections, calculate the wp score
     if win_perc < .45:
         wp_score = 0

@@ -1,5 +1,13 @@
-from save_load import LoadProjections
 import math
+import sys
+from pathlib import Path
+
+#Find the project root path and add that path to Python's import path so we can find the files we
+#need to import from
+ROOT_DIR = Path(__file__).resolve().parents[1]  
+sys.path.insert(0, str(ROOT_DIR))
+
+from save_load import load_projections
 
 def playoff_imp(standings, teams):
     #Initialize dictionary to hold first and second place teams in each division and 4th place team in wild card
@@ -77,7 +85,7 @@ def playoff_imp(standings, teams):
 
                 teams[team['name']]['playoff_imp'] = playoff_imp
     else:
-        projections = LoadProjections()
+        projections = load_projections()
         for team in projections:
             teams[team['Name']]['playoff_imp'] = 0
 

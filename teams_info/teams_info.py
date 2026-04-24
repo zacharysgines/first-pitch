@@ -1,4 +1,12 @@
 import statsapi
+import sys
+from pathlib import Path
+
+#Find the project root path and add that path to Python's import path so we can find the files we
+#need to import from
+ROOT_DIR = Path(__file__).resolve().parents[1]  
+sys.path.insert(0, str(ROOT_DIR))
+
 from save_load import load_projections
 
 def get_teams_info(standings):

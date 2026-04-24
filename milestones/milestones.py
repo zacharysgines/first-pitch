@@ -1,128 +1,116 @@
-import json
 from datetime import datetime
 from pathlib import Path
 import statsapi
 import math
 import pandas as pd
+import sys
+from pathlib import Path
 
-#Load milestone_records.json
-with open("scores/milestone_records.json", "r") as f:
-    milestone_records = json.load(f)
+#Find the project root path and add that path to Python's import path so we can find the files we
+#need to import from
+ROOT_DIR = Path(__file__).resolve().parents[1]  
+sys.path.insert(0, str(ROOT_DIR))
 
-# Load prospects.csv with an encoding fallback because the source file currently
-# contains Windows-1252 characters such as accented player names.
-PROSPECTS_CSV = Path(__file__).with_name("prospects.csv")
+from save_load import load_milestone_records, load_prospects, load_milestone_stat_list, load_saved_lineups, save_milestone_records
 
-try:
-    df = pd.read_csv(PROSPECTS_CSV, encoding="utf-8")
-except UnicodeDecodeError:
-    df = pd.read_csv(PROSPECTS_CSV, encoding="cp1252")
-prospects = df.to_dict(orient='records')
 
-batter_milestone_stat_list = {
-    "runs":         {"margin": 6, 'box_name': 'runs'},
-    "doubles":      {"margin": 5, 'box_name': 'doubles'},
-    "triples":      {"margin": 4, 'box_name': 'triples'},
-    "home_runs":    {"margin": 5, 'box_name': 'homeRuns'},
-    "hits":         {"margin": 7, 'box_name': 'hits'}, 
-    "steals":       {"margin": 7, 'box_name': 'stolenBases'},
-    "rbi":          {"margin": 10, 'box_name': 'rbi'}
-}
-
-pitcher_milestone_stat_list = {
-    "strikeouts":      {"margin": 21, 'box_name': 'strikeOuts'},
-}
-
-def CleanProspectValue(value):
-    if pd.isna(value):
-        return None
-    return value
-
-def LoadLineups():
-    with open("scores/lineups.json", "r") as f:
-        saved_lineups = json.load(f)
-
-    if isinstance(saved_lineups, dict) and "games" in saved_lineups:
-        return saved_lineups["games"]
-
-    return saved_lineups
-
-def milestones(games, date_obj, teams):
-    #Initialize milestones dictionary
-    for team in teams:
-        teams[team]['milestones'] = {
+def milestones(games, gamedate_str, teams_info):
+    #Initialize milestones info in teams_info
+    for team in teams_info:
+        team_info = teams_info[team]
+        team_info['milestones'] = {
             'career': [],
             'season': []
         }
-        teams[team]['debuts'] = []
-        teams[team]['milestone_score'] = 0
-        teams[team]['debut_score'] = 0
+        team_info['debuts'] = []
+        team_info['milestone_score'] = 0
+        team_info['debut_score'] = 0
 
-    #If date is later than today, don't get the milestones
-    if date_obj.date() > datetime.today().date():
+    #Get lineup info for today's games
+    saved_lineups = load_saved_lineups()
+    lineup_date_str = saved_lineups.get("date")
+    saved_games = saved_lineups.get("games", {})
+
+    #If the date passed in is not the lineup date, don't get the milestones for this game
+    if gamedate_str != lineup_date_str:
         return None
-
-    saved_lineups = LoadLineups()
+    
+    batter_milestone_stat_list, pitcher_milestone_stat_list = load_milestone_stat_list()
     
     for game in games:
-        away_team = teams[game['away_name']]
-        home_team = teams[game['home_name']]
-        game_key = f"game_{game['game_id']}"
-        game_lineup = saved_lineups.get(game_key)
-
+        #Get team info
+        away_team_info = teams_info[game['away_name']]
+        home_team_info = teams_info[game['home_name']]
+        #Find this game in the saved lineups. If you can't find it, don't get the milestones for this game.
+        game_id = game['game_id']
+        game_lineup = saved_games.get(game_id)
         if not game_lineup:
             continue
 
         #Add all the milestones that need to be scored into the teams dictionary
         for player in game_lineup.get('away_lineup', []):
-            GetMilestones(player['id'], away_team, player['name'], teams, 'hitting', batter_milestone_stat_list, player)
+            get_milestones(player, away_team_info, 'hitting', batter_milestone_stat_list)
 
         for player in game_lineup.get('home_lineup', []):
-            GetMilestones(player['id'], home_team, player['name'], teams, 'hitting', batter_milestone_stat_list, player)
+            get_milestones(player, home_team_info, 'hitting', batter_milestone_stat_list)
 
         away_pitcher = game_lineup.get('away_pitcher')
         if away_pitcher:
-            GetMilestones(away_pitcher['id'], away_team, away_pitcher['name'], teams, 'pitching', pitcher_milestone_stat_list, away_pitcher)
+            get_milestones(away_pitcher, away_team_info, 'pitching', pitcher_milestone_stat_list)
 
         home_pitcher = game_lineup.get('home_pitcher')
         if home_pitcher:
-            GetMilestones(home_pitcher['id'], home_team, home_pitcher['name'], teams, 'pitching', pitcher_milestone_stat_list, home_pitcher)
+            get_milestones(home_pitcher, home_team_info, 'pitching', pitcher_milestone_stat_list)
 
     return None
 
-def GetMilestones(player_id, teamname, player_name, teams, player_type, milestone_stat_list, player): 
+def get_milestones(player, team_info, player_type, milestone_stat_list): 
+    #################################################################################################################################################################################
+    ######################################################################### MILESTONES ############################################################################################
+    #################################################################################################################################################################################
+    player_name = player['name']
     #Create a dictionary to hold all of their season and career stats for this iteration of the loop
     season_stats = {}
     career_stats = {}
     
     #Get the career stats for this player
-    player_career = statsapi.player_stat_data(player_id, group=player_type, type="career")            
     career_stat_block = {}
+    player_career = statsapi.player_stat_data(player['id'], group=player_type, type="career")            
     if player_career.get('stats'):
         career_stat_block = player_career['stats'][0].get('stats', {})
 
+    #Get season stats for this player
     season_stat_block = player.get('stats', {})
+
     #For each stat we want to track, find that player's value and save it to their dictionary
-    for stat, info in milestone_stat_list.items():        
-        season_stats[stat] = season_stat_block.get(info['box_name'], 0)
-        career_stats[stat] = career_stat_block.get(info['box_name'], 0)
+    for stat_name, milestone_info in milestone_stat_list.items():        
+        season_stats[stat_name] = season_stat_block.get(milestone_info['box_name'], 0)
+        career_stats[stat_name] = career_stat_block.get(milestone_info['box_name'], 0)
+        player_season_stat_value = season_stats[stat_name]
+        player_career_stat_value = career_stats[stat_name]
 
-        #Pass this stat into UpdateMilestone to get the current record, and update the current record if necessary
-        season_record = UpdateMilestone(season_stats[stat], stat, 'season')
-        #Pass this stat into AddMilestone, which will add it into the teams dictionary if necessary
-        AddMilestone(season_record, info['margin'], season_stats[stat], teamname, 'season', stat, player_name)
+        #Pass this stat into update_milestone to get the current season record, and update it if necessary
+        season_record = update_milestone(player_season_stat_value, stat_name, 'season')
+        #Pass this season stat into add_milestone, which will add it into the teams dictionary if necessary
+        add_milestone(season_record, milestone_info['margin'], player_season_stat_value, team_info, 'season', stat_name, player_name)
 
-        #Same thing as above, but with career milestones
-        career_record = UpdateMilestone(career_stats[stat], stat, 'career')
-        AddMilestone(career_record, info['margin'], career_stats[stat], teamname, 'career', stat, player_name)
+        #Pass this stat into update_milestone to get the current career record, and update it if necessary
+        career_record = update_milestone(player_career_stat_value, stat_name, 'career')
+        #Pass this career stat into add_milestone, which will add it into the teams dictionary if necessary
+        add_milestone(career_record, milestone_info['margin'], player_career_stat_value, team_info, 'career', stat_name, player_name)
     
-    if career_stat_block.get('gamesPlayed', 0) == 0:
-        if player_type == 'pitching':
-            player_position = 'SP'
-        else:
-            player_position = player.get('position')
+    #################################################################################################################################################################################
+    ########################################################################### DEBUTS ##############################################################################################
+    #################################################################################################################################################################################
+    #Get prospects.csv
+    prospects = load_prospects()
 
-        player = {
+    #Check if this player has not played an MLB game yet to see if they're making their debut
+    if career_stat_block.get('gamesPlayed', 0) == 0:
+        player_position = player.get('position')
+
+        #Define basic debut info, which will be updated if more info is found.
+        debut_info = {
             'name': player_name,
             'org': None,
             'pos': player_position,
@@ -131,122 +119,131 @@ def GetMilestones(player_id, teamname, player_name, teams, player_type, mileston
             'pos_rank': None,
             'score': 0.05
         }
+
         for prospect in prospects:
+            #See if you can find this player in prospects.csv. If you can't they're not a top prospect, so we don't have any additional info on them.
             if prospect['Name'] == player_name:
+                #Get all info about this prospect from the .csv file
                 rank = prospect['Rank']
                 org_rank = prospect['OrgRank']
                 pos_rank = prospect['PosRank']
                 fv = prospect['FV']
 
-                player['org'] = prospect['Org']
-                player['pos'] = prospect['Pos']
-
+                #Update debut_info with any info we found in the .csv file, and save the calculated score for this prosepct
+                debut_info['org'] = prospect['Org']
+                debut_info['pos'] = prospect['Pos']
                 if pd.notna(rank):
-                    player['mlb_rank'] = rank
+                    debut_info['mlb_rank'] = rank
                 if pd.notna(org_rank):
-                    player['org_rank'] = org_rank
+                    debut_info['org_rank'] = org_rank
                 if pd.notna(pos_rank):
-                    player['pos_rank'] = pos_rank                
-                                
-                player['score'] = .0094 * math.exp(.0576 * fv)
+                    debut_info['pos_rank'] = pos_rank                                
+                debut_info['score'] = .0094 * math.exp(.0576 * fv)
         
-        teamname['debuts'].append(player)       
-        teamname['debut_score'] += player['score']
-                    
+        #Save all debut info for this player into the team_info dictionary
+        team_info['debuts'].append(debut_info)       
+        team_info['debut_score'] += debut_info['score']
     return None
 
-def AddMilestone(record, margin, player_stat, team, scope, stat, player_name):
-    #Initialize "diff" as the difference between the record and this players value
-    diff = record - player_stat
+
+def add_milestone(record, margin, player_stat_value, team_info, scope, stat_name, player_name):
+    #Initialize "diff" as the difference between the record and this players value, and score as 0
+    diff = record - player_stat_value
     score = 0
 
     #Get milestone score for runs
-    if stat == 'runs':
+    if stat_name == 'runs':
         if 0 <= diff <= margin:
             score = .0241 * diff**3 - .2581 * diff**2 + .6035 * diff + .6333
-            target = record
+            target_stat_value = record
             milestone_type = 'Record'
 
     #Get milestone score for doubles
-    if stat == 'doubles':
+    if stat_name == 'doubles':
         if 0 <= diff <= margin:
             score = -.245 * diff + 1.245
-            target = record
+            target_stat_value = record
             milestone_type = "Record"
     
     #Get milestone score for triples
-    if stat == 'triples':
+    if stat_name == 'triples':
         if 0 <= diff <= margin:
             score = .1125 * diff**2 - .8675 * diff + .17625
-            target = record
+            target_stat_value = record
             milestone_type = "Record"
 
     #Get milestone score for home runs
-    if stat == 'home_runs':
+    if stat_name == 'home_runs':
         if 0 <= diff <= margin:
             score = (0.0414 * diff**2 - 0.4846 * diff + 1.488) * 2
-            target = record
+            target_stat_value = record
             milestone_type = 'Record'
         else:
-            target = math.ceil((player_stat + 1) / 100) * 100
-            diff = target - player_stat
+            target_stat_value = math.ceil((player_stat_value + 1) / 100) * 100
+            diff = target_stat_value - player_stat_value
             if 0 <= diff <= margin:
-                score = (0.0414 * diff**2 - 0.4846 * diff + 1.488) * (0.0263 * math.exp(0.006 * target))
+                score = (0.0414 * diff**2 - 0.4846 * diff + 1.488) * (0.0263 * math.exp(0.006 * target_stat_value))
                 milestone_type = 'Milestone'
 
     #Get milestone score for hits
-    if stat == 'hits':
+    if stat_name == 'hits':
         if 0 <= diff <= margin:
             score = (.0103 * diff**3 - .1202 * diff**2 + 0.2245 * diff + .9029) * 2
-            target = record
+            target_stat_value = record
             milestone_type = 'Record'
         else:
-            target = math.ceil((player_stat + 1) / 1000) * 1000
-            diff = target - player_stat
+            target_stat_value = math.ceil((player_stat_value + 1) / 1000) * 1000
+            diff = target_stat_value - player_stat_value
             if 0 <= diff <= margin:
-                score = (.0103 * diff**3 - .1202 * diff**2 + 0.2245 * diff + .9029) * (.0000002 * target**2 - .0005 * target + .4)
+                score = (.0103 * diff**3 - .1202 * diff**2 + 0.2245 * diff + .9029) * (.0000002 * target_stat_value**2 - .0005 * target_stat_value + .4)
                 milestone_type = 'Milestone'
 
     #Get milestone score for steals
-    if stat == 'steals':
+    if stat_name == 'steals':
         if 0 <= diff <= margin:
             score = .0125 * diff**3 - .1423 * diff**2 + .2667 * diff + .8857
-            target = record
+            target_stat_value = record
             milestone_type = 'Record'
 
     #Get milestone score for rbi
-    if stat == 'rbi':
+    if stat_name == 'rbi':
         if 0 <= diff <= margin:
             score = .0037 * diff**3 - .057 * diff**2 + .1181 * diff + .9503
-            target = record
+            target_stat_value = record
             milestone_type = 'Record'
 
     #Get milestone score for strikeouts
-    if stat == 'strikeouts':
+    if stat_name == 'strikeouts':
         if 0 <= diff <= margin:
             score = (.0004 * diff**3 - .0149 * diff**2 + 0.0837 * diff + .9017) * 2
-            target = record
+            target_stat_value = record
             milestone_type = 'Record'
         else:
-            target = math.ceil((player_stat + 1) / 1000) * 1000
-            diff = target - player_stat
+            target_stat_value = math.ceil((player_stat_value + 1) / 1000) * 1000
+            diff = target_stat_value - player_stat_value
             if 0 <= diff <= margin:
-                score = (.0004 * diff**3 - .0149 * diff**2 + 0.0837 * diff + .9017) * (.0000002 * target**2 - .0003 * target + .18)
+                score = (.0004 * diff**3 - .0149 * diff**2 + 0.0837 * diff + .9017) * (.0000002 * target_stat_value**2 - .0003 * target_stat_value + .18)
                 milestone_type = 'Milestone'
 
+    #If the milestone score for this player was significant enough, add this milestone info to the team_info dictionary
     if score >= .05:
-        team['milestones'].setdefault(scope, []).append(
-            {"stat": stat, "player": player_name, "value": player_stat, "target": target, "diff": diff, "milestone_type": milestone_type, "milestone_score": score}
+        team_info['milestones'].setdefault(scope, []).append(
+            {"stat": stat_name, "player": player_name, "value": player_stat_value, "target": target_stat_value, "diff": diff, "milestone_type": milestone_type, "milestone_score": score}
         )     
-        team['milestone_score'] += score
-
+        team_info['milestone_score'] += score
     return None
 
-def UpdateMilestone(player_stat, stat, scope):
-    if player_stat > milestone_records[scope][stat]:
-        milestone_records[scope][stat] = player_stat
-        
-        with open('scores/milestone_records.json', "w") as f:
-            json.dump(milestone_records, f, indent=2)
 
-    return milestone_records[scope][stat]
+def update_milestone(player_stat_value, stat_name, scope):
+    #Load the current records for each stat we're tracking
+    milestone_records = load_milestone_records()
+
+    #If this player has exceeded the record, update the record to whatever this player's stat value is
+    if player_stat_value > milestone_records[scope][stat_name]:
+        milestone_records[scope][stat_name] = player_stat_value
+        
+        #If we updated the milestone_records, save the new record
+        save_milestone_records(milestone_records)
+
+    #Return the current record for this stat
+    return milestone_records[scope][stat_name]
