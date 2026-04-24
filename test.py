@@ -1,23 +1,20 @@
-# """
-# Adjust divisional scores to use min wp instead of games back
-# SAVE MILESTONES
-# UPDATE LINEUP CHANGES
-# MVP player
-# Cy Young Player
-# RotY Player
-# Hot Streak Player
-#     - Consecutive games with home run
-#     - Hitting streak
-#     - On base streak
-#     - OPS over last x games
-#     - Consecutive scoreless innnings
-#     - ERA over last x games
-# ERA milestone
-# "On Pace" milestones
-# Modern (and other) era records
-# WAR data/better stats
-# Automated prospect list
-# """
+"""
+SAVE MILESTONES
+MVP player
+Cy Young Player
+RotY Player
+Hot Streak Player
+    - Consecutive games with home run
+    - Hitting streak
+    - On base streak
+    - OPS over last x games
+    - Consecutive scoreless innnings
+    - ERA over last x games
+ERA milestone
+"On Pace" milestones
+Modern (and other) era records
+WAR data/better stats
+"""
 
 import statsapi
 import pandas as pd
@@ -26,13 +23,14 @@ import json
 import math
 import hashlib
 from pathlib import Path
+import pybaseball
 
 
-# # def LoadProjections():
-# #     #Load projections.csv
-# #     with open('projected_records.csv', 'r', encoding='utf-8') as f:
-# #         df = pd.read_csv(f)
-# #         projections = df.to_dict(orient='records')
+# def LoadProjections():
+#     #Load projections.csv
+#     with open('projected_records.csv', 'r', encoding='utf-8') as f:
+#         df = pd.read_csv(f)
+#         projections = df.to_dict(orient='records')
     
 # #     return projections
 
@@ -66,16 +64,26 @@ from pathlib import Path
     
 #     return teams
 
-# # def GetProspects():
-# #     PROSPECTS_CSV = 'scores\prospects.csv'
+# def GetProspects():
+#     PROSPECTS_CSV = 'scores\prospects.csv'
 
-# #     try:
-# #         df = pd.read_csv(PROSPECTS_CSV, encoding="utf-8")
-# #     except UnicodeDecodeError:
-# #         df = pd.read_csv(PROSPECTS_CSV, encoding="cp1252")
-# #     prospects = df.to_dict(orient='records')
+#     try:
+#         df = pd.read_csv(PROSPECTS_CSV, encoding="utf-8")
+#     except UnicodeDecodeError:
+#         df = pd.read_csv(PROSPECTS_CSV, encoding="cp1252")
+#     prospects = df.to_dict(orient='records')
 
-# #     return prospects
+#     return prospects
+
+#fv = 40
+# original_prospect_score = 0
+# unadjusted_score = 0.24395779497136927
+# new_prospect_score = .0094 * math.exp(.0576 * fv)
+# new_unadjusted_score = unadjusted_score - original_prospect_score + new_prospect_score
+# score = min(100, 100*((math.log(1+new_unadjusted_score))/(math.log(3))))
+# print('Prospect Score:', new_prospect_score)
+# print('Unadjusted Score:', new_unadjusted_score)
+# print('Score:', score)
 
 # # fv = 40
 # # original_prospect_score = 0
@@ -94,34 +102,21 @@ games = statsapi.schedule(gamedate)
 # standings = statsapi.standings_data(date=gamedate)
 # teams = GetTeams(standings)
 
-# pitchers = statsapi.lookup_player("Diaz")
+url = "https://www.baseball-reference.com/data/war_daily_pitch.txt"
 
-# for pitcher in pitchers:
-#     print(pitcher)
-
-
-#For each game, get each teams id
-for game in games:
-    #Get team details
-    home_team_id = game['home_id']
-    away_team_id = game['away_id']
-    home_team_name = game['home_name']
-    away_team_name = game['away_name']
-    #Get bio details for each teams starting pitcher
-    home_pitcher_name = game['home_probable_pitcher']
-    away_pitcher_name = game['away_probable_pitcher']
-    if home_pitcher_name != '':
-        home_pitcher = statsapi.lookup_player(home_pitcher_name)
-    else:
-        home_pitcher = None
-    if away_pitcher_name != '':
-        away_pitcher = statsapi.lookup_player(away_pitcher_name)
-    else:
-        away_pitcher = None
-    
-    if home_pitcher != None:
-        for pitcher in home_pitcher:
-            print(pitcher)
-    if away_pitcher != None:
-        for pitcher in away_pitcher:
-            print(pitcher)
+war_raw = pd.read_csv(url)
+war_tab = war_raw[war_raw["year_ID"] == 2026].copy()
+war_agg = (
+    war_tab
+    .groupby(["mlb_ID", "year_ID"], as_index=False)
+    .agg({
+        "name_common": "first",
+        "WAR": "sum",
+        "IPouts": "sum",
+        "team_ID": "last"
+    })
+)
+war_agg = war_agg.dropna(subset=["mlb_ID"])
+war_agg["mlb_ID"] = war_agg["mlb_ID"].astype(int)
+war_lookup = dict(zip(war_agg["mlb_ID"], war_agg["WAR"]))
+print(war_lookup)
