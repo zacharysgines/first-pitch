@@ -3517,7 +3517,134 @@
         "game_823232": {
             "away_team": "Miami Marlins",
             "home_team": "San Francisco Giants",
-            "away_lineup": [],
+            "away_lineup": [
+                {
+                    "id": 805300,
+                    "name": "Jakob Marsee",
+                    "position": "CF",
+                    "stats": {
+                        "runs": 16,
+                        "doubles": 1,
+                        "triples": 2,
+                        "home_runs": 1,
+                        "hits": 17,
+                        "steals": 9,
+                        "rbi": 7
+                    }
+                },
+                {
+                    "id": 669364,
+                    "name": "Xavier Edwards",
+                    "position": "2B",
+                    "stats": {
+                        "runs": 18,
+                        "doubles": 5,
+                        "triples": 2,
+                        "home_runs": 1,
+                        "hits": 31,
+                        "steals": 2,
+                        "rbi": 7
+                    }
+                },
+                {
+                    "id": 688363,
+                    "name": "Graham Pauley",
+                    "position": "3B",
+                    "stats": {
+                        "runs": 5,
+                        "doubles": 6,
+                        "triples": 0,
+                        "home_runs": 0,
+                        "hits": 10,
+                        "steals": 1,
+                        "rbi": 5
+                    }
+                },
+                {
+                    "id": 669065,
+                    "name": "Kyle Stowers",
+                    "position": "LF",
+                    "stats": {
+                        "runs": 2,
+                        "doubles": 1,
+                        "triples": 0,
+                        "home_runs": 0,
+                        "hits": 3,
+                        "steals": 0,
+                        "rbi": 0
+                    }
+                },
+                {
+                    "id": 689414,
+                    "name": "Liam Hicks",
+                    "position": "C",
+                    "stats": {
+                        "runs": 14,
+                        "doubles": 3,
+                        "triples": 0,
+                        "home_runs": 4,
+                        "hits": 25,
+                        "steals": 1,
+                        "rbi": 21
+                    }
+                },
+                {
+                    "id": 683357,
+                    "name": "Owen Caissie",
+                    "position": "RF",
+                    "stats": {
+                        "runs": 7,
+                        "doubles": 5,
+                        "triples": 0,
+                        "home_runs": 2,
+                        "hits": 16,
+                        "steals": 1,
+                        "rbi": 14
+                    }
+                },
+                {
+                    "id": 682663,
+                    "name": "Agust\u00edn Ram\u00edrez",
+                    "position": "DH",
+                    "stats": {
+                        "runs": 12,
+                        "doubles": 4,
+                        "triples": 1,
+                        "home_runs": 2,
+                        "hits": 20,
+                        "steals": 1,
+                        "rbi": 12
+                    }
+                },
+                {
+                    "id": 681393,
+                    "name": "Connor Norby",
+                    "position": "1B",
+                    "stats": {
+                        "runs": 6,
+                        "doubles": 5,
+                        "triples": 0,
+                        "home_runs": 2,
+                        "hits": 18,
+                        "steals": 0,
+                        "rbi": 7
+                    }
+                },
+                {
+                    "id": 672640,
+                    "name": "Otto Lopez",
+                    "position": "SS",
+                    "stats": {
+                        "runs": 19,
+                        "doubles": 5,
+                        "triples": 2,
+                        "home_runs": 3,
+                        "hits": 29,
+                        "steals": 4,
+                        "rbi": 11
+                    }
+                }
+            ],
             "home_lineup": [
                 {
                     "id": 669477,
@@ -3664,7 +3791,7 @@
                     "ip": "21.2"
                 }
             },
-            "lineup_hash": "10bd3423c7277bbac8ca2d4a46fe13f3",
+            "lineup_hash": "31025b301c78c4b71397a6cd763f9b04",
             "lineup_confirmed": false
         }
     }
