@@ -171,7 +171,7 @@ def get_scores(standings, games, gamedate_obj):
             min_wp_score = 8.9545 * min_wp**2 - 7.0217 * min_wp + 1.3316
         #Divisional Score
         if away_team_info['division'] == home_team_info['division']:
-            division_score = min_wp_score
+            division_score = 2.5 * (.6 * min_wp_score + .4 * team_diff_score)
         else:
             division_score = 0
         #Starting Pitcher ERA
@@ -194,8 +194,8 @@ def get_scores(standings, games, gamedate_obj):
         prospect_score = away_prospect_score + home_prospect_score
         #SCORING
         unadjusted_score = playoff_imp_score + win_streak_score + wp_score + team_diff_score + era_score + division_score + milestone_score + prospect_score + min_wp_score
-        score = min(100, 100*((math.log(1+unadjusted_score))/(math.log(3))))    #Final Adjustment (in denominatior, math.log(x), x = 1 + 99th percentile score. 
-                                                                                #Adjust higher to get less 100s, lower to get more 100s) 
+        score = min(100, 100*((math.log(1+unadjusted_score))/(math.log(2.33))))    #Final Adjustment (in denominatior, math.log(x), x = 1 + 99th percentile score. 
+                                                                                   #Adjust higher to get less 100s, lower to get more 100s) 
         #Add the scores for this game to the game_scores list
         game_scores.append({
             'game_id': gameid,

@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-import json
 import statsapi
 import sys
 from pathlib import Path
@@ -56,49 +55,53 @@ def winning_streak(standings, teams_info, date_obj):
                     
             #If you didn't find this date in the .json file, we need to add that date in there and return back this team's result for that date
             if found_entry == False:
-                wins_log, results = AddWinStreakEntry(streak_date_str, wins_log)
-                winning_streak, won_games = FindTeamResult(results, team)
+                wins_log, results = add_win_streak_entry(streak_date_str, wins_log)
+                winning_streak, won_games = find_team_result(results, team)
                 streak_count += won_games
 
-        #After the while loop ends, save the streak count
-        teams[team]['winning_streak'] = streak_count
-
-        if streak_count == 0:
+        #After the while loop ends, calculate the streak score
+        if streak_count <= 2:
             win_streak_score = 0
         else:
-            win_streak_score = 0.002 * streak_count**2 - 0.0047 * streak_count + 0.0083
+            win_streak_score = min(1, -0.0006 * streak_count**3 + 0.018 * streak_count**2 - 0.0763 * streak_count + 0.0957)
 
-        teams[team]['win_streak_score'] = win_streak_score
+        team_info['winning_streak'] = streak_count
+        team_info['win_streak_score'] = win_streak_score
 
     #Save any dates that were added back into the .json file
-    SaveWinStreaks(wins_log)
+    save_win_streaks(wins_log)
 
     return None
 
 def find_team_result(results, team):
     #Track how many games this team has won today
     won_games_today = 0
-    #If we called this function, their winning streak should be true
+    #Initalize winning_streak to be true and set to false if they lost a game on this date
     winning_streak = True
+
+    #Find this team's results for this day
     for result_team, result in results.items():
         if result_team == team:
-            #If this team won, add one to the streak counter
-            if 'game_2' in result:
+            #Check if they played a double header on this day. If they lost the second game of the day, don't check the first game. If they won, add one to "won_games_today" 
+            #and then check the next game.  
+            if 'game_2' in result: 
                 if result['game_2'] == 'w':
-                    won_games += 1
+                    won_games_today += 1
                 else:
                     winning_streak = False
                     break
+            #If the team won their second game of the double header or if they didn't play a double header, check the first game of that day to see if they won and add 
+            #one to "won_games_today"
             if result['game_1'] == 'w':
-                won_games += 1
+                won_games_today += 1
             #If this team lost, end the winning streak
             else:
                 winning_streak = False
             break
 
-    return winning_streak, won_games
+    return winning_streak, won_games_today
             
-def AddWinStreakEntry(streak_date_str, wins_log):
+def add_win_streak_entry(streak_date_str, wins_log):
     #Track team results for this day and the result for the team that prompted getting this date 
     results = {}
     #Find this teams game for the current streak_date
@@ -107,6 +110,7 @@ def AddWinStreakEntry(streak_date_str, wins_log):
     #Look through every game this day.
     if prior_games:
         for game in prior_games:
+            #Don't consider this game if it wasn't a regular season game
             if game.get('game_type') != 'R':
                 continue
             #If there's no winning team listed, then that game got postponed, so skip it.
@@ -115,16 +119,16 @@ def AddWinStreakEntry(streak_date_str, wins_log):
             winning_team = game['winning_team']
             losing_team = game['losing_team']
 
-            #Save the winning and losing teams to the results dictionary
-            if winning_team not in results:
+            #If the team is already in results, then this game is the second game of a double header, so save it as game_2. Otherwise, treat it as game_1 
+            if winning_team in results:
+                results[winning_team]['game_2'] = 'w'                
+            else:
                 results[winning_team] = {'game_1': 'w'}
-            else:
-                results[winning_team]['game_2'] = 'w'
             
-            if losing_team not in results:
-                results[losing_team] = {'game_1': 'l'}
-            else:
+            if losing_team in results:
                 results[losing_team]['game_2'] = 'l'
+            else:                
+                results[losing_team] = {'game_1': 'l'}
 
     #Insert the date and results into the win_streaks dictionary 
     wins_log.append({
