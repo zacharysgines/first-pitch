@@ -1,10 +1,17 @@
 import streamlit as st
-from GetScores import ScoreGames
 from datetime import date, datetime, timedelta, timezone
 import html
 import json
-from pathlib import Path
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
+from pathlib import Path
+import sys
+
+#Find the project root path and add that path to Python's import path so we can find the files we
+#need to import from
+ROOT_DIR = Path(__file__).resolve().parents[1]  
+sys.path.insert(0, str(ROOT_DIR))
+
+from scores.get_scores import score_games
 
 # Streamlit still handles layout/state, but most of the visual presentation in this
 # file is custom HTML/CSS injected with st.markdown. Treat this file more like a
@@ -1271,9 +1278,9 @@ if current_page == "home":
                 st.session_state.selected_date = datetime.now(get_user_display_timezone()).date()
         elif query_date:
             try:
-                query_date_value = datetime.strptime(query_date, "%Y-%m-%d").date()
-                if query_date_value != st.session_state.selected_date:
-                    st.session_state.selected_date = query_date_value
+                query_date_obj = datetime.strptime(query_date, "%Y-%m-%d").date()
+                if query_date_obj != st.session_state.selected_date:
+                    st.session_state.selected_date = query_date_obj
             except ValueError:
                 pass
 
@@ -1291,9 +1298,9 @@ if current_page == "home":
             on_change=sync_selected_date_from_input,
         )
 
-        selected_date = st.session_state.selected_date
+        selected_date_obj = st.session_state.selected_date
 
-    date_str = selected_date.strftime("%m/%d/%Y")
+    date_str = selected_date_obj.strftime("%m/%d/%Y")
 
     if "last_loaded_date" not in st.session_state:
         st.session_state.last_loaded_date = None
@@ -1309,10 +1316,10 @@ if current_page == "home":
             """,
             unsafe_allow_html=True,
         )
-        games = ScoreGames(date_str)
+        games = score_games(date_str)
         loading_placeholder.empty()
     else:
-        games = ScoreGames(date_str)
+        games = score_games(date_str)
 
     st.session_state.last_loaded_date = date_str
 else:
@@ -1335,7 +1342,7 @@ def score_class(score):
 
 def load_lineups_snapshot():
     """Load the latest lineup snapshot saved by the lineup polling script."""
-    lineups_path = Path("scores/lineups.json")
+    lineups_path = Path(__file__).resolve().parent / "lineups" / "lineups.json"
     if not lineups_path.exists():
         return {"date": None, "games": {}}
 

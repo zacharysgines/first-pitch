@@ -1,7 +1,11 @@
 import json
+from pathlib import Path
+
 import pandas as pd
 
-with open("game_scores.json", "r") as f:
+SCORES_FILE = Path(__file__).resolve().parent / "scores" / "game_scores.json"
+
+with open(SCORES_FILE, "r", encoding="utf-8") as f:
     raw_text = f.read().strip()
     saved_scores = json.loads(raw_text) if raw_text else []
 
