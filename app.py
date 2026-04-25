@@ -1300,7 +1300,8 @@ if current_page == "home":
 
         selected_date_obj = st.session_state.selected_date
 
-    date_str = selected_date_obj.strftime("%m/%d/%Y")
+    selected_date = selected_date_obj
+    date_str = selected_date.strftime("%m/%d/%Y")
 
     if "last_loaded_date" not in st.session_state:
         st.session_state.last_loaded_date = None
@@ -1323,6 +1324,7 @@ if current_page == "home":
 
     st.session_state.last_loaded_date = date_str
 else:
+    selected_date = None
     date_str = None
     games = []
 
