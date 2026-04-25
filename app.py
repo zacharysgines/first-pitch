@@ -1273,9 +1273,9 @@ if current_page == "home":
                 try:
                     st.session_state.selected_date = datetime.strptime(query_date, "%Y-%m-%d").date()
                 except ValueError:
-                    st.session_state.selected_date = date.today()
+                    st.session_state.selected_date = datetime.now(get_user_display_timezone()).date()
             else:
-                st.session_state.selected_date = date.today()
+                st.session_state.selected_date = datetime.now(get_user_display_timezone()).date()
         elif query_date:
             try:
                 query_date_obj = datetime.strptime(query_date, "%Y-%m-%d").date()
@@ -1364,8 +1364,17 @@ def load_lineups_snapshot():
         "games": games,
     }
 
-def get_lineup_announcement_note(lineups_games, game):
+def get_lineup_announcement_note(lineups_games, game, selected_date, current_user_date):
     """Return the appropriate lineup announcement note for this matchup."""
+    if selected_date is None or current_user_date is None:
+        return None
+
+    if selected_date < current_user_date:
+        return None
+
+    if selected_date > current_user_date:
+        return "Lineups have not been announced"
+
     away_team = str(game.get("away_team_name", "")).strip()
     home_team = str(game.get("home_team_name", "")).strip()
 
@@ -1654,6 +1663,11 @@ def format_prospect_breakdown_label(team_name):
 # At this point all shared state/header/date-selection work is done. The remaining
 # logic is just "which page should render" plus the home-page game-card loop.
 lineups_snapshot = load_lineups_snapshot()
+current_user_date = (
+    datetime.now(get_user_display_timezone()).date()
+    if current_page == "home"
+    else None
+)
 lineups_games_for_date = (
     lineups_snapshot.get("games", {})
     if current_page == "home" and lineups_snapshot.get("date") == date_str
@@ -1681,7 +1695,7 @@ elif games:
         if has_playoff_implications:
             pill_items.append('<span class="game-pill">Playoff Implications</span>')
         if has_division_rivals:
-            pill_items.append('<span class="game-pill game-pill-division">Division Rivals</span>')
+            pill_items.append('<span class="game-pill game-pill-division">Divison Rivals</span>')
         pill_html = f'<div class="game-pill-row">{"".join(pill_items)}</div>' if pill_items else ""
 
         unadjusted_score = game.get('unadjusted_score', 0) or 0
@@ -1802,7 +1816,12 @@ elif games:
         breakdown_rows.sort(key=lambda row: row["value"], reverse=True)
         breakdown_rows_html = "".join(row["html"] for row in breakdown_rows)
         lineup_note_html = ""
-        lineup_announcement_note = get_lineup_announcement_note(lineups_games_for_date, game)
+        lineup_announcement_note = get_lineup_announcement_note(
+            lineups_games_for_date,
+            game,
+            selected_date,
+            current_user_date,
+        )
         if lineup_announcement_note:
             lineup_note_html = (
                 '<div class="game-expand-lineup-note">'
