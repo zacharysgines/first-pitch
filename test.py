@@ -24,6 +24,7 @@ import math
 import hashlib
 from pathlib import Path
 import pybaseball
+import pybaseball
 
 
 # def LoadProjections():
@@ -66,7 +67,14 @@ import pybaseball
 
 # def GetProspects():
 #     PROSPECTS_CSV = 'scores\prospects.csv'
+# def GetProspects():
+#     PROSPECTS_CSV = 'scores\prospects.csv'
 
+#     try:
+#         df = pd.read_csv(PROSPECTS_CSV, encoding="utf-8")
+#     except UnicodeDecodeError:
+#         df = pd.read_csv(PROSPECTS_CSV, encoding="cp1252")
+#     prospects = df.to_dict(orient='records')
 #     try:
 #         df = pd.read_csv(PROSPECTS_CSV, encoding="utf-8")
 #     except UnicodeDecodeError:
@@ -102,6 +110,24 @@ games = statsapi.schedule(gamedate)
 # standings = statsapi.standings_data(date=gamedate)
 # teams = GetTeams(standings)
 
+url = "https://www.baseball-reference.com/data/war_daily_pitch.txt"
+
+war_raw = pd.read_csv(url)
+war_tab = war_raw[war_raw["year_ID"] == 2026].copy()
+war_agg = (
+    war_tab
+    .groupby(["mlb_ID", "year_ID"], as_index=False)
+    .agg({
+        "name_common": "first",
+        "WAR": "sum",
+        "IPouts": "sum",
+        "team_ID": "last"
+    })
+)
+war_agg = war_agg.dropna(subset=["mlb_ID"])
+war_agg["mlb_ID"] = war_agg["mlb_ID"].astype(int)
+war_lookup = dict(zip(war_agg["mlb_ID"], war_agg["WAR"]))
+print(war_lookup)
 url = "https://www.baseball-reference.com/data/war_daily_pitch.txt"
 
 war_raw = pd.read_csv(url)
