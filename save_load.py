@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-
+from datetime import datetime
 import pandas as pd
 
 ROOT_DIR = Path(__file__).resolve().parent
@@ -8,9 +8,10 @@ SCORES_FILE = ROOT_DIR / "scores" / "game_scores.json"
 PROJECTIONS_FILE = ROOT_DIR / "records" / "projected_records.csv"
 LINEUPS_FILE = ROOT_DIR / "lineups" / "lineups.json"
 WIN_STREAKS_FILE = ROOT_DIR / "win_streaks" / "win_streaks.json"
-SP_PROJECTIONS_FILE = ROOT_DIR / "starting_pitchers" / "sp_projections.csv"
+SP_PROJECTIONS_FILE = ROOT_DIR / "starting_pitchers" / "sp_projections_war.csv"
 MILESTONE_RECORDS_FILE = ROOT_DIR / "milestones" / "milestone_records.json"
 PROSPECTS_FILE = ROOT_DIR / "milestones" / "prospects.csv"
+PITCHER_WAR_FILE = ROOT_DIR / "starting_pitchers" / "war_lookup.json"
 
 #Load game_scores.json
 def load_scores():
@@ -109,3 +110,45 @@ def load_milestone_stat_list():
 
     return batter_milestone_stat_list, pitcher_milestone_stat_list
 
+
+def load_pitcher_war_lookup(gamedate_str):
+    # Get date
+    gamedate_obj = datetime.strptime(gamedate_str, "%m/%d/%Y").date()
+
+    try:
+        #Try to fetch fresh data
+        war_raw = pd.read_csv("https://www.baseball-reference.com/data/war_daily_pitch.txt")
+        war_tab = war_raw[war_raw["year_ID"] == gamedate_obj.year].copy()
+        war_agg = (
+            war_tab
+            .groupby(["mlb_ID", "year_ID"], as_index=False)
+            .agg({
+                "name_common": "first",
+                "WAR": "sum",
+                "IPouts": "sum",
+                "team_ID": "last"
+            })
+        )
+        war_agg = war_agg.dropna(subset=["mlb_ID"])
+        war_agg["mlb_ID"] = war_agg["mlb_ID"].astype(int)
+        war_agg["IP"] = round(war_agg["IPouts"] / 3, 1)
+        war_agg["WAR"] = round(war_agg["WAR"], 1)
+        war_lookup = {
+            str(row["mlb_ID"]): {
+                "WAR": row["WAR"],
+                "IP": row["IP"]
+            }
+            for _, row in war_agg.iterrows()
+        }
+
+        if not war_lookup:
+            raise ValueError("WAR lookup is empty")
+        else:
+            #Save to JSON (overwrite old cache)
+            with open(PITCHER_WAR_FILE, "w") as f:
+                json.dump(war_lookup, f)
+            return war_lookup
+
+    except Exception as e:
+        with open(PITCHER_WAR_FILE, "r") as f:
+            return json.load(f)
