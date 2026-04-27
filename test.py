@@ -17,6 +17,7 @@
 # Modern (and other) era records
 # WAR data/better stats
 # Automated prospect list
+# Weighted team score and SP WAR based on projections and this year's stats
 # """
 
 #fv = 40
