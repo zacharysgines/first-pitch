@@ -1,20 +1,23 @@
-"""
-SAVE MILESTONES
-MVP player
-Cy Young Player
-RotY Player
-Hot Streak Player
-    - Consecutive games with home run
-    - Hitting streak
-    - On base streak
-    - OPS over last x games
-    - Consecutive scoreless innnings
-    - ERA over last x games
-ERA milestone
-"On Pace" milestones
-Modern (and other) era records
-WAR data/better stats
-"""
+# """
+# Adjust divisional scores to use min wp instead of games back
+# SAVE MILESTONES
+# UPDATE LINEUP CHANGES
+# MVP player
+# Cy Young Player
+# RotY Player
+# Hot Streak Player
+#     - Consecutive games with home run
+#     - Hitting streak
+#     - On base streak
+#     - OPS over last x games
+#     - Consecutive scoreless innnings
+#     - ERA over last x games
+# ERA milestone
+# "On Pace" milestones
+# Modern (and other) era records
+# WAR data/better stats
+# Automated prospect list
+# """
 
 #fv = 40
 # original_prospect_score = 0
@@ -41,30 +44,29 @@ def load_projections():
         projections = df.to_dict(orient='records')    
     return projections 
 
-def load_sp_projections():
-    #Load sp_projections.csv
-    with open(Path(__file__).resolve().parent / "starting_pitchers" / "sp_projections_war.csv", 'r', encoding='utf-8') as f:
-        df = pd.read_csv(f)
-        sp_projections = df.to_dict(orient='records')
+# # def LoadProjections():
+# #     #Load projections.csv
+# #     with open('projected_records.csv', 'r', encoding='utf-8') as f:
+# #         df = pd.read_csv(f)
+# #         projections = df.to_dict(orient='records')
     
-    return sp_projections
+# #     return projections
 
+# def GetTeams(standings):
+#     #Initialize the teams dictionary
+#     teams = {}
 
-def get_teams_info(standings):
-    #Initialize the teams_info dictionary
-    teams_info = {}
-
-    #If there's no standings (i.e., first day of the season), use projections instead
-    if standings:
-        for division in standings.values():
-            for team in division['teams']:                
-                #Initialize the dictionary for each team within the teams_info dictionary
-                team_info = teams_info.setdefault(team['name'], {})
-                #Save each team's Id
-                team_obj = statsapi.lookup_team(team['name'], activeStatus="Y")
-                team_info['id'] = team_obj[0]['id']
-                #Save each team's divison
-                team_info['division'] = division['div_name']
+#     #If there's no standings (i.e., first day of the season), use projections instead
+#     if standings:
+#         for division in standings.values():
+#             for team in division['teams']:                
+#                 #Initialize the dictionary for each team within the teams dictionary
+#                 team_name = teams.setdefault(team['name'], {})
+#                 #Save each team's Id
+#                 team_obj = statsapi.lookup_team(team['name'], activeStatus="Y")
+#                 team_name['id'] = team_obj[0]['id']
+#                 #Save each team's divison
+#                 team_name['division'] = division['div_name']
     
     else:
         #Load Projections
@@ -78,178 +80,64 @@ def get_teams_info(standings):
             #Save each team's divison
             team_info['division'] = team['Division']
     
-    return teams_info
+#     return teams
+
+# # def GetProspects():
+# #     PROSPECTS_CSV = 'scores\prospects.csv'
+
+# #     try:
+# #         df = pd.read_csv(PROSPECTS_CSV, encoding="utf-8")
+# #     except UnicodeDecodeError:
+# #         df = pd.read_csv(PROSPECTS_CSV, encoding="cp1252")
+# #     prospects = df.to_dict(orient='records')
+
+# #     return prospects
+
+# # fv = 40
+# # original_prospect_score = 0
+# # unadjusted_score = 0.24395779497136927
+# # new_prospect_score = .0094 * math.exp(.0576 * fv)
+# # new_unadjusted_score = unadjusted_score - original_prospect_score + new_prospect_score
+# # score = min(100, 100*((math.log(1+new_unadjusted_score))/(math.log(3))))
+# # print('Prospect Score:', new_prospect_score)
+# # print('Unadjusted Score:', new_unadjusted_score)
+# # print('Score:', score)
+
+gamedate = '04/26/2026'
+date_obj = datetime.strptime(gamedate, "%m/%d/%Y")
+
+games = statsapi.schedule(gamedate)
+# standings = statsapi.standings_data(date=gamedate)
+# teams = GetTeams(standings)
+
+# pitchers = statsapi.lookup_player("Diaz")
+
+# for pitcher in pitchers:
+#     print(pitcher)
 
 
-gamedate_str = '04/25/2026'
-
-games = statsapi.schedule(gamedate_str)
-standings = statsapi.standings_data(date=gamedate_str)
-teams_info = get_teams_info(standings)
-
-def get_pitcher_war_lookup(gamedate_str):
-    #Get date as an object
-    gamedate_obj = datetime.strptime(gamedate_str, "%m/%d/%Y").date()
-    #Get this pitchers stats for this sesason
-    game_year_str = gamedate_obj.strftime("%Y")
-
-    war_raw = pd.read_csv("https://www.baseball-reference.com/data/war_daily_pitch.txt")
-    war_tab = war_raw[war_raw["year_ID"] == game_year_str].copy()
-    war_agg = (
-        war_tab
-        .groupby(["mlb_ID", "year_ID"], as_index=False)
-        .agg({
-            "name_common": "first",
-            "WAR": "sum",
-            "IPouts": "sum",
-            "team_ID": "last"
-        })
-    )
-    war_agg = war_agg.dropna(subset=["mlb_ID"])
-    war_agg["mlb_ID"] = war_agg["mlb_ID"].astype(int)
-    war_agg["IP"] = round(war_agg["IPouts"] / 3, 1)
-    war_agg['WAR'] = round(war_agg["WAR"], 1)
-    war_lookup = {
-        row["mlb_ID"]: {
-            "WAR": row["WAR"],
-            "IP": row["IP"]
-        }
-        for _, row in war_agg.iterrows()
-    }
-    return war_lookup
-
-
-def normalize_name(name):
-    #If the name given isn't a string, return an empty string
-    if not isinstance(name, str):
-        return ""
-
-    #Convert all special characters so we can match names
-    normalized = unicodedata.normalize("NFKD", name.casefold())
-    return "".join(char for char in normalized if not unicodedata.combining(char))
-
-
-def find_pitcher(player_list, team_id):
-    potential_players = []
-
-    for player in player_list:
-        current_team = player.get('current_team') or {}
-        primary_position = player.get('primaryPosition') or {}
-        player_position = primary_position.get('code')
-
-        if current_team.get('id') == team_id and player_position in ('1', 'Y'):
-            potential_players.append(player)
-
-    if len(potential_players) > 1:
-        return []
-    return potential_players
-
-
-def starting_pitchers(games, teams_info, gamedate_str):
-    #Load projections for starting pitchers
-    sp_projections = load_sp_projections()
-    war_lookup = get_pitcher_war_lookup(gamedate_str)
-
-    #For each game, get each teams id
-    for game in games:
-        #Get team details
-        home_team_id = game['home_id']
-        away_team_id = game['away_id']
-        home_team_name = game['home_name']
-        away_team_name = game['away_name']
-        home_team_info = teams_info[home_team_name]
-        away_team_info = teams_info[away_team_name]
-        #Get bio details for each teams starting pitcher
-        home_pitcher_name = game['home_probable_pitcher']
-        away_pitcher_name = game['away_probable_pitcher']
-        if home_pitcher_name != '':
-            home_pitcher = statsapi.lookup_player(home_pitcher_name)
-        else:
-            home_pitcher = None
-        if away_pitcher_name != '':
-            away_pitcher = statsapi.lookup_player(away_pitcher_name)
-        else:
-            away_pitcher = None
-
-        #If we found more than one player with this name, run this function to determine which player we're looking for.
-        if home_pitcher != None and len(home_pitcher) > 1:
-            home_pitcher = find_pitcher(home_pitcher, home_team_id)
-        if away_pitcher != None and len(away_pitcher) > 1:
-            away_pitcher = find_pitcher(away_pitcher, away_team_id)
-
-        #If we identified the pitcher, get that pitcher's stats. Otherwise, set all team_info to None
-        if home_pitcher:
-            get_sp_stats(home_pitcher[0], home_team_info, sp_projections, war_lookup, home_team_name)
-        else:
-            set_pitcher_info(home_team_info, None, None, None, None)
-        if away_pitcher:
-            get_sp_stats(away_pitcher[0], away_team_info, sp_projections, war_lookup, away_team_name)
-        else:
-            set_pitcher_info(away_team_info, None, None, None, None)
-    return None
-
-
-def get_sp_stats(pitcher, team_info, sp_projections, war_lookup, team_name):
-    #Track if we find this player in the WAR dictionary
-    war_found = False    
-    #Look through every player who has a WAR this year in the WAR dictionary and see if any ID matches the starting pitcher's ID
-    for id, stats in war_lookup.items():
-        if id == pitcher['id']:
-            #If you find a match, set war_found = True, and get the pitcher's name, WAR and IP
-            war_found = True           
-            pitcher_WAR = stats['WAR']
-            pitcher_ip = stats['IP']
-        break
+#For each game, get each teams id
+for game in games:
+    #Get team details
+    home_team_id = game['home_id']
+    away_team_id = game['away_id']
+    home_team_name = game['home_name']
+    away_team_name = game['away_name']
+    #Get bio details for each teams starting pitcher
+    home_pitcher_name = game['home_probable_pitcher']
+    away_pitcher_name = game['away_probable_pitcher']
+    if home_pitcher_name != '':
+        home_pitcher = statsapi.lookup_player(home_pitcher_name)
+    else:
+        home_pitcher = None
+    if away_pitcher_name != '':
+        away_pitcher = statsapi.lookup_player(away_pitcher_name)
+    else:
+        away_pitcher = None
     
-    #If we didn't find this player in the WAR dictionary or if we did but they have less than 100 IP this year, get their projected stats
-    if war_found == False or pitcher_ip < 100:
-        get_projected_sp_stats(sp_projections, pitcher['fullName'], team_name, team_info)
-        return None
-    
-    #If we did find this pitcher and they have more than 100 IP, calculate the score for this player and save it to the team_info dictionary
-    set_pitcher_info(team_info, pitcher['fullName'], pitcher_WAR, pitcher_ip, 'real')
-
-    return None
-
-
-def get_projected_sp_stats(sp_projections, pitcher_name, team_name, team_info):
-    #Initialize a list to hold any pitcher who has this name
-    possible_pitchers = []
-
-    for pitcher_proj in sp_projections:
-        #For each pitcher in the projections csv, if their name and team matches the current pitcher we're looking at, add them to the list of possible pitchers. 
-        if normalize_name(pitcher_proj['Name']) == normalize_name(pitcher_name) and pitcher_proj['Team'] == team_name:
-            possible_pitchers.append(pitcher_proj)
-    
-    #If we ended up with only one matching pitcher, get that pitcher's projected WAR and IP and save all their info to team_info
-    if len(possible_pitchers) == 1:
-        war = possible_pitchers[0]['WAR']
-        ip = possible_pitchers[0]['IP']
-        set_pitcher_info(team_info, pitcher_name, war, ip, 'projected')
-        return None
-
-    #If we didn't find a matching pitcher or found more than one match, don't save any pitcher info
-    set_pitcher_info(team_info, None, None, None, None)
-    return None
-
-
-def set_pitcher_info(team_info, name, war, ip, source):
-    #Calculate the WAR score
-    if war is not None and war >= 1:
-        #Get the player's WAR per 200 IP
-        war_per_200 = war / ip * 200
-        war_score = .0115 * war_per_200**2 - .0122 * war_per_200 + .0097
-    else: 
-        war_score = 0
-    
-    #Save all info to team_info
-    team_info['pitcher_name'] = name
-    team_info['pitcher_war'] = war
-    team_info['war_source'] = source
-    team_info['war_score'] = war_score
-
-    return None
-
-#print(war_lookup)    
-starting_pitchers(games, teams_info, gamedate_str)
-print(teams_info)
+    if home_pitcher != None:
+        for pitcher in home_pitcher:
+            print(pitcher)
+    if away_pitcher != None:
+        for pitcher in away_pitcher:
+            print(pitcher)
