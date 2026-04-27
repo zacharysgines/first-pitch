@@ -19,14 +19,30 @@
 # Automated prospect list
 # """
 
+#fv = 40
+# original_prospect_score = 0
+# unadjusted_score = 0.24395779497136927
+# new_prospect_score = .0094 * math.exp(.0576 * fv)
+# new_unadjusted_score = unadjusted_score - original_prospect_score + new_prospect_score
+# score = min(100, 100*((math.log(1+new_unadjusted_score))/(math.log(3))))
+# print('Prospect Score:', new_prospect_score)
+# print('Unadjusted Score:', new_unadjusted_score)
+# print('Score:', score)
+
 import statsapi
 import pandas as pd
-from datetime import datetime, timedelta
-import json
-import math
-import hashlib
+from datetime import datetime
 from pathlib import Path
+import unicodedata
 
+
+
+#Load projected records from projected_records.csv
+def load_projections():
+    with open(Path(__file__).resolve().parent / "records" / "projected_records.csv", 'r', encoding='utf-8') as f:
+        df = pd.read_csv(f)
+        projections = df.to_dict(orient='records')    
+    return projections 
 
 # # def LoadProjections():
 # #     #Load projections.csv
@@ -52,17 +68,17 @@ from pathlib import Path
 #                 #Save each team's divison
 #                 team_name['division'] = division['div_name']
     
-#     else:
-#         #Load Projections
-#         projections = LoadProjections()
-#         for team in projections:
-#             #Initialize the dictionary for each team within the teams dictionary
-#             team_name = teams.setdefault(team['Name'], {})
-#             #Save each team's id
-#             team_obj = statsapi.lookup_team(team['Name'], activeStatus="Y")
-#             teams[team['Name']]['id'] = team_obj[0]['id']
-#             #Save each team's divison
-#             team_name['division'] = team['Division']
+    else:
+        #Load Projections
+        projections = load_projections()
+        for team in projections:
+            #Initialize the dictionary for each team within the teams_info dictionary
+            team_info = teams_info.setdefault(team['Name'], {})
+            #Save each team's id
+            team_obj = statsapi.lookup_team(team['Name'], activeStatus="Y")
+            team_info['id'] = team_obj[0]['id']
+            #Save each team's divison
+            team_info['division'] = team['Division']
     
 #     return teams
 

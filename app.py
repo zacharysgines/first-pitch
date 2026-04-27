@@ -1004,8 +1004,9 @@ def render_methodology_page():
                     for playoff positioning late in the season and they play each other, multiplying the already 
                     strong playoff implications score.</li>
                     <li><strong>Starting pitcher:</strong> the quality of each team's starting pitcher is a large 
-                    factor in determining scores for games. Currently, this is based on starting pitcher ERA, 
-                    however plans are to change this to FIP or WAR in the near future.</li>
+                    factor in determining scores for games. Current and future games use starting pitcher WAR, 
+                    while older saved games may still display the ERA-based score that was used when they were 
+                    originally calculated.</li>
                     <li><strong>Milestones:</strong> players approaching a milestone will give their teams a boost 
                     in score when they are within range of hitting that milestone in the given game. These milestones 
                     include runs scored, doubles, triples, home runs, hits, steals, RBI, and strikeouts for pitchers, 
@@ -1408,8 +1409,19 @@ def build_game_notes(game):
     
     # These helpers stay nested because they only exist to turn the score JSON
     # for one game into the short note strings shown on that game's card.
+    def format_war(war_value):
+        return f"{float(war_value):.1f}"
+
     def format_era(era_value):
         return f"{float(era_value):.2f}"
+
+    def numeric_value(value):
+        if value is None:
+            return None
+        try:
+            return float(value)
+        except (TypeError, ValueError):
+            return None
 
     def format_count(diff_value, singular_label, plural_label):
         if diff_value == 1:
@@ -1499,27 +1511,57 @@ def build_game_notes(game):
 
         return f"<strong>{name_text}{rank_text}</strong>: MLB debut"
 
-    if game['away_era'] is not None and game['away_era'] <= 3.50:
-        away_era_text = html.escape(format_era(game['away_era']))
-        if game['away_era_source'] == 'real':
+    away_war = numeric_value(game.get('away_war'))
+    away_war_score = numeric_value(game.get('away_war_score')) or 0
+    away_era = numeric_value(game.get('away_era'))
+    if away_war is not None and away_war_score >= .2:
+        away_war_text = html.escape(format_war(away_war))
+        if game.get('away_war_source') == 'real':
+            notes.append(
+                f"<strong>{html.escape(str(game['away_starter']))}</strong>"
+                f": {away_war_text} WAR"
+            )
+        elif game.get('away_war_source') == 'projected':
+            notes.append(
+                f"<strong>{html.escape(str(game['away_starter']))}</strong>"
+                f": {away_war_text} projected WAR"
+            )
+    elif away_era is not None and away_era <= 3.50:
+        away_era_text = html.escape(format_era(away_era))
+        if game.get('away_era_source') == 'real':
             notes.append(
                 f"<strong>{html.escape(str(game['away_starter']))}</strong>"
                 f": {away_era_text} ERA"
             )
-        elif game['away_era_source'] == 'projected':
+        elif game.get('away_era_source') == 'projected':
             notes.append(
                 f"<strong>{html.escape(str(game['away_starter']))}</strong>"
                 f": {away_era_text} ERA (projected)"
             )
 
-    if game['home_era'] is not None and game['home_era'] <= 3.50:
-        home_era_text = html.escape(format_era(game['home_era']))
-        if game['home_era_source'] == 'real':
+    home_war = numeric_value(game.get('home_war'))
+    home_war_score = numeric_value(game.get('home_war_score')) or 0
+    home_era = numeric_value(game.get('home_era'))
+    if home_war is not None and home_war_score >= .2:
+        home_war_text = html.escape(format_war(home_war))
+        if game.get('home_war_source') == 'real':
+            notes.append(
+                f"<strong>{html.escape(str(game['home_starter']))}</strong>"
+                f": {home_war_text} WAR"
+            )
+        elif game.get('home_war_source') == 'projected':
+            notes.append(
+                f"<strong>{html.escape(str(game['home_starter']))}</strong>"
+                f": {home_war_text} projected WAR"
+            )
+    elif home_era is not None and home_era <= 3.50:
+        home_era_text = html.escape(format_era(home_era))
+        if game.get('home_era_source') == 'real':
             notes.append(
                 f"<strong>{html.escape(str(game['home_starter']))}</strong>"
                 f": {home_era_text} ERA"
             )
-        elif game['home_era_source'] == 'projected':
+        elif game.get('home_era_source') == 'projected':
             notes.append(
                 f"<strong>{html.escape(str(game['home_starter']))}</strong>"
                 f": {home_era_text} ERA (projected)"
@@ -1593,6 +1635,15 @@ def format_breakdown_score(value):
     """Render scoring-component contributions with a consistent card-friendly format."""
     return f"{value:.1f}"
 
+def numeric_score_value(value, default=0):
+    """Coerce score fields from old/new cached JSON into numeric values."""
+    if value is None:
+        return default
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
 def format_breakdown_team_name(team_name):
     """Shorten full MLB team names for the expanded scoring breakdown."""
     team_text = str(team_name).strip()
@@ -1616,16 +1667,22 @@ def build_breakdown_row(label, value):
     )
     return {"value": value, "html": row_html}
 
-def format_pitcher_breakdown_label(starter, era, era_source):
+def format_pitcher_breakdown_label(starter, value, source, metric):
     """Build the pitcher label used in the scoring breakdown rows."""
-    if starter is None or era is None:
+    if starter is None or value is None:
         return None
 
     starter_text = html.escape(str(starter))
-    era_text = html.escape(f"{float(era):.2f}")
-    if era_source == "projected":
-        return f"{starter_text}: {era_text} ERA (projected)"
-    return f"{starter_text}: {era_text} ERA"
+    if metric == "war":
+        stat_text = html.escape(f"{float(value):.1f}")
+        if source == "projected":
+            return f"{starter_text}: {stat_text} projected WAR"
+        return f"{starter_text}: {stat_text} WAR"
+
+    stat_text = html.escape(f"{float(value):.2f}")
+    if source == "projected":
+        return f"{starter_text}: {stat_text} ERA (projected)"
+    return f"{starter_text}: {stat_text} ERA"
 
 def format_win_streak_breakdown_label(team_name, win_streak):
     """Build the win-streak label used in the scoring breakdown rows."""
@@ -1700,7 +1757,9 @@ elif games:
             pill_items.append('<span class="game-pill game-pill-division">Divison Rivals</span>')
         pill_html = f'<div class="game-pill-row">{"".join(pill_items)}</div>' if pill_items else ""
 
-        unadjusted_score = game.get('unadjusted_score', 0) or 0
+        unadjusted_score = numeric_score_value(game.get('unadjusted_score'))
+        away_pitcher_score = numeric_score_value(game.get('away_war_score', game.get('away_era_score', 0)))
+        home_pitcher_score = numeric_score_value(game.get('home_war_score', game.get('home_era_score', 0)))
         if unadjusted_score > 0:
             away_playoff_component = score * (game.get('away_playoff_imp', 0) / unadjusted_score)
             home_playoff_component = score * (game.get('home_playoff_imp', 0) / unadjusted_score)
@@ -1715,8 +1774,8 @@ elif games:
             home_prospect_component = score * (game.get('home_prospect_score', 0) / unadjusted_score)
             away_win_streak_component = score * (game.get('away_win_streak_score', 0) / unadjusted_score)
             home_win_streak_component = score * (game.get('home_win_streak_score', 0) / unadjusted_score)
-            away_era_component = score * (game.get('away_era_score', 0) / unadjusted_score)
-            home_era_component = score * (game.get('home_era_score', 0) / unadjusted_score)
+            away_pitcher_component = score * (away_pitcher_score / unadjusted_score)
+            home_pitcher_component = score * (home_pitcher_score / unadjusted_score)
         else:
             away_playoff_component = 0
             home_playoff_component = 0
@@ -1731,8 +1790,8 @@ elif games:
             home_prospect_component = 0
             away_win_streak_component = 0
             home_win_streak_component = 0
-            away_era_component = 0
-            home_era_component = 0
+            away_pitcher_component = 0
+            home_pitcher_component = 0
 
         breakdown_rows = [
             build_breakdown_row(
@@ -1791,27 +1850,29 @@ elif games:
 
         away_pitcher_label = format_pitcher_breakdown_label(
             game.get('away_starter'),
-            game.get('away_era'),
-            game.get('away_era_source'),
+            game.get('away_war') if 'away_war' in game else game.get('away_era'),
+            game.get('away_war_source') if 'away_war' in game else game.get('away_era_source'),
+            'war' if 'away_war' in game else 'era',
         )
         if away_pitcher_label:
             breakdown_rows.append(
                 build_breakdown_row(
                     away_pitcher_label,
-                    away_era_component,
+                    away_pitcher_component,
                 )
             )
 
         home_pitcher_label = format_pitcher_breakdown_label(
             game.get('home_starter'),
-            game.get('home_era'),
-            game.get('home_era_source'),
+            game.get('home_war') if 'home_war' in game else game.get('home_era'),
+            game.get('home_war_source') if 'home_war' in game else game.get('home_era_source'),
+            'war' if 'home_war' in game else 'era',
         )
         if home_pitcher_label:
             breakdown_rows.append(
                 build_breakdown_row(
                     home_pitcher_label,
-                    home_era_component,
+                    home_pitcher_component,
                 )
             )
 
