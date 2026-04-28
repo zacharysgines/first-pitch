@@ -4,7 +4,36 @@
         "824446": {
             "away_team": "Tampa Bay Rays",
             "home_team": "Cleveland Guardians",
-            "away_lineup": [],
+            "away_lineup": [
+                {
+                    "id": 695600,
+                    "name": "Carter Jensen",
+                    "position": "C",
+                    "stats": {
+                        "runs": 12,
+                        "doubles": 2,
+                        "triples": 0,
+                        "home_runs": 6,
+                        "hits": 22,
+                        "steals": 0,
+                        "rbi": 16
+                    }
+                },
+                {
+                    "id": 686555,
+                    "name": "Isaac Collins",
+                    "position": "LF",
+                    "stats": {
+                        "runs": 11,
+                        "doubles": 1,
+                        "triples": 0,
+                        "home_runs": 1,
+                        "hits": 14,
+                        "steals": 0,
+                        "rbi": 6
+                    }
+                }
+            ],
             "home_lineup": [],
             "away_pitcher": {
                 "id": 571927,

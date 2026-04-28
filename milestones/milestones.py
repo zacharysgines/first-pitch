@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 import statsapi
 import math
@@ -11,7 +11,7 @@ from pathlib import Path
 ROOT_DIR = Path(__file__).resolve().parents[1]  
 sys.path.insert(0, str(ROOT_DIR))
 
-from save_load import load_milestone_records, load_prospects, load_milestone_stat_list, load_saved_lineups, save_milestone_records
+from save_load import load_milestone_records, load_prospects, load_milestone_stat_list, load_saved_lineups, save_milestone_records, load_player_stats
 
 
 def milestones(games, gamedate_str, teams_info):
@@ -31,6 +31,9 @@ def milestones(games, gamedate_str, teams_info):
     lineup_date_str = saved_lineups.get("date")
     saved_games = saved_lineups.get("games", {})
 
+    #Get player_stats list 
+    player_stats = load_player_stats()
+
     #If the date passed in is not the lineup date, don't get the milestones for this game
     if gamedate_str != lineup_date_str:
         return None
@@ -49,18 +52,20 @@ def milestones(games, gamedate_str, teams_info):
 
         #Add all the milestones that need to be scored into the teams dictionary
         for player in game_lineup.get('away_lineup', []):
-            get_milestones(player, away_team_info, 'hitting', batter_milestone_stat_list)
+            #get_milestones(player, away_team_info, 'hitting', batter_milestone_stat_list)
+            get_streaks(player, player_stats, gamedate_str)
+            break
 
-        for player in game_lineup.get('home_lineup', []):
-            get_milestones(player, home_team_info, 'hitting', batter_milestone_stat_list)
+        # for player in game_lineup.get('home_lineup', []):
+        #     get_milestones(player, home_team_info, 'hitting', batter_milestone_stat_list)
 
-        away_pitcher = game_lineup.get('away_pitcher')
-        if away_pitcher:
-            get_milestones(away_pitcher, away_team_info, 'pitching', pitcher_milestone_stat_list)
+        # away_pitcher = game_lineup.get('away_pitcher')
+        # if away_pitcher:
+        #     get_milestones(away_pitcher, away_team_info, 'pitching', pitcher_milestone_stat_list)
 
-        home_pitcher = game_lineup.get('home_pitcher')
-        if home_pitcher:
-            get_milestones(home_pitcher, home_team_info, 'pitching', pitcher_milestone_stat_list)
+        # home_pitcher = game_lineup.get('home_pitcher')
+        # if home_pitcher:
+        #     get_milestones(home_pitcher, home_team_info, 'pitching', pitcher_milestone_stat_list)
 
     return None
 
@@ -247,3 +252,108 @@ def update_milestone(player_stat_value, stat_name, scope):
 
     #Return the current record for this stat
     return milestone_records[scope][stat_name]
+
+
+def get_streaks(player, player_stats, gamedate_str):
+    #Get today's date and the date of opening day so we know how far back we need to calculate streaks
+    season_dates = statsapi.get("season", {"seasonId": datetime.now().year,"sportId": 1})
+    opening_day_str = season_dates["seasons"][0]["regularSeasonStartDate"]
+    opening_day_obj = datetime.strptime(opening_day_str, "%Y-%m-%d")
+    gamedate_obj = datetime.strptime(gamedate_str, "%m/%d/%Y")
+
+    #Set each streak as active and 0 for tracking
+    hitting_streak_active = True
+    hitting_streak = 0
+
+    for saved_player in player_stats:
+        #Find the player in player_stats.json that matches the current player we're looking at
+        if saved_player['player_id'] == player['id']:
+            #Loop through dates until we get back to opening day
+            while gamedate_obj >= opening_day_obj:
+                #Subtract one from the last day we looked at to get the previous date (gamedate starts as today, so first day we check is yesterday)
+                gamedate_obj -= timedelta(days=1)
+                check_date = gamedate_obj.strftime("%m/%d/%Y")
+                print(check_date)
+
+                #Initialize "found_date" as false and set true if we find this date in player_stats.json
+                found_date = False
+                #Loop through each date we have saved for this player
+                for saved_game in saved_player['games']:
+                    #If we find this date saved alraedy, check their streak numbers from the saved stats
+                    if saved_game['date'] == check_date:
+                        found_date = True                        
+                        print(saved_game)
+
+                        #Get this players saved stats for this day
+                        at_bats =  saved_game['stats']['at_bats']
+                        hits = saved_game['stats']['hits']
+
+                        #Make sure they had at least one at bat on this date. If they didn't, don't consider the hitting streak
+                        if at_bats > 0:
+                            #If they had a hit, add one to their hitting streak
+                            if hits > 0:
+                                hitting_streak += 1
+                            #If they didn't end the streak
+                            else:
+                                hitting_streak_active = False
+                        
+                        break
+                    
+                    #If we didn't find this date, add their stats for this date into player_stats.json
+                    if found_date == False:
+                        prior_games = statsapi.schedule(date=check_date)
+                        #print(prior_games)
+
+
+
+
+
+                
+
+
+    
+
+
+
+
+
+from save_load import load_saved_lineups, load_projections
+
+def get_teams_info(standings):
+    #Initialize the teams_info dictionary
+    teams_info = {}
+
+    #If there's no standings (i.e., first day of the season), use projections instead
+    if standings:
+        for division in standings.values():
+            for team in division['teams']:                
+                #Initialize the dictionary for each team within the teams_info dictionary
+                team_info = teams_info.setdefault(team['name'], {})
+                #Save each team's Id
+                team_obj = statsapi.lookup_team(team['name'], activeStatus="Y")
+                team_info['id'] = team_obj[0]['id']
+                #Save each team's divison
+                team_info['division'] = division['div_name']
+    
+    else:
+        #Load Projections
+        projections = load_projections()
+        for team in projections:
+            #Initialize the dictionary for each team within the teams_info dictionary
+            team_info = teams_info.setdefault(team['Name'], {})
+            #Save each team's id
+            team_obj = statsapi.lookup_team(team['Name'], activeStatus="Y")
+            team_info['id'] = team_obj[0]['id']
+            #Save each team's divison
+            team_info['division'] = team['Division']
+    
+    return teams_info
+
+gamedate = '04/27/2026'
+date_obj = datetime.strptime(gamedate, "%m/%d/%Y")
+
+games = statsapi.schedule(gamedate)
+standings = statsapi.standings_data(date=gamedate)
+teams_info = get_teams_info(standings)
+
+milestones(games, gamedate, teams_info)

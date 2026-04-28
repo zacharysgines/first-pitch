@@ -13,6 +13,8 @@ SP_PROJECTIONS_FILE = ROOT_DIR / "starting_pitchers" / "sp_projections_war.csv"
 MILESTONE_RECORDS_FILE = ROOT_DIR / "milestones" / "milestone_records.json"
 PROSPECTS_FILE = ROOT_DIR / "milestones" / "prospects.csv"
 PITCHER_WAR_FILE = ROOT_DIR / "starting_pitchers" / "war_lookup.json"
+PLAYER_STATS_FILE = ROOT_DIR / "milestones" / "player_stats.json"
+
 
 #Load game_scores.json
 def load_scores():
@@ -153,3 +155,10 @@ def load_pitcher_war_lookup(gamedate_str):
     except Exception as e:
         with open(PITCHER_WAR_FILE, "r") as f:
             return json.load(f)
+
+def load_player_stats():
+    #Load player_stats.json
+    with open(PLAYER_STATS_FILE, "r", encoding="utf-8") as f:
+        player_stats = json.load(f)
+    
+    return player_stats
