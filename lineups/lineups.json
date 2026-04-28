@@ -240,7 +240,15 @@
             "home_team": "Milwaukee Brewers",
             "away_lineup": [],
             "home_lineup": [],
-            "away_pitcher": null,
+            "away_pitcher": {
+                "id": 518876,
+                "name": "Merrill Kelly",
+                "stats": {
+                    "strikeouts": 8,
+                    "era": "9.31",
+                    "ip": "9.2"
+                }
+            },
             "home_pitcher": {
                 "id": 694477,
                 "name": "Chad Patrick",
@@ -250,7 +258,7 @@
                     "ip": "23.0"
                 }
             },
-            "lineup_hash": "06fb803004446af1ec3f36929673690b"
+            "lineup_hash": "aab4150a17c0af8ee3f4ce764c94b833"
         },
         "822908": {
             "away_team": "New York Yankees",
