@@ -171,7 +171,7 @@ def get_scores(standings, games, gamedate_str):
             min_wp_score = 8.9545 * min_wp**2 - 7.0217 * min_wp + 1.3316
         #Divisional Score
         if away_team_info['division'] == home_team_info['division']:
-            division_score = 2.5 * (.6 * min_wp_score + .4 * team_diff_score)
+            division_score = 1.42 * min_wp_score + .95 * team_diff_score
         else:
             division_score = 0
         #Starting Pitcher WAR
@@ -355,4 +355,4 @@ def update_scores(gamedate_str, games, games_to_update):
     return saved_scores
 
 #get_all_scores('08/21/2026', '12/31/2026')
-#score_games('04/08/2026', use_json=False)
+#score_games('04/26/2026', use_json=False)
