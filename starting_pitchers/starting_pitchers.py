@@ -103,14 +103,10 @@ def get_projected_sp_stats(sp_projections, pitcher_name, team_name, team_info):
 
 def set_pitcher_info(team_info, name, war, ip, source):
     #Calculate the WAR score
-    if war is not None:
-        #Get the player's WAR per 200 IP
+    if war is not None and war >= 1.5:
         war_per_200 = war / ip * 200
-        if war_per_200 >= 2:
-            war_score = .0148 * war_per_200**2 - .0488 * war_per_200 + .0751
-        else:
-            war_score = 0
-    else: 
+        war_score = -.0029 * war_per_200**2 + .1022 * war_per_200 - .2071
+    else:
         war_score = 0
     
     #Save all info to team_info
