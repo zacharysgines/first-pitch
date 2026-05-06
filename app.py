@@ -1514,7 +1514,7 @@ def build_game_notes(game):
     away_war = numeric_value(game.get('away_war'))
     away_war_score = numeric_value(game.get('away_war_score')) or 0
     away_era = numeric_value(game.get('away_era'))
-    if away_war is not None and away_war >= 2.5:
+    if away_war_score is not None and away_war_score >= .1:
         away_war_text = html.escape(format_war(away_war))
         if game.get('away_war_source') == 'real':
             notes.append(
@@ -1542,7 +1542,7 @@ def build_game_notes(game):
     home_war = numeric_value(game.get('home_war'))
     home_war_score = numeric_value(game.get('home_war_score')) or 0
     home_era = numeric_value(game.get('home_era'))
-    if home_war is not None and home_war >= 2.5:
+    if home_war_score is not None and home_war_score >= 0.1:
         home_war_text = html.escape(format_war(home_war))
         if game.get('home_war_source') == 'real':
             notes.append(
