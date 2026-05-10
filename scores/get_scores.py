@@ -177,10 +177,14 @@ def get_scores(standings, games, gamedate_str):
         #Starting Pitcher WAR
         away_starter = away_team_info['pitcher_name']
         away_war = away_team_info['pitcher_war']
+        away_current_war = away_team_info['pitcher_current_war']
+        away_projected_war = away_team_info['pitcher_projected_war']
         away_war_source = away_team_info['war_source']
         away_war_score = away_team_info['war_score']
         home_starter = home_team_info['pitcher_name']
         home_war = home_team_info['pitcher_war']
+        home_current_war = home_team_info['pitcher_current_war']
+        home_projected_war = home_team_info['pitcher_projected_war']
         home_war_source = home_team_info['war_source']
         home_war_score = home_team_info['war_score']
         war_score = away_war_score + home_war_score
@@ -214,6 +218,10 @@ def get_scores(standings, games, gamedate_str):
             'home_starter': home_starter,
             'away_war': away_war,
             'home_war': home_war,
+            'away_current_war': away_current_war,
+            'home_current_war': home_current_war,
+            'away_projected_war': away_projected_war,
+            'home_projected_war': home_projected_war,
             'away_war_source': away_war_source,
             'home_war_source': home_war_source,
             'home_war_score': home_war_score,
@@ -301,6 +309,8 @@ def update_scores(gamedate_str, games, games_to_update):
             #Update this game with the new information and set game_updated to True so we can recalculate the score
             saved_game['away_starter'] = away_team_info['pitcher_name']
             saved_game['away_war'] = away_team_info['pitcher_war']
+            saved_game['away_current_war'] = away_team_info['pitcher_current_war']
+            saved_game['away_projected_war'] = away_team_info['pitcher_projected_war']
             saved_game['away_war_source'] = away_team_info['war_source']
             saved_game['away_war_score'] = away_team_info['war_score']
             saved_game['away_career_milestones'] = away_team_info['milestones']['career']
@@ -318,6 +328,8 @@ def update_scores(gamedate_str, games, games_to_update):
             #Update this game with the new information
             saved_game['home_starter'] = home_team_info['pitcher_name']
             saved_game['home_war'] = home_team_info['pitcher_war']
+            saved_game['home_current_war'] = home_team_info['pitcher_current_war']
+            saved_game['home_projected_war'] = home_team_info['pitcher_projected_war']
             saved_game['home_war_source'] = home_team_info['war_source']
             saved_game['home_war_score'] = home_team_info['war_score']
             saved_game['home_career_milestones'] = home_team_info['milestones']['career']

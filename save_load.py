@@ -1,6 +1,7 @@
 import json
+import subprocess
+from datetime import date, datetime
 from pathlib import Path
-from datetime import datetime
 
 import pandas as pd
 
@@ -13,6 +14,7 @@ SP_PROJECTIONS_FILE = ROOT_DIR / "starting_pitchers" / "sp_projections_war.csv"
 MILESTONE_RECORDS_FILE = ROOT_DIR / "milestones" / "milestone_records.json"
 PROSPECTS_FILE = ROOT_DIR / "milestones" / "prospects.csv"
 PITCHER_WAR_FILE = ROOT_DIR / "starting_pitchers" / "war_lookup.json"
+FANGRAPHS_WAR_SCRIPT = ROOT_DIR / "starting_pitchers" / "get_fwar.r"
 
 #Load game_scores.json
 def load_scores():
@@ -112,44 +114,37 @@ def load_milestone_stat_list():
     return batter_milestone_stat_list, pitcher_milestone_stat_list
 
 
+def refresh_pitcher_war_lookup_if_needed():
+    if PITCHER_WAR_FILE.exists():
+        last_updated = datetime.fromtimestamp(PITCHER_WAR_FILE.stat().st_mtime).date()
+        if last_updated >= date.today():
+            return None
+
+    subprocess.run(
+        ["Rscript", str(FANGRAPHS_WAR_SCRIPT)],
+        cwd=ROOT_DIR,
+        check=True,
+    )
+
+    return None
+
+
 def load_pitcher_war_lookup(gamedate_str):
-    # Get date
-    gamedate_obj = datetime.strptime(gamedate_str, "%m/%d/%Y").date()
-
     try:
-        #Try to fetch fresh data
-        war_raw = pd.read_csv("https://www.baseball-reference.com/data/war_daily_pitch.txt")
-        war_tab = war_raw[war_raw["year_ID"] == gamedate_obj.year].copy()
-        war_agg = (
-            war_tab
-            .groupby(["mlb_ID", "year_ID"], as_index=False)
-            .agg({
-                "name_common": "first",
-                "WAR": "sum",
-                "IPouts": "sum",
-                "team_ID": "last"
-            })
-        )
-        war_agg = war_agg.dropna(subset=["mlb_ID"])
-        war_agg["mlb_ID"] = war_agg["mlb_ID"].astype(int)
-        war_agg["IP"] = round(war_agg["IPouts"] / 3, 1)
-        war_agg["WAR"] = round(war_agg["WAR"], 1)
-        war_lookup = {
-            str(row["mlb_ID"]): {
-                "WAR": row["WAR"],
-                "IP": row["IP"]
-            }
-            for _, row in war_agg.iterrows()
-        }
+        refresh_pitcher_war_lookup_if_needed()
+    except Exception as exc:
+        if not PITCHER_WAR_FILE.exists():
+            raise
+        print(f"Could not refresh FanGraphs WAR lookup. Using cached file instead. Error: {exc}")
 
-        if not war_lookup:
-            raise ValueError("WAR lookup is empty")
-        else:
-            #Save to JSON (overwrite old cache)
-            with open(PITCHER_WAR_FILE, "w") as f:
-                json.dump(war_lookup, f)
-            return war_lookup
+    with open(PITCHER_WAR_FILE, "r", encoding="utf-8") as f:
+        war_lookup = json.load(f)
 
-    except Exception as e:
-        with open(PITCHER_WAR_FILE, "r") as f:
-            return json.load(f)
+    if not war_lookup:
+        raise ValueError(f"WAR lookup is empty: {PITCHER_WAR_FILE}")
+
+    for player_id, stats in war_lookup.items():
+        if "WAR" not in stats or "IP" not in stats:
+            raise ValueError(f"WAR lookup entry {player_id} is missing WAR or IP")
+
+    return war_lookup

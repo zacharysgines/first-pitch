@@ -49,11 +49,11 @@ def starting_pitchers(games, teams_info, gamedate_str):
         if home_pitcher:
             get_sp_stats(home_pitcher[0], home_team_info, sp_projections, war_lookup, home_team_name)
         else:
-            set_pitcher_info(home_team_info, None, None, None, None)
+            set_pitcher_info(home_team_info, None, None, None, None, None, None)
         if away_pitcher:
             get_sp_stats(away_pitcher[0], away_team_info, sp_projections, war_lookup, away_team_name)
         else:
-            set_pitcher_info(away_team_info, None, None, None, None)
+            set_pitcher_info(away_team_info, None, None, None, None, None, None)
     return None
 
 
@@ -87,7 +87,7 @@ def get_sp_stats(pitcher, team_info, sp_projections, war_lookup, team_name):
 
     #If we don't find projected stats or current stats, set pitcher info to None
     if current_ip == 0 and proj_ip == 0:
-        set_pitcher_info(team_info, None, None, None, None)
+        set_pitcher_info(team_info, None, None, None, None, None, None)
         return None
 
     if proj_ip > 0:
@@ -105,7 +105,7 @@ def get_sp_stats(pitcher, team_info, sp_projections, war_lookup, team_name):
     weighted_war_per_200 = current_weight * current_war_per_200 + proj_weight * proj_war_per_200
     
     #If we have either this players projected WAR or current WAR, calculate the score for this player and save it to the team_info dictionary
-    set_pitcher_info(team_info, pitcher['fullName'], weighted_war_per_200, saved_war, source)
+    set_pitcher_info(team_info, pitcher['fullName'], weighted_war_per_200, saved_war, source, current_WAR, proj_war)
 
     return None
 
@@ -131,7 +131,7 @@ def get_projected_sp_stats(sp_projections, pitcher_name, team_name):
     return 0, 0, 0
 
 
-def set_pitcher_info(team_info, name, war_per_200, saved_war, source):
+def set_pitcher_info(team_info, name, war_per_200, saved_war, source, current_war, projected_war):
     #Calculate the WAR score
     if war_per_200 is not None and war_per_200 >= 2.25:
         war_score = -.0029 * war_per_200**2 + .1022 * war_per_200 - .2071
@@ -141,6 +141,8 @@ def set_pitcher_info(team_info, name, war_per_200, saved_war, source):
     #Save all info to team_info
     team_info['pitcher_name'] = name
     team_info['pitcher_war'] = saved_war
+    team_info['pitcher_current_war'] = current_war
+    team_info['pitcher_projected_war'] = projected_war
     team_info['war_source'] = source
     team_info['war_score'] = war_score
 
