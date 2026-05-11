@@ -1423,6 +1423,12 @@ def build_game_notes(game):
         except (TypeError, ValueError):
             return None
 
+    def score_value(key):
+        return numeric_value(game.get(key)) or 0
+
+    def add_note(note, value):
+        notes.append({"value": value, "html": note})
+
     def format_pitcher_war_note(starter, current_war, projected_war, fallback_war, source):
         if starter is None:
             return None
@@ -1536,7 +1542,8 @@ def build_game_notes(game):
     away_war = numeric_value(game.get('away_war'))
     away_current_war = numeric_value(game.get('away_current_war'))
     away_projected_war = numeric_value(game.get('away_projected_war'))
-    away_war_score = numeric_value(game.get('away_war_score')) or 0
+    away_war_score = score_value('away_war_score')
+    away_era_score = score_value('away_era_score')
     away_era = numeric_value(game.get('away_era'))
     if away_war_score is not None and away_war_score >= .15:
         away_pitcher_note = format_pitcher_war_note(
@@ -1547,24 +1554,27 @@ def build_game_notes(game):
             game.get('away_war_source'),
         )
         if away_pitcher_note:
-            notes.append(away_pitcher_note)
+            add_note(away_pitcher_note, away_war_score)
     elif away_era is not None and away_era <= 3.50:
         away_era_text = html.escape(format_era(away_era))
         if game.get('away_era_source') == 'real':
-            notes.append(
+            add_note(
                 f"<strong>{html.escape(str(game['away_starter']))}</strong>"
-                f": {away_era_text} ERA"
+                f": {away_era_text} ERA",
+                away_era_score,
             )
         elif game.get('away_era_source') == 'projected':
-            notes.append(
+            add_note(
                 f"<strong>{html.escape(str(game['away_starter']))}</strong>"
-                f": {away_era_text} ERA (projected)"
+                f": {away_era_text} ERA (projected)",
+                away_era_score,
             )
 
     home_war = numeric_value(game.get('home_war'))
     home_current_war = numeric_value(game.get('home_current_war'))
     home_projected_war = numeric_value(game.get('home_projected_war'))
-    home_war_score = numeric_value(game.get('home_war_score')) or 0
+    home_war_score = score_value('home_war_score')
+    home_era_score = score_value('home_era_score')
     home_era = numeric_value(game.get('home_era'))
     if home_war_score is not None and home_war_score >= 0.15:
         home_pitcher_note = format_pitcher_war_note(
@@ -1575,63 +1585,68 @@ def build_game_notes(game):
             game.get('home_war_source'),
         )
         if home_pitcher_note:
-            notes.append(home_pitcher_note)
+            add_note(home_pitcher_note, home_war_score)
     elif home_era is not None and home_era <= 3.50:
         home_era_text = html.escape(format_era(home_era))
         if game.get('home_era_source') == 'real':
-            notes.append(
+            add_note(
                 f"<strong>{html.escape(str(game['home_starter']))}</strong>"
-                f": {home_era_text} ERA"
+                f": {home_era_text} ERA",
+                home_era_score,
             )
         elif game.get('home_era_source') == 'projected':
-            notes.append(
+            add_note(
                 f"<strong>{html.escape(str(game['home_starter']))}</strong>"
-                f": {home_era_text} ERA (projected)"
+                f": {home_era_text} ERA (projected)",
+                home_era_score,
             )
 
     if game['away_win_streak'] >= 5:
-        notes.append(
+        add_note(
             f"<strong>{html.escape(str(game['away_team_name']))}</strong>"
-            f": {html.escape(str(game['away_win_streak']))} game winning streak"
+            f": {html.escape(str(game['away_win_streak']))} game winning streak",
+            score_value('away_win_streak_score'),
         )
 
     if game['home_win_streak'] >= 5:
-        notes.append(
+        add_note(
             f"<strong>{html.escape(str(game['home_team_name']))}</strong>"
-            f": {html.escape(str(game['home_win_streak']))} game winning streak"
+            f": {html.escape(str(game['home_win_streak']))} game winning streak",
+            score_value('home_win_streak_score'),
         )
 
     for milestone in game.get('away_career_milestones', []):
         note = format_milestone_note(milestone, 'career')
         if note:
-            notes.append(note)
+            add_note(note, score_value('away_milestone_score'))
 
     for milestone in game.get('home_career_milestones', []):
         note = format_milestone_note(milestone, 'career')
         if note:
-            notes.append(note)
+            add_note(note, score_value('home_milestone_score'))
 
     for milestone in game.get('away_season_milestones', []):
         note = format_milestone_note(milestone, 'season')
         if note:
-            notes.append(note)
+            add_note(note, score_value('away_milestone_score'))
 
     for milestone in game.get('home_season_milestones', []):
         note = format_milestone_note(milestone, 'season')
         if note:
-            notes.append(note)
+            add_note(note, score_value('home_milestone_score'))
 
     for debut in game.get('away_debuts', []):
         note = format_debut_note(debut)
         if note:
-            notes.append(note)
+            add_note(note, score_value('away_prospect_score'))
 
     for debut in game.get('home_debuts', []):
         note = format_debut_note(debut)
         if note:
-            notes.append(note)
+            add_note(note, score_value('home_prospect_score'))
 
-    return notes
+    notes.sort(key=lambda note: note["value"], reverse=True)
+    return [note["html"] for note in notes]
 
 def format_game_status(game):
     """Return either live/final status text or a scheduled first-pitch time."""
@@ -1721,21 +1736,8 @@ def format_win_streak_breakdown_label(team_name, win_streak):
     streak_text = html.escape(str(streak_value))
     return f"{team_text}: {streak_text} game winning streak"
 
-def format_team_strength_breakdown_label(team_name):
-    """Build the team-strength label used in the scoring breakdown rows."""
-    team_text = format_breakdown_team_name(team_name)
-    return f"{team_text} team strength"
-
-def format_team_difference_breakdown_label():
-    """Build the team-difference label used in the scoring breakdown rows."""
-    return "Team difference"
-
-def format_division_score_breakdown_label():
-    """Build the division-score label used in the scoring breakdown rows."""
-    return "Division score"
-
-def format_wild_card_score_breakdown_label():
-    """Build the wild-card-score label used in the scoring breakdown rows."""
+def format_matchup_strength_breakdown_label():
+    """Build the combined matchup-strength label used in the scoring breakdown rows."""
     return "Matchup strength"
 
 def format_milestone_breakdown_label(team_name):
@@ -1823,6 +1825,14 @@ elif games:
             away_pitcher_component = 0
             home_pitcher_component = 0
 
+        matchup_strength_component = (
+            away_wp_component
+            + home_wp_component
+            + team_diff_component
+            + division_component
+            + wild_card_component
+        )
+
         breakdown_rows = [
             build_breakdown_row(
                 f'Playoff implications for {format_breakdown_team_name(game["away_team_name"])}',
@@ -1833,24 +1843,8 @@ elif games:
                 home_playoff_component,
             ),
             build_breakdown_row(
-                format_team_strength_breakdown_label(game["away_team_name"]),
-                away_wp_component,
-            ),
-            build_breakdown_row(
-                format_team_strength_breakdown_label(game["home_team_name"]),
-                home_wp_component,
-            ),
-            build_breakdown_row(
-                format_team_difference_breakdown_label(),
-                team_diff_component,
-            ),
-            build_breakdown_row(
-                format_division_score_breakdown_label(),
-                division_component,
-            ),
-            build_breakdown_row(
-                format_wild_card_score_breakdown_label(),
-                wild_card_component,
+                format_matchup_strength_breakdown_label(),
+                matchup_strength_component,
             ),
             build_breakdown_row(
                 format_milestone_breakdown_label(game["away_team_name"]),
