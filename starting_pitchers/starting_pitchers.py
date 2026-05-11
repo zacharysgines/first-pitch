@@ -90,16 +90,14 @@ def get_sp_stats(pitcher, team_info, sp_projections, war_lookup, team_name):
         set_pitcher_info(team_info, None, None, None, None, None, None)
         return None
 
-    if proj_ip > 0:
-        #Find the weighted WAR based on current and projected IP
-        current_weight = min(1, current_ip / (proj_ip * 0.75))
-        #If the current ip is less than half of the projected ip, save the projected ip to display on the app
-        if current_ip < .5 * proj_ip :
-            saved_war = proj_war
-            source = 'projected'
-    else:
-        current_weight = 1
+    #Find the weighted WAR based on current and projected IP
+    current_weight = min(1, current_ip / max(75, proj_ip * 0.75))
     proj_weight = 1 - current_weight
+
+    #If the current ip is less than half of the projected ip, save the projected ip to display on the app
+    if current_ip < .5 * proj_ip :
+        saved_war = proj_war
+        source = 'projected'
     
     #Use weights to find weighted war per 200 IP
     weighted_war_per_200 = current_weight * current_war_per_200 + proj_weight * proj_war_per_200
