@@ -1423,6 +1423,34 @@ def build_game_notes(game):
         except (TypeError, ValueError):
             return None
 
+    def score_value(key):
+        return numeric_value(game.get(key)) or 0
+
+    def add_note(note, value):
+        notes.append({"value": value, "html": note})
+
+    def format_pitcher_war_note(starter, current_war, projected_war, fallback_war, source):
+        if starter is None:
+            return None
+
+        starter_text = f"<strong>{html.escape(str(starter))}</strong>"
+        war_bits = []
+        if current_war is not None:
+            war_bits.append(f"{html.escape(format_war(current_war))} current WAR")
+        if projected_war is not None:
+            war_bits.append(f"{html.escape(format_war(projected_war))} projected WAR")
+
+        if war_bits:
+            return f"{starter_text}: {', '.join(war_bits)}"
+
+        if fallback_war is None:
+            return None
+
+        fallback_text = html.escape(format_war(fallback_war))
+        if source == 'projected':
+            return f"{starter_text}: {fallback_text} projected WAR"
+        return f"{starter_text}: {fallback_text} WAR"
+
     def format_count(diff_value, singular_label, plural_label):
         if diff_value == 1:
             return singular_label
@@ -1512,104 +1540,113 @@ def build_game_notes(game):
         return f"<strong>{name_text}{rank_text}</strong>: MLB debut"
 
     away_war = numeric_value(game.get('away_war'))
-    away_war_score = numeric_value(game.get('away_war_score')) or 0
+    away_current_war = numeric_value(game.get('away_current_war'))
+    away_projected_war = numeric_value(game.get('away_projected_war'))
+    away_war_score = score_value('away_war_score')
+    away_era_score = score_value('away_era_score')
     away_era = numeric_value(game.get('away_era'))
-    if away_war is not None and away_war >= 2.5:
-        away_war_text = html.escape(format_war(away_war))
-        if game.get('away_war_source') == 'real':
-            notes.append(
-                f"<strong>{html.escape(str(game['away_starter']))}</strong>"
-                f": {away_war_text} WAR"
-            )
-        elif game.get('away_war_source') == 'projected':
-            notes.append(
-                f"<strong>{html.escape(str(game['away_starter']))}</strong>"
-                f": {away_war_text} projected WAR"
-            )
+    if away_war_score is not None and away_war_score >= .15:
+        away_pitcher_note = format_pitcher_war_note(
+            game.get('away_starter'),
+            away_current_war,
+            away_projected_war,
+            away_war,
+            game.get('away_war_source'),
+        )
+        if away_pitcher_note:
+            add_note(away_pitcher_note, away_war_score)
     elif away_era is not None and away_era <= 3.50:
         away_era_text = html.escape(format_era(away_era))
         if game.get('away_era_source') == 'real':
-            notes.append(
+            add_note(
                 f"<strong>{html.escape(str(game['away_starter']))}</strong>"
-                f": {away_era_text} ERA"
+                f": {away_era_text} ERA",
+                away_era_score,
             )
         elif game.get('away_era_source') == 'projected':
-            notes.append(
+            add_note(
                 f"<strong>{html.escape(str(game['away_starter']))}</strong>"
-                f": {away_era_text} ERA (projected)"
+                f": {away_era_text} ERA (projected)",
+                away_era_score,
             )
 
     home_war = numeric_value(game.get('home_war'))
-    home_war_score = numeric_value(game.get('home_war_score')) or 0
+    home_current_war = numeric_value(game.get('home_current_war'))
+    home_projected_war = numeric_value(game.get('home_projected_war'))
+    home_war_score = score_value('home_war_score')
+    home_era_score = score_value('home_era_score')
     home_era = numeric_value(game.get('home_era'))
-    if home_war is not None and home_war >= 2.5:
-        home_war_text = html.escape(format_war(home_war))
-        if game.get('home_war_source') == 'real':
-            notes.append(
-                f"<strong>{html.escape(str(game['home_starter']))}</strong>"
-                f": {home_war_text} WAR"
-            )
-        elif game.get('home_war_source') == 'projected':
-            notes.append(
-                f"<strong>{html.escape(str(game['home_starter']))}</strong>"
-                f": {home_war_text} projected WAR"
-            )
+    if home_war_score is not None and home_war_score >= 0.15:
+        home_pitcher_note = format_pitcher_war_note(
+            game.get('home_starter'),
+            home_current_war,
+            home_projected_war,
+            home_war,
+            game.get('home_war_source'),
+        )
+        if home_pitcher_note:
+            add_note(home_pitcher_note, home_war_score)
     elif home_era is not None and home_era <= 3.50:
         home_era_text = html.escape(format_era(home_era))
         if game.get('home_era_source') == 'real':
-            notes.append(
+            add_note(
                 f"<strong>{html.escape(str(game['home_starter']))}</strong>"
-                f": {home_era_text} ERA"
+                f": {home_era_text} ERA",
+                home_era_score,
             )
         elif game.get('home_era_source') == 'projected':
-            notes.append(
+            add_note(
                 f"<strong>{html.escape(str(game['home_starter']))}</strong>"
-                f": {home_era_text} ERA (projected)"
+                f": {home_era_text} ERA (projected)",
+                home_era_score,
             )
 
     if game['away_win_streak'] >= 5:
-        notes.append(
+        add_note(
             f"<strong>{html.escape(str(game['away_team_name']))}</strong>"
-            f": {html.escape(str(game['away_win_streak']))} game winning streak"
+            f": {html.escape(str(game['away_win_streak']))} game winning streak",
+            score_value('away_win_streak_score'),
         )
 
     if game['home_win_streak'] >= 5:
-        notes.append(
+        add_note(
             f"<strong>{html.escape(str(game['home_team_name']))}</strong>"
-            f": {html.escape(str(game['home_win_streak']))} game winning streak"
+            f": {html.escape(str(game['home_win_streak']))} game winning streak",
+            score_value('home_win_streak_score'),
         )
 
     for milestone in game.get('away_career_milestones', []):
         note = format_milestone_note(milestone, 'career')
         if note:
-            notes.append(note)
+            add_note(note, score_value('away_milestone_score'))
 
     for milestone in game.get('home_career_milestones', []):
         note = format_milestone_note(milestone, 'career')
         if note:
-            notes.append(note)
+            add_note(note, score_value('home_milestone_score'))
 
     for milestone in game.get('away_season_milestones', []):
         note = format_milestone_note(milestone, 'season')
         if note:
-            notes.append(note)
+            add_note(note, score_value('away_milestone_score'))
 
     for milestone in game.get('home_season_milestones', []):
         note = format_milestone_note(milestone, 'season')
         if note:
-            notes.append(note)
+            add_note(note, score_value('home_milestone_score'))
 
     for debut in game.get('away_debuts', []):
         note = format_debut_note(debut)
         if note:
-            notes.append(note)
+            add_note(note, score_value('away_prospect_score'))
 
     for debut in game.get('home_debuts', []):
         note = format_debut_note(debut)
         if note:
-            notes.append(note)
+            add_note(note, score_value('home_prospect_score'))
 
-    return notes
+    notes.sort(key=lambda note: note["value"], reverse=True)
+    return [note["html"] for note in notes]
 
 def format_game_status(game):
     """Return either live/final status text or a scheduled first-pitch time."""
@@ -1667,13 +1704,21 @@ def build_breakdown_row(label, value):
     )
     return {"value": value, "html": row_html}
 
-def format_pitcher_breakdown_label(starter, value, source, metric):
+def format_pitcher_breakdown_label(starter, value, source, metric, current_war=None, projected_war=None):
     """Build the pitcher label used in the scoring breakdown rows."""
     if starter is None or value is None:
         return None
 
     starter_text = html.escape(str(starter))
     if metric == "war":
+        war_bits = []
+        if current_war is not None:
+            war_bits.append(f"{float(current_war):.1f} current WAR")
+        if projected_war is not None:
+            war_bits.append(f"{float(projected_war):.1f} projected WAR")
+        if war_bits:
+            return f"{starter_text}: {html.escape(', '.join(war_bits))}"
+
         stat_text = html.escape(f"{float(value):.1f}")
         if source == "projected":
             return f"{starter_text}: {stat_text} projected WAR"
@@ -1691,21 +1736,8 @@ def format_win_streak_breakdown_label(team_name, win_streak):
     streak_text = html.escape(str(streak_value))
     return f"{team_text}: {streak_text} game winning streak"
 
-def format_team_strength_breakdown_label(team_name):
-    """Build the team-strength label used in the scoring breakdown rows."""
-    team_text = format_breakdown_team_name(team_name)
-    return f"{team_text} team strength"
-
-def format_team_difference_breakdown_label():
-    """Build the team-difference label used in the scoring breakdown rows."""
-    return "Team difference"
-
-def format_division_score_breakdown_label():
-    """Build the division-score label used in the scoring breakdown rows."""
-    return "Division score"
-
-def format_wild_card_score_breakdown_label():
-    """Build the wild-card-score label used in the scoring breakdown rows."""
+def format_matchup_strength_breakdown_label():
+    """Build the combined matchup-strength label used in the scoring breakdown rows."""
     return "Matchup strength"
 
 def format_milestone_breakdown_label(team_name):
@@ -1748,7 +1780,7 @@ elif games:
             for note in notes
         )
         has_playoff_implications = game.get('playoff_imp_score', 0) >= 0.2
-        has_division_rivals = game.get('division_score', 0) >= 0.10
+        has_division_rivals = game.get('division_score', 0) >= 0.02
         details_html = f'<div class="game-details">{notes_html}</div>' if notes else ""
         pill_items = []
         if has_playoff_implications:
@@ -1793,6 +1825,14 @@ elif games:
             away_pitcher_component = 0
             home_pitcher_component = 0
 
+        matchup_strength_component = (
+            away_wp_component
+            + home_wp_component
+            + team_diff_component
+            + division_component
+            + wild_card_component
+        )
+
         breakdown_rows = [
             build_breakdown_row(
                 f'Playoff implications for {format_breakdown_team_name(game["away_team_name"])}',
@@ -1803,24 +1843,8 @@ elif games:
                 home_playoff_component,
             ),
             build_breakdown_row(
-                format_team_strength_breakdown_label(game["away_team_name"]),
-                away_wp_component,
-            ),
-            build_breakdown_row(
-                format_team_strength_breakdown_label(game["home_team_name"]),
-                home_wp_component,
-            ),
-            build_breakdown_row(
-                format_team_difference_breakdown_label(),
-                team_diff_component,
-            ),
-            build_breakdown_row(
-                format_division_score_breakdown_label(),
-                division_component,
-            ),
-            build_breakdown_row(
-                format_wild_card_score_breakdown_label(),
-                wild_card_component,
+                format_matchup_strength_breakdown_label(),
+                matchup_strength_component,
             ),
             build_breakdown_row(
                 format_milestone_breakdown_label(game["away_team_name"]),
@@ -1853,6 +1877,8 @@ elif games:
             game.get('away_war') if 'away_war' in game else game.get('away_era'),
             game.get('away_war_source') if 'away_war' in game else game.get('away_era_source'),
             'war' if 'away_war' in game else 'era',
+            current_war=game.get('away_current_war'),
+            projected_war=game.get('away_projected_war'),
         )
         if away_pitcher_label:
             breakdown_rows.append(
@@ -1867,6 +1893,8 @@ elif games:
             game.get('home_war') if 'home_war' in game else game.get('home_era'),
             game.get('home_war_source') if 'home_war' in game else game.get('home_era_source'),
             'war' if 'home_war' in game else 'era',
+            current_war=game.get('home_current_war'),
+            projected_war=game.get('home_projected_war'),
         )
         if home_pitcher_label:
             breakdown_rows.append(
