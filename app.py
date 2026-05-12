@@ -1527,13 +1527,15 @@ def build_game_notes(game):
 
         rank_bits = []
         if mlb_rank is not None:
-            rank_bits.append(f"#{html.escape(str(mlb_rank))} MLB")
+            rank_bits.append(f"#{html.escape(str(mlb_rank))} MLB prospect")
         if org_rank is not None and org:
+            prospect_label = " prospect" if not rank_bits else ""
             rank_bits.append(
-                f"#{html.escape(str(org_rank))} {html.escape(str(org))}"
+                f"#{html.escape(str(org_rank))} {html.escape(str(org))}{prospect_label}"
             )
         if pos_rank is not None:
-            rank_bits.append(f"#{html.escape(str(pos_rank))} {pos_text}")
+            prospect_label = " prospect" if not rank_bits else ""
+            rank_bits.append(f"#{html.escape(str(pos_rank))} {pos_text}{prospect_label}")
 
         rank_text = f" ({', '.join(rank_bits)})" if rank_bits else ""
 
