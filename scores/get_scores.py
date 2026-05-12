@@ -367,4 +367,4 @@ def update_scores(gamedate_str, games, games_to_update):
     return saved_scores
 
 #get_all_scores('08/21/2026', '12/31/2026')
-#score_games('05/11/2026', use_json=False)
+score_games('05/11/2026', use_json=False)

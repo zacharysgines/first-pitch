@@ -64,10 +64,12 @@ def get_lineup(game):
     for team_status in ('away', 'home'):
         if team_status == 'away':
             starting_pitcher = away_pitcher
+            team_name = away_team
             lineup_key = "away_lineup"
             pitcher_key = "away_pitcher"
         else:
             starting_pitcher = home_pitcher
+            team_name = home_team
             lineup_key = "home_lineup"
             pitcher_key = "home_pitcher"
 
@@ -82,6 +84,7 @@ def get_lineup(game):
                     "id": player_id,
                     "name": player_name,
                     "position": player['position']['abbreviation'],
+                    "team": team_name,
                     "stats": {
                         "runs": season_stats.get('runs', 0),
                         "doubles": season_stats.get('doubles', 0),
@@ -101,6 +104,8 @@ def get_lineup(game):
                 pitcher_data = {
                     "id": player_id,
                     "name": player_name,
+                    "position": "P",
+                    "team": team_name,
                     "stats": {
                         "strikeouts": season_stats.get('strikeOuts', 0),
                         "era": season_stats.get('era', 0),
