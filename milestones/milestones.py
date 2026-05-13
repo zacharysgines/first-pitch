@@ -14,6 +14,30 @@ sys.path.insert(0, str(ROOT_DIR))
 from save_load import load_milestone_records, load_prospects, load_milestone_stat_list, load_saved_lineups, save_milestone_records
 
 
+def parse_future_value(fv):
+    if pd.isna(fv):
+        return None
+
+    if isinstance(fv, (int, float)):
+        return float(fv)
+
+    fv_text = str(fv).strip()
+    if not fv_text:
+        return None
+
+    if fv_text.endswith("+"):
+        fv_value = pd.to_numeric(fv_text[:-1], errors="coerce")
+        if pd.isna(fv_value):
+            return None
+        return float(fv_value) + 2.5
+
+    fv_value = pd.to_numeric(fv_text, errors="coerce")
+    if pd.isna(fv_value):
+        return None
+
+    return float(fv_value)
+
+
 def milestones(games, gamedate_str, teams_info):
     #Initialize milestones info in teams_info
     for team in teams_info:
@@ -127,7 +151,7 @@ def get_milestones(player, team_info, player_type, milestone_stat_list):
                 rank = prospect['Rank']
                 org_rank = prospect['OrgRank']
                 pos_rank = prospect['PosRank']
-                fv = prospect['FV']
+                fv = parse_future_value(prospect['FV'])
 
                 #Update debut_info with any info we found in the .csv file, and save the calculated score for this prosepct
                 debut_info['org'] = prospect['Org']
@@ -138,7 +162,8 @@ def get_milestones(player, team_info, player_type, milestone_stat_list):
                     debut_info['org_rank'] = org_rank
                 if pd.notna(pos_rank):
                     debut_info['pos_rank'] = pos_rank                                
-                debut_info['score'] = .0094 * math.exp(.0576 * fv)
+                if fv is not None:
+                    debut_info['score'] = .0094 * math.exp(.0576 * fv)
         
         #Save all debut info for this player into the team_info dictionary
         team_info['debuts'].append(debut_info)       
