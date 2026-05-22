@@ -324,7 +324,7 @@ def get_streaks(player, player_stats, gamedate_str):
         gamedate_obj -= timedelta(days=1)
         check_date_str = gamedate_obj.strftime("%m/%d/%Y")
 
-        get_player_stats(check_date_str, player)
+        get_player_date_stats(check_date_str, player)
 
         player_stats.append({
             'player_id': player['id'],
@@ -333,40 +333,105 @@ def get_streaks(player, player_stats, gamedate_str):
         
         
 
-def get_player_stats(date, player):
+def get_player_date_stats(date, player):
+    #Get all the games for this date. If there are no games, return none
     prior_games = statsapi.schedule(date=date)
+    if not prior_games:
+        return False, 0, 0, 0
     
+    #Get current player information
     player_team = player['team']
     print("Player Team:", player_team)
 
+    #Check each game in this date to find this player's team game for that date
     for game in prior_games:
+        #Track whether this team played this day or not
+        game_found = False
+
+        #If the game we're looking at is not a regular season game, skip it
         if game['game_type'] != 'R':
             continue
         
+        #If either of the teams for this game are the player's team, this is the game we need to
+        #get stats from
         if game['away_name'] == player_team or game['home_name'] == player_team:
+            #Get game info
+            game_found = True
             game_id = game['game_id']
 
+            #Get play-by-play info
             pbp = statsapi.get("game", {"gamePk": game_id})
-            plays = pbp["liveData"]["plays"]["allPlays"]
+            events = pbp["liveData"]["plays"]["allPlays"]
 
-            for play in plays:
-                batter_id = play.get("matchup", {}).get("batter", {}).get("id")
+            #Define events that reult in an at bat
+            ab_events = {
+                "sing'e",
+                "double",
+                "triple",
+                "home_run",
+                "double_play",
+                "field_error",
+                "field_out",
+                "fielders_choice",
+                "fielders_choice_out",
+                "force_out",
+                "grounded_into_double_play",
+                "strikeout",
+                "strike_out",
+                "strikeout_double_play",
+                "strikeout_triple_play",
+                "triple_play",
+                'fan_interference'
+            }
 
-                if batter_id != player['id']:
+            pa_events = {
+                "sac_fly",
+                "sac_fly_double_play",
+                "sac_bunt",
+                "sac_bunt_double_play"
+                "walk",
+                "intent_walk",
+                "hit_by_pitch",
+            }
+
+            hit_events = {
+                "single",
+                "double",
+                "triple",
+                "home_run",
+            }
+
+            #Initialize plate appearances, at bats and hits to 0 and increment if they had
+            #an event that meets the criteria
+            plate_appearances = 0
+            at_bats = 0
+            hits = 0
+
+            #Go through each event that occured in the play by play data (essentially every 
+            #plate appearance)
+            for event in events:
+                #Get the ID for the batter involved in this event
+                event_batter_id = event.get("matchup", {}).get("batter", {}).get("id")
+
+                #If this player was not the player we're looking for, skip this event 
+                if event_batter_id != player['id']:
                     continue
 
-                event_type = play.get("result", {}).get("eventType", "")
+                #Get the result of this event
+                result = event.get("result", {}).get("eventType", "")
+                print(result)
 
-                print(event_type)
+                if result in ab_events:
+                    at_bats += 1
+                if result in ab_events or result in pa_events:
+                    plate_appearances += 1
+                if result in hit_events:
+                    hits += 1
 
+                return at_bats, plate_appearances, hits
             
-            # box = statsapi.boxscore_data(game_id)
-
-            # for box_player in box['away']['players'].values():
-            #     if box_player['person']['id'] == player['id']:
-
-            #         print(box_player)
-
+    if game_found == False:
+        return 0, 0, 0
         
 
 
