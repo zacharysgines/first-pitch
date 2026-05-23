@@ -413,12 +413,78 @@ st.markdown(
         div.st-key-date_toolbar {
             margin: 0.75rem auto 0.35rem auto;
             --date-input-width: 190px;
+            --date-step-button-size: 24px;
+            --date-step-gap: 0.55rem;
             position: relative;
         }
 
         div.st-key-date_toolbar div[data-testid="stHorizontalBlock"] {
             max-width: var(--date-input-width);
             margin: 0 auto;
+        }
+
+        div.st-key-previous_date_button,
+        div.st-key-next_date_button {
+            position: absolute;
+            top: 50%;
+            width: var(--date-step-button-size);
+            height: var(--date-step-button-size);
+            transform: translateY(-50%);
+            margin: 0;
+            padding: 0;
+            z-index: 3;
+        }
+
+        div.st-key-previous_date_button {
+            left: calc(50% - (var(--date-input-width) / 2) - var(--date-step-button-size) - var(--date-step-gap));
+        }
+
+        div.st-key-next_date_button {
+            right: calc(50% - (var(--date-input-width) / 2) - var(--date-step-button-size) - var(--date-step-gap));
+        }
+
+        div.st-key-previous_date_button div[data-testid="stButton"],
+        div.st-key-next_date_button div[data-testid="stButton"] {
+            height: var(--date-step-button-size);
+            margin: 0;
+        }
+
+        div.st-key-previous_date_button button[kind="secondary"],
+        div.st-key-next_date_button button[kind="secondary"] {
+            width: var(--date-step-button-size);
+            height: var(--date-step-button-size);
+            min-height: var(--date-step-button-size);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            border: none;
+            background: transparent;
+            color: #6c7280;
+            box-shadow: none;
+            line-height: 1;
+        }
+
+        div.st-key-previous_date_button button[kind="secondary"] p,
+        div.st-key-next_date_button button[kind="secondary"] p {
+            margin: 0;
+            font-size: 1.3rem;
+            font-weight: 500;
+            line-height: 1;
+        }
+
+        div.st-key-previous_date_button button[kind="secondary"]:hover,
+        div.st-key-previous_date_button button[kind="secondary"]:focus,
+        div.st-key-previous_date_button button[kind="secondary"]:focus-visible,
+        div.st-key-previous_date_button button[kind="secondary"]:active,
+        div.st-key-next_date_button button[kind="secondary"]:hover,
+        div.st-key-next_date_button button[kind="secondary"]:focus,
+        div.st-key-next_date_button button[kind="secondary"]:focus-visible,
+        div.st-key-next_date_button button[kind="secondary"]:active {
+            border: none;
+            background: transparent;
+            color: #6c7280;
+            box-shadow: none;
         }
 
         /* DATE LABEL */
@@ -854,6 +920,8 @@ st.markdown(
                 padding: 0;
                 box-sizing: border-box;
                 --date-input-width: 150px;
+                --date-step-button-size: 22px;
+                --date-step-gap: 0.45rem;
             }
 
             .date-filter-heading {
@@ -996,6 +1064,18 @@ def sync_selected_date_from_input():
     """Mirror the Streamlit date widget back into query params for shareable URLs."""
     selected = st.session_state.selected_date_input
     st.session_state.selected_date = selected
+    st.query_params["date"] = selected.isoformat()
+
+
+def shift_selected_date(days):
+    """Move the selected date by a fixed day offset and keep widget/query state synced."""
+    selected = st.session_state.get(
+        "selected_date",
+        datetime.now(get_user_display_timezone()).date(),
+    )
+    selected = selected + timedelta(days=days)
+    st.session_state.selected_date = selected
+    st.session_state.selected_date_input = selected
     st.query_params["date"] = selected.isoformat()
 
 
@@ -1367,6 +1447,20 @@ if current_page == "home":
             format="MM/DD/YYYY",
             label_visibility="collapsed",
             on_change=sync_selected_date_from_input,
+        )
+        st.button(
+            r"\<",
+            key="previous_date_button",
+            help="Previous day",
+            on_click=shift_selected_date,
+            args=(-1,),
+        )
+        st.button(
+            r"\>",
+            key="next_date_button",
+            help="Next day",
+            on_click=shift_selected_date,
+            args=(1,),
         )
 
         selected_date_obj = st.session_state.selected_date
