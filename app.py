@@ -648,8 +648,19 @@ st.markdown(
             margin-top: 0.25rem;
         }
 
-        .game-pill-row {
+        .game-card-meta-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
             margin: 0 0.9rem 0.9rem 0.9rem;
+        }
+
+        .game-pill-row {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.45rem;
         }
 
         .game-pill {
@@ -665,10 +676,6 @@ st.markdown(
             text-transform: capitalize;
         }
 
-        .game-pill + .game-pill {
-            margin-left: 0.45rem;
-        }
-
         .game-pill-division {
             background-color: #ffffff;
             color: #1F2A44;
@@ -681,7 +688,7 @@ st.markdown(
             align-items: center;
             gap: 0.35rem;
             min-height: 2rem;
-            margin: -0.25rem 0.9rem 0.8rem 0.9rem;
+            margin-left: auto;
         }
 
         .broadcast-logo-frame {
@@ -898,12 +905,14 @@ st.markdown(
                 padding: 0.5rem 0.7rem 0.55rem 1.85rem;
             }
 
-            .game-pill-row {
+            .game-card-meta-row {
+                align-items: flex-start;
+                gap: 0.55rem;
                 margin: 0 0.65rem 0.7rem 0.65rem;
             }
 
             .broadcast-logo-row {
-                margin: -0.1rem 0.65rem 0.65rem 0.65rem;
+                min-height: 1.7rem;
             }
 
             .broadcast-logo {
@@ -1953,8 +1962,13 @@ elif games:
         if has_playoff_implications:
             pill_items.append('<span class="game-pill">Playoff Implications</span>')
         if has_division_rivals:
-            pill_items.append('<span class="game-pill game-pill-division">Divison Rivals</span>')
+            pill_items.append('<span class="game-pill game-pill-division">Division Rivals</span>')
         pill_html = f'<div class="game-pill-row">{"".join(pill_items)}</div>' if pill_items else ""
+        meta_html = (
+            f'<div class="game-card-meta-row">{pill_html}{broadcast_logos_html}</div>'
+            if pill_html or broadcast_logos_html
+            else ""
+        )
 
         unadjusted_score = numeric_score_value(game.get('unadjusted_score'))
         away_pitcher_score = numeric_score_value(game.get('away_war_score', game.get('away_era_score', 0)))
@@ -2121,8 +2135,7 @@ elif games:
             f'<div class="score-bubble {color_class}">{score:.0f}</div>'
             '</div>'
             f'{details_html}'
-            f'{pill_html}'
-            f'{broadcast_logos_html}'
+            f'{meta_html}'
             '</summary>'
             f'{expanded_html}'
             '</details>'
