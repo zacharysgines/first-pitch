@@ -77,6 +77,12 @@ war_lookup <- setNames(
 )
 
 output_file <- file.path(get_script_dir(), "war_lookup.json")
-write_json(war_lookup, output_file, auto_unbox = TRUE, pretty = TRUE, null = "null")
+metadata <- setNames(
+  list(list(last_updated = as.character(Sys.Date()))),
+  "_metadata"
+)
+war_output <- c(metadata, war_lookup)
+
+write_json(war_output, output_file, auto_unbox = TRUE, pretty = TRUE, null = "null")
 
 cat("Saved", length(war_lookup), "pitcher WAR records to", output_file, "\n")

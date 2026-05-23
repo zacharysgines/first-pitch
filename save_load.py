@@ -1,6 +1,6 @@
 import json
 import subprocess
-from datetime import date, datetime
+from datetime import date
 from pathlib import Path
 
 import pandas as pd
@@ -15,6 +15,26 @@ MILESTONE_RECORDS_FILE = ROOT_DIR / "milestones" / "milestone_records.json"
 PROSPECTS_FILE = ROOT_DIR / "milestones" / "prospects.csv"
 PITCHER_WAR_FILE = ROOT_DIR / "starting_pitchers" / "war_lookup.json"
 FANGRAPHS_WAR_SCRIPT = ROOT_DIR / "starting_pitchers" / "get_fwar.r"
+
+def get_pitcher_war_lookup_updated_date():
+    if not PITCHER_WAR_FILE.exists():
+        return None
+
+    try:
+        with open(PITCHER_WAR_FILE, "r", encoding="utf-8") as f:
+            war_lookup = json.load(f)
+    except (json.JSONDecodeError, OSError):
+        return None
+
+    metadata = war_lookup.get("_metadata", {})
+    last_updated = metadata.get("last_updated")
+    if not last_updated:
+        return None
+
+    try:
+        return date.fromisoformat(last_updated)
+    except ValueError:
+        return None
 
 #Load game_scores.json
 def load_scores():
@@ -115,10 +135,9 @@ def load_milestone_stat_list():
 
 
 def refresh_pitcher_war_lookup_if_needed():
-    if PITCHER_WAR_FILE.exists():
-        last_updated = datetime.fromtimestamp(PITCHER_WAR_FILE.stat().st_mtime).date()
-        if last_updated >= date.today():
-            return None
+    last_updated = get_pitcher_war_lookup_updated_date()
+    if last_updated is not None and last_updated >= date.today():
+        return None
 
     subprocess.run(
         ["Rscript", str(FANGRAPHS_WAR_SCRIPT)],
@@ -142,6 +161,12 @@ def load_pitcher_war_lookup(gamedate_str):
 
     if not war_lookup:
         raise ValueError(f"WAR lookup is empty: {PITCHER_WAR_FILE}")
+
+    war_lookup = {
+        player_id: stats
+        for player_id, stats in war_lookup.items()
+        if player_id != "_metadata"
+    }
 
     for player_id, stats in war_lookup.items():
         if "WAR" not in stats or "IP" not in stats:
