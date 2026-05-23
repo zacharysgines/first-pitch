@@ -1,5 +1,6 @@
 import streamlit as st
 from datetime import date, datetime, timedelta, timezone
+import base64
 import html
 import json
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
@@ -8,10 +9,12 @@ import sys
 
 #Find the project root path and add that path to Python's import path so we can find the files we
 #need to import from
-ROOT_DIR = Path(__file__).resolve().parents[1]  
+ROOT_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT_DIR))
 
 from scores.get_scores import score_games
+
+BROADCAST_ASSET_DIR = ROOT_DIR / "assets" / "broadcasts"
 
 # Streamlit still handles layout/state, but most of the visual presentation in this
 # file is custom HTML/CSS injected with st.markdown. Treat this file more like a
@@ -672,6 +675,32 @@ st.markdown(
             border: 1.5px solid #1F2A44;
         }
 
+        .broadcast-logo-row {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 0.35rem;
+            min-height: 2rem;
+            margin: -0.25rem 0.9rem 0.8rem 0.9rem;
+        }
+
+        .broadcast-logo-frame {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 4.7rem;
+            height: 1.8rem;
+            padding: 0.15rem 0.25rem;
+            box-sizing: border-box;
+        }
+
+        .broadcast-logo {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
         .game-expand-panel {
             border-top: 1px solid #d6d6d6;
             background: linear-gradient(180deg, #fcfbf7 0%, #f2eee3 100%);
@@ -871,6 +900,20 @@ st.markdown(
 
             .game-pill-row {
                 margin: 0 0.65rem 0.7rem 0.65rem;
+            }
+
+            .broadcast-logo-row {
+                margin: -0.1rem 0.65rem 0.65rem 0.65rem;
+            }
+
+            .broadcast-logo {
+                width: 100%;
+                height: 100%;
+            }
+
+            .broadcast-logo-frame {
+                width: 4.2rem;
+                height: 1.6rem;
             }
 
             .game-expand-panel {
@@ -1343,6 +1386,127 @@ def score_class(score):
     else:
         return "score-blue"
 
+BROADCAST_LOGO_SPECS = [
+    {
+        "key": "peacock",
+        "tokens": ("peacock",),
+        "label": "Peacock",
+        "filename": "peacock.png",
+    },
+    {
+        "key": "apple-tv",
+        "tokens": ("apple tv", "apple tv+", "apple"),
+        "label": "Apple TV+",
+        "filename": "apple-tv-plus.png",
+    },
+    {
+        "key": "espn",
+        "tokens": ("espn",),
+        "label": "ESPN",
+        "filename": "espn.png",
+    },
+    {
+        "key": "fs1",
+        "tokens": ("fs1", "fox sports 1"),
+        "label": "FS1",
+        "filename": "fs1.png",
+    },
+    {
+        "key": "fox",
+        "tokens": ("fox",),
+        "label": "FOX",
+        "filename": "fox.png",
+    },
+    {
+        "key": "tbs",
+        "tokens": ("tbs",),
+        "label": "TBS",
+        "filename": "tbs.png",
+    },
+    {
+        "key": "mlb-network",
+        "tokens": ("mlb network", "mlbn"),
+        "label": "MLBN",
+        "filename": "mlb-network.png",
+    },
+    {
+        "key": "roku",
+        "tokens": ("roku",),
+        "label": "Roku",
+        "filename": "roku.png",
+    },
+    {
+        "key": "nbcsn",
+        "tokens": ("nbcsn", "nbc sports"),
+        "label": "NBCSN",
+        "filename": "nbcsn.png",
+    },
+]
+
+def build_image_data_uri(filename):
+    image_path = BROADCAST_ASSET_DIR / filename
+    if not image_path.exists():
+        return None
+
+    mime_type = {
+        ".png": "image/png",
+        ".jpg": "image/jpeg",
+        ".jpeg": "image/jpeg",
+        ".webp": "image/webp",
+        ".svg": "image/svg+xml",
+    }.get(image_path.suffix.lower())
+    if not mime_type:
+        return None
+
+    encoded = base64.b64encode(image_path.read_bytes()).decode("ascii")
+    return f"data:{mime_type};base64,{encoded}"
+
+def get_broadcast_logo_specs(national_broadcasts):
+    if not national_broadcasts:
+        return []
+
+    if isinstance(national_broadcasts, str):
+        broadcasts = [national_broadcasts]
+    else:
+        broadcasts = national_broadcasts
+
+    matched_specs = []
+    matched_keys = set()
+    for broadcast in broadcasts:
+        broadcast_text = str(broadcast).casefold()
+        for spec in BROADCAST_LOGO_SPECS:
+            if spec["key"] in matched_keys:
+                continue
+            if spec["key"] == "fox" and ("fs1" in broadcast_text or "fox sports 1" in broadcast_text):
+                continue
+            if any(token in broadcast_text for token in spec["tokens"]):
+                matched_specs.append(spec)
+                matched_keys.add(spec["key"])
+
+    return matched_specs
+
+def build_broadcast_logos_html(game):
+    logo_specs = get_broadcast_logo_specs(game.get("national_broadcasts", []))
+    if not logo_specs:
+        return ""
+
+    logos_html = []
+    for spec in logo_specs[:3]:
+        label = html.escape(spec["label"], quote=True)
+        data_uri = build_image_data_uri(spec["filename"])
+        if not data_uri:
+            continue
+        logos_html.append(
+            '<span class="broadcast-logo-frame">'
+            f'<img class="broadcast-logo" src="{data_uri}" alt="{label}" title="{label}">'
+            '</span>'
+        )
+
+    if not logos_html:
+        return ""
+
+    return f'<div class="broadcast-logo-row">{"".join(logos_html)}</div>'
+
 def load_lineups_snapshot():
     """Load the latest lineup snapshot saved by the lineup polling script."""
     lineups_path = Path(__file__).resolve().parent / "lineups" / "lineups.json"
@@ -1784,6 +1948,7 @@ elif games:
         has_playoff_implications = game.get('playoff_imp_score', 0) >= 0.2
         has_division_rivals = game.get('division_score', 0) >= 0.02
         details_html = f'<div class="game-details">{notes_html}</div>' if notes else ""
+        broadcast_logos_html = build_broadcast_logos_html(game)
         pill_items = []
         if has_playoff_implications:
             pill_items.append('<span class="game-pill">Playoff Implications</span>')
@@ -1957,6 +2122,7 @@ elif games:
             '</div>'
             f'{details_html}'
             f'{pill_html}'
+            f'{broadcast_logos_html}'
             '</summary>'
             f'{expanded_html}'
             '</details>'

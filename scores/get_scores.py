@@ -76,7 +76,7 @@ def score_games(gamedate_str, saved_scores = None, use_json = True):
         for entry in saved_scores:
             if entry["gamedate"] == gamedate_str:
                 cached_games = entry["games"]
-                if all(game.get("game_datetime") for game in cached_games):
+                if all(game.get("game_datetime") and "national_broadcasts" in game for game in cached_games):
                     return cached_games
                 break
         
@@ -134,6 +134,7 @@ def get_scores(standings, games, gamedate_str):
         #Game Info
         gameid = game['game_id']
         game_datetime = game['game_datetime']
+        national_broadcasts = game.get('national_broadcasts', [])
         #Team Definitions
         away_team_name = game['away_name']
         home_team_name = game['home_name']
@@ -204,6 +205,7 @@ def get_scores(standings, games, gamedate_str):
         game_scores.append({
             'game_id': gameid,
             'game_datetime': game_datetime,
+            'national_broadcasts': national_broadcasts,
             'away_team_name': away_team_name,
             'home_team_name': home_team_name,
             'away_wins': away_wins,
@@ -296,6 +298,8 @@ def update_scores(gamedate_str, games, games_to_update):
         game_updated = False                                   
         game_id = saved_game.get('game_id')                   #Get id for this game in game_scores.json
         game_to_update = games_to_update.get(game_id, {})     #Find the game in games_to_update that shares this game_id
+        live_game = live_games.get(game_id, {})
+        saved_game['national_broadcasts'] = live_game.get('national_broadcasts', saved_game.get('national_broadcasts', []))
 
         #Get the away team and home team name for this game
         away_team_name = saved_game['away_team_name']
