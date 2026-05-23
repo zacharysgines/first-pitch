@@ -563,8 +563,11 @@ st.markdown(
             flex-direction: column;
             align-items: flex-start;
             gap: 0.35rem;
+            flex: 1 1 auto;
+            width: 100%;
             padding-left: .5rem;
             padding-right: 6.2rem;
+            box-sizing: border-box;
         }
 
         .game-time {
@@ -577,13 +580,19 @@ st.markdown(
         }
 
         .team-column {
-            width: auto;
+            width: 100%;
         }
 
         .team-line {
             display: flex;
             align-items: baseline;
             gap: 0.45rem;
+            width: 100%;
+        }
+
+        .team-line-with-logo {
+            align-items: center;
+            width: calc(100% + 6.8rem);
         }
 
         .team-name {
@@ -689,6 +698,11 @@ st.markdown(
             gap: 0.35rem;
             min-height: 2rem;
             margin-left: auto;
+        }
+
+        .broadcast-logo-row-inline {
+            min-height: 1.8rem;
+            flex-shrink: 0;
         }
 
         .broadcast-logo-frame {
@@ -874,11 +888,15 @@ st.markdown(
             }
 
             .team-column {
-                width: auto;
+                width: 100%;
             }
 
             .team-line {
                 gap: 0.4rem;
+            }
+
+            .team-line-with-logo {
+                width: calc(100% + 5.05rem);
             }
 
             .team-name {
@@ -1494,7 +1512,7 @@ def get_broadcast_logo_specs(national_broadcasts):
 
     return matched_specs
 
-def build_broadcast_logos_html(game):
+def build_broadcast_logos_html(game, extra_class=""):
     logo_specs = get_broadcast_logo_specs(game.get("national_broadcasts", []))
     if not logo_specs:
         return ""
@@ -1514,7 +1532,11 @@ def build_broadcast_logos_html(game):
     if not logos_html:
         return ""
 
-    return f'<div class="broadcast-logo-row">{"".join(logos_html)}</div>'
+    class_name = "broadcast-logo-row"
+    if extra_class:
+        class_name = f'{class_name} {html.escape(extra_class, quote=True)}'
+
+    return f'<div class="{class_name}">{"".join(logos_html)}</div>'
 
 def load_lineups_snapshot():
     """Load the latest lineup snapshot saved by the lineup polling script."""
@@ -1964,9 +1986,17 @@ elif games:
         if has_division_rivals:
             pill_items.append('<span class="game-pill game-pill-division">Division Rivals</span>')
         pill_html = f'<div class="game-pill-row">{"".join(pill_items)}</div>' if pill_items else ""
+        has_badges = bool(pill_items)
+        has_info_box = bool(details_html)
+        use_meta_broadcast_row = has_badges or has_info_box
+        inline_broadcast_logos_html = (
+            build_broadcast_logos_html(game, "broadcast-logo-row-inline")
+            if broadcast_logos_html and not use_meta_broadcast_row
+            else ""
+        )
         meta_html = (
             f'<div class="game-card-meta-row">{pill_html}{broadcast_logos_html}</div>'
-            if pill_html or broadcast_logos_html
+            if use_meta_broadcast_row and (pill_html or broadcast_logos_html)
             else ""
         )
 
@@ -2126,9 +2156,10 @@ elif games:
             '</div>'
             '</div>'
             '<div class="team-column">'
-            '<div class="team-line">'
+            f'<div class="team-line{" team-line-with-logo" if inline_broadcast_logos_html else ""}">'
             f'<span class="team-name">{html.escape(str(game["home_team_name"]))}</span>'
             f'<span class="team-record">({game["home_wins"]} - {game["home_losses"]})</span>'
+            f'{inline_broadcast_logos_html}'
             '</div>'
             '</div>'
             '</div>'
