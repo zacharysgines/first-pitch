@@ -141,9 +141,9 @@ def get_milestones(player, team_info, player_type, milestone_stat_list):
             'mlb_rank': None,
             'org_rank': None,
             'pos_rank': None,
-            'score': 0.05
+            'score': 0.1
         }
-
+    
         for prospect in prospects:
             #See if you can find this player in prospects.csv. If you can't they're not a top prospect, so we don't have any additional info on them.
             if prospect['Name'] == player_name:
@@ -163,7 +163,7 @@ def get_milestones(player, team_info, player_type, milestone_stat_list):
                 if pd.notna(pos_rank):
                     debut_info['pos_rank'] = pos_rank                                
                 if fv is not None:
-                    debut_info['score'] = .0094 * math.exp(.0576 * fv)
+                    debut_info['score'] = 0.0001 * fv^2 + 0.0029 * fv - 0.1338
         
         #Save all debut info for this player into the team_info dictionary
         team_info['debuts'].append(debut_info)       
