@@ -50,11 +50,17 @@ def records(teams, standings):
 
 def calc_score(wp, team_info, current_wins, current_losses):
     #After getting the winning percentage either through the weighted team record or through 
-    #projections, calculate the wp score
-    if wp < .45:
+    #projections, calculate the wp score with a piecewise function
+    if wp >= 0.685:
+        wp_score = 0.3
+    elif wp >= 0.600:
+        wp_score = -14.166 * wp**2 + 19.456 * wp - 6.3762
+    elif wp >= 0.400:
+        wp_score = 0.5193 * wp - 0.1113
+    elif wp >= 0.309:
+        wp_score = 7.8024 * wp**2 - 4.5431 * wp + 0.6597
+    else:
         wp_score = 0
-    else:   
-        wp_score = .000007 * math.exp(15.091 * wp)
 
     #Save the current wins, losses and wp_score to the team_info
     team_info['wins'] = current_wins
