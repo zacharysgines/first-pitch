@@ -163,7 +163,7 @@ def get_milestones(player, team_info, player_type, milestone_stat_list):
                 if pd.notna(pos_rank):
                     debut_info['pos_rank'] = pos_rank                                
                 if fv is not None:
-                    debut_info['score'] = 0.0001 * fv^2 + 0.0029 * fv - 0.1338
+                    debut_info['score'] = 0.0001 * fv**2 + 0.0029 * fv - 0.1338
         
         #Save all debut info for this player into the team_info dictionary
         team_info['debuts'].append(debut_info)       
@@ -172,92 +172,130 @@ def get_milestones(player, team_info, player_type, milestone_stat_list):
 
 
 def add_milestone(record, margin, player_stat_value, team_info, scope, stat_name, player_name):
-    #Initialize "diff" as the difference between the record and this players value, and score as 0
-    diff = record - player_stat_value
+    #Initialize "diff" as the needed number to pass the record, and score as 0
+    diff = record - player_stat_value + 1
     score = 0
+    milestone_type = None
 
     #Get milestone score for runs
     if stat_name == 'runs':
-        if 0 <= diff <= margin:
-            score = min(1, .0172 * diff**3 - .1757 * diff**2 + .2787 * diff + .9674)
+        if 1 <= diff <= margin:
             target_stat_value = record
             milestone_type = 'Record'
+        else:
+            target_stat_value = math.ceil((player_stat_value + 1) / 500) * 500
+            diff = target_stat_value - player_stat_value
+            if 1 <= diff <= margin:
+                milestone_type = 'Milestone'
+        if milestone_type:
+            score = max(0, min(1, .00000005 * target_stat_value**2 + 0.0002 * target_stat_value + 0.1305)) * max(0, min(1, 0.03 * diff**3 - 0.305 * diff**2 + 0.6513 * diff + 0.5993))
 
     #Get milestone score for doubles
     if stat_name == 'doubles':
-        if 0 <= diff <= margin:
-            score = min(1, .0264 * diff**3 - .2167 * diff**2 + .2438 * diff + .9869)
-            target_stat_value = record
-            milestone_type = "Record"
-    
-    #Get milestone score for triples
-    if stat_name == 'triples':
-        if 0 <= diff <= margin:
-            score = min(1, .0536 * diff**2 - .4693 * diff + 1.0471)
-            target_stat_value = record
-            milestone_type = "Record"
-
-    #Get milestone score for home runs
-    if stat_name == 'home_runs':
-        if 0 <= diff <= margin:
-            score = min(1, 0.0273 * diff**3 - 0.2272 * diff**2 + 0.263 * diff + 0.9841)
+        if 1 <= diff <= margin:
             target_stat_value = record
             milestone_type = 'Record'
         else:
             target_stat_value = math.ceil((player_stat_value + 1) / 100) * 100
             diff = target_stat_value - player_stat_value
-            if 0 <= diff <= margin:
-                score = min(1, 0.0414 * diff**2 - 0.4846 * diff + 1.488) * min(1, -.000000006 * target_stat_value**3 + .000008 * target_stat_value**2 - .0018 * target_stat_value + .1593)
+            if 1 <= diff <= margin:
                 milestone_type = 'Milestone'
+        if milestone_type:
+            score = max(0, min(1, .000001 * target_stat_value**2 + 0.0003 * target_stat_value + 0.1698)) * max(0, min(1, 0.1198 * diff**3 - 0.8666 * diff**2 + 1.5026 * diff + 0.1951))
+    
+    #Get milestone score for triples
+    if stat_name == 'triples':
+        if 1 <= diff <= margin:
+            target_stat_value = record
+            milestone_type = 'Record'
+        else:
+            target_stat_value = math.ceil((player_stat_value + 1) / 50) * 50
+            diff = target_stat_value - player_stat_value
+            if 1 <= diff <= margin:
+                milestone_type = 'Milestone'
+        if milestone_type:
+            score = max(0, min(1, -.000006 * target_stat_value**2 + 0.0042 * target_stat_value + 0.204)) * max(0, min(1, 0.3078 * diff**2 - 1.6001 * diff + 2.0321))
+
+    #Get milestone score for home runs
+    if stat_name == 'home_runs':
+        if 1 <= diff <= margin:
+            target_stat_value = record
+            milestone_type = 'Record'
+        else:
+            target_stat_value = math.ceil((player_stat_value + 1) / 100) * 100
+            diff = target_stat_value - player_stat_value
+            if 1 <= diff <= margin:
+                milestone_type = 'Milestone'
+        if milestone_type:
+            score = max(0, min(1, .0000002 * target_stat_value**2 + 0.0009 * target_stat_value + 0.1928)) * max(0, min(1, 0.0862 * diff**3 - 0.5685 * diff**2 + 0.7238 * diff + 0.6888))
 
     #Get milestone score for hits
     if stat_name == 'hits':
-        if 0 <= diff <= margin:
-            score = min(1, -.003 * diff**3 - .0052 * diff**2 + 0.052 * diff + .9785)
+        if 1 <= diff <= margin:
             target_stat_value = record
             milestone_type = 'Record'
         else:
-            target_stat_value = math.ceil((player_stat_value + 1) / 1000) * 1000
+            target_stat_value = math.ceil((player_stat_value + 1) / 500) * 500
             diff = target_stat_value - player_stat_value
-            if 0 <= diff <= margin:
-                score = min(1, -.003 * diff**3 - .0052 * diff**2 + 0.052 * diff + .9785) * min(1, -.00000000006 * target_stat_value**3 + .0000005 * target_stat_value**2 - .001 * target_stat_value + .54)
+            if 1 <= diff <= margin:
                 milestone_type = 'Milestone'
+        if milestone_type:
+            score = max(0, min(1, -.00000001 * target_stat_value**2 + 0.0003 * target_stat_value + 0.0723)) * max(0, min(1, 0.0201 * diff**3 - 0.2455 * diff**2 + 0.6613 * diff + 0.5264))
 
     #Get milestone score for steals
     if stat_name == 'steals':
-        if 0 <= diff <= margin:
-            score = min(1, .0172 * diff**3 - .1757 * diff**2 + .2787 * diff + .9674)
-            target_stat_value = record
-            milestone_type = 'Record'
-
-    #Get milestone score for rbi
-    if stat_name == 'rbi':
-        if 0 <= diff <= margin:
-            score = min(1, .0041 * diff**3 - .0707 * diff**2 + .2037 * diff + .9308)
-            target_stat_value = record
-            milestone_type = 'Record'
-
-    #Get milestone score for strikeouts
-    if stat_name == 'strikeouts':
-        if 0 <= diff <= margin:
-            if diff <= 10:
-                score = 1
-            else:
-                score = min(1, -.0004 * diff**3 + .0313 * diff**2 - 0.7902 * diff + 6.3981)
+        if 1 <= diff <= margin:
             target_stat_value = record
             milestone_type = 'Record'
         else:
-            target_stat_value = math.ceil((player_stat_value + 1) / 1000) * 1000
+            target_stat_value = math.ceil((player_stat_value + 1) / 100) * 100
             diff = target_stat_value - player_stat_value
-            if 0 <= diff <= margin:
-                if target_stat_value >= 5000:
-                    score = 1
-                else:
-                    score = min(1, -.0004 * diff**3 + .0313 * diff**2 - 0.7902 * diff + 6.3981) * min(1, .00000005 * target_stat_value**2 + .00007 * target_stat_value - .075)
+            if 1 <= diff <= margin:
                 milestone_type = 'Milestone'
+        if milestone_type:
+            score = max(0, min(1, -.0000006 * target_stat_value**2 + 0.0015 * target_stat_value + 0.139)) * max(0, min(1,  -0.007 * diff**3 + 0.1348 * diff**2 - 0.8207 * diff + 1.5901))
+
+    #Get milestone score for rbi
+    if stat_name == 'rbi':
+        if 1 <= diff <= margin:
+            target_stat_value = record
+            milestone_type = 'Record'
+        else:
+            target_stat_value = math.ceil((player_stat_value + 1) / 500) * 500
+            diff = target_stat_value - player_stat_value
+            if 1 <= diff <= margin:
+                milestone_type = 'Milestone'
+        if milestone_type:
+            score = max(0, min(1, .0000001 * target_stat_value**2 + 8E-05 * target_stat_value + 0.2145)) * max(0, min(1, -0.0009 * diff**4 + 0.0232 * diff**3 - 0.1981 * diff**2 + 0.4591 * diff + 0.671))
+
+    #Get milestone score for strikeouts
+    if stat_name == 'strikeouts':
+        if 1 <= diff <= margin:
+            target_stat_value = record
+            milestone_type = 'Record'
+        else:
+            target_stat_value = math.ceil((player_stat_value + 1) / 500) * 500
+            diff = target_stat_value - player_stat_value
+            if 1 <= diff <= margin:
+                milestone_type = 'Milestone'
+        if milestone_type:
+            score = max(0, min(1, -.00000003 * target_stat_value**2 + 0.0003 * target_stat_value + 0.0857)) * max(0, min(1, 0.0006 * diff**3 - 0.0189 * diff**2 + 0.0883 * diff + 0.8579))
+
+    #Get milestone score for wins
+    if stat_name == 'wins':
+        if 1 <= diff <= margin:
+            target_stat_value = record
+            milestone_type = 'Record'
+        else:
+            target_stat_value = math.ceil((player_stat_value + 1) / 50) * 50
+            diff = target_stat_value - player_stat_value
+            if 1 <= diff <= margin:
+                milestone_type = 'Milestone'
+        if milestone_type:
+            score = max(0, min(1, -.00000003 * target_stat_value**2 + 0.0003 * target_stat_value + 0.0857)) * max(0, min(1, 0.0006 * diff**3 - 0.0189 * diff**2 + 0.0883 * diff + 0.8579))
 
     #If the milestone score for this player was significant enough, add this milestone info to the team_info dictionary
-    if score >= .05:
+    if score >= .2:
         team_info['milestones'].setdefault(scope, []).append(
             {"stat": stat_name, "player": player_name, "value": player_stat_value, "target": target_stat_value, "diff": diff, "milestone_type": milestone_type, "milestone_score": score}
         )     

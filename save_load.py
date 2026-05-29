@@ -99,16 +99,17 @@ def load_prospects():
 def load_milestone_stat_list():
     batter_milestone_stat_list = {
         "runs":         {"margin": 6, 'box_name': 'runs'},
-        "doubles":      {"margin": 5, 'box_name': 'doubles'},
-        "triples":      {"margin": 4, 'box_name': 'triples'},
-        "home_runs":    {"margin": 5, 'box_name': 'homeRuns'},
+        "doubles":      {"margin": 4, 'box_name': 'doubles'},
+        "triples":      {"margin": 3, 'box_name': 'triples'},
+        "home_runs":    {"margin": 4, 'box_name': 'homeRuns'},
         "hits":         {"margin": 7, 'box_name': 'hits'}, 
-        "steals":       {"margin": 7, 'box_name': 'stolenBases'},
+        "steals":       {"margin": 6, 'box_name': 'stolenBases'},
         "rbi":          {"margin": 10, 'box_name': 'rbi'}
     }
 
     pitcher_milestone_stat_list = {
-        "strikeouts":      {"margin": 21, 'box_name': 'strikeOuts'},
+        "strikeouts":      {"margin": 20, 'box_name': 'strikeOuts'},
+        "wins":            {"margin": 1, 'box_name': 'wins'}
     }
 
     return batter_milestone_stat_list, pitcher_milestone_stat_list
