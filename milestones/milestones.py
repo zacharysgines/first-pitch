@@ -295,7 +295,7 @@ def add_milestone(record, margin, player_stat_value, team_info, scope, stat_name
             score = max(0, min(1, -.00000003 * target_stat_value**2 + 0.0003 * target_stat_value + 0.0857)) * max(0, min(1, 0.0006 * diff**3 - 0.0189 * diff**2 + 0.0883 * diff + 0.8579))
 
     #If the milestone score for this player was significant enough, add this milestone info to the team_info dictionary
-    if score >= .2:
+    if score > 0:
         team_info['milestones'].setdefault(scope, []).append(
             {"stat": stat_name, "player": player_name, "value": player_stat_value, "target": target_stat_value, "diff": diff, "milestone_type": milestone_type, "milestone_score": score}
         )     

@@ -160,15 +160,15 @@ def get_scores(standings, games, gamedate_str):
         away_wp_score = away_team_info['wp_score']
         home_wp_score = home_team_info['wp_score']
         wp_score = (away_wp_score + home_wp_score) / 2
-        #Winning Percentage Difference
+        #Team Diff
         team_diff = abs(away_wp - home_wp)
-        team_diff_score = max(0, 0.08 * (1 - (team_diff / 0.05)))
-        #Min WP
-        min_wp = min(away_wp, home_wp)
-        if min_wp < .5:
-            min_wp_score = 0
-        else:
-            min_wp_score = 8.9545 * min_wp**2 - 7.0217 * min_wp + 1.3316
+        team_diff_score = min(1, max(0, -2.0688 * team_diff**5 + 7.6341 * team_diff**4 - 10.813 * team_diff**3 + 7.3312 * team_diff**2 - 2.3882 * team_diff + 0.3067))
+        # #Min WP
+        # min_wp = min(away_wp, home_wp)
+        # if min_wp < .5:
+        #     min_wp_score = 0
+        # else:
+        #     min_wp_score = 8.9545 * min_wp**2 - 7.0217 * min_wp + 1.3316
         #Divisional Score
         if away_team_info['division'] == home_team_info['division']:
             division_score = .0025 + .3085 * (min_wp_score + team_diff_score)
@@ -197,7 +197,8 @@ def get_scores(standings, games, gamedate_str):
         home_prospect_score = home_team_info['debut_score']
         prospect_score = away_prospect_score + home_prospect_score
         #SCORING
-        unadjusted_score = playoff_imp_score + win_streak_score + wp_score + team_diff_score + war_score + division_score + milestone_score + prospect_score + min_wp_score
+        unadjusted_score = playoff_imp_score + win_streak_score + wp_score + team_diff_score + war_score + division_score + milestone_score + prospect_score 
+        #+ min_wp_score
         score = min(100, 100*((math.log(1+unadjusted_score))/(math.log(2.33))))    #Final Adjustment (in denominatior, math.log(x), x = 1 + 99th percentile score. 
                                                                                    #Adjust higher to get less 100s, lower to get more 100s) 
         #Add the scores for this game to the game_scores list
