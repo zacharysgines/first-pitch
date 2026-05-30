@@ -35,7 +35,7 @@ def records(teams, standings):
 
                 #Pass current record and weighted wp into calc_score to get the scores and save
                 #them to team_info
-                calc_score(weighted_wp, team_info, current_wins, current_losses)
+                calc_score(weighted_wp, team_info, current_wins, current_losses, 162 - games_left)
                 
     #If it's the first day of the season, just use the projected wp instead of the weighted one
     else:
@@ -46,9 +46,37 @@ def records(teams, standings):
 
             #Pass projected wp to calc_score to get wp score and 0 for team wins and losses for the 
             #first day of the season
-            calc_score(proj_wp, team_info, 0, 0)
+            calc_score(proj_wp, team_info, 0, 0, 162)
 
-def calc_score(wp, team_info, current_wins, current_losses):
+    #Get the adjusted division leader for each division so we can calculate games back
+    division_leaders = {}
+    for team in teams:
+        team_info = teams[team]
+        division = team_info['division']
+        division_info = division_leaders.setdefault(division, {})
+        games_over_500 = team_info['adjusted_wins'] - team_info['adjusted_losses']
+
+        if not division_info or games_over_500 > division_info['games_over_500']:
+            division_info['team'] = team
+            division_info['wins'] = team_info['adjusted_wins']
+            division_info['losses'] = team_info['adjusted_losses']
+            division_info['games_over_500'] = games_over_500
+
+    #Use adjusted wins and losses to calculate each team's games back in the division
+    for team in teams:
+        team_info = teams[team]
+        division = team_info['division']
+        division_info = division_leaders[division]
+        games_back = ((division_info['wins'] - team_info['adjusted_wins']) + (team_info['adjusted_losses'] - division_info['losses'])) / 2
+
+        if games_back <= 0:
+            team_info['games_back'] = 0
+        else:
+            team_info['games_back'] = games_back
+
+    return None
+
+def calc_score(wp, team_info, current_wins, current_losses, games_played):
     #After getting the winning percentage either through the weighted team record or through 
     #projections, calculate the wp score with a piecewise function
     if wp >= 0.685:
@@ -65,7 +93,10 @@ def calc_score(wp, team_info, current_wins, current_losses):
     #Save the current wins, losses and wp_score to the team_info
     team_info['wins'] = current_wins
     team_info['losses'] = current_losses
+    team_info['adjusted_wins'] = round(games_played * wp)
+    team_info['adjusted_losses'] = games_played - round(games_played * wp)
     team_info['win_perc'] = wp
     team_info['wp_score'] = wp_score
 
     return None
+

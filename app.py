@@ -1697,6 +1697,11 @@ def format_breakdown_team_name(team_name):
 
 def build_breakdown_row(label, value):
     """Build one breakdown row and keep the numeric value available for sorting."""
+    row_html = render_breakdown_row(label, value)
+    return {"label": label, "value": value, "html": row_html}
+
+def render_breakdown_row(label, value):
+    """Render one scoring breakdown row."""
     row_html = (
         '<div class="game-breakdown-row">'
         f'<div class="game-breakdown-label">{label}</div>'
@@ -1704,7 +1709,7 @@ def build_breakdown_row(label, value):
         f'<div class="game-breakdown-value">{format_breakdown_score(value)}</div>'
         '</div>'
     )
-    return {"value": value, "html": row_html}
+    return row_html
 
 def format_pitcher_breakdown_label(starter, value, source, metric, current_war=None, projected_war=None):
     """Build the pitcher label used in the scoring breakdown rows."""
@@ -1781,8 +1786,14 @@ elif games:
             f"<div class='game-note-item'>{note}</div>"
             for note in notes
         )
-        has_playoff_implications = game.get('playoff_imp_score', 0) >= 0.2
-        has_division_rivals = game.get('division_score', 0) >= 0.02
+        away_playoff_score = numeric_score_value(game.get('away_playoff_imp_score', game.get('away_playoff_imp')))
+        home_playoff_score = numeric_score_value(game.get('home_playoff_imp_score', game.get('home_playoff_imp')))
+        has_playoff_implications = max(
+            numeric_score_value(game.get('playoff_imp_score')),
+            away_playoff_score,
+            home_playoff_score,
+        ) >= 0.2
+        has_division_rivals = numeric_score_value(game.get('division_score')) >= 0.02
         details_html = f'<div class="game-details">{notes_html}</div>' if notes else ""
         pill_items = []
         if has_playoff_implications:
@@ -1791,41 +1802,83 @@ elif games:
             pill_items.append('<span class="game-pill game-pill-division">Divison Rivals</span>')
         pill_html = f'<div class="game-pill-row">{"".join(pill_items)}</div>' if pill_items else ""
 
-        unadjusted_score = numeric_score_value(game.get('unadjusted_score'))
         away_pitcher_score = numeric_score_value(game.get('away_war_score', game.get('away_era_score', 0)))
         home_pitcher_score = numeric_score_value(game.get('home_war_score', game.get('home_era_score', 0)))
-        if unadjusted_score > 0:
-            away_playoff_component = score * (game.get('away_playoff_imp', 0) / unadjusted_score)
-            home_playoff_component = score * (game.get('home_playoff_imp', 0) / unadjusted_score)
-            away_wp_component = score * (game.get('away_wp_score', 0) / unadjusted_score)
-            home_wp_component = score * (game.get('home_wp_score', 0) / unadjusted_score)
-            team_diff_component = score * (game.get('team_diff', 0) / unadjusted_score)
-            division_component = score * (game.get('division_score', 0) / unadjusted_score)
-            wild_card_component = score * (game.get('min_wp_score', 0) / unadjusted_score)
-            away_milestone_component = score * (game.get('away_milestone_score', 0) / unadjusted_score)
-            home_milestone_component = score * (game.get('home_milestone_score', 0) / unadjusted_score)
-            away_prospect_component = score * (game.get('away_prospect_score', 0) / unadjusted_score)
-            home_prospect_component = score * (game.get('home_prospect_score', 0) / unadjusted_score)
-            away_win_streak_component = score * (game.get('away_win_streak_score', 0) / unadjusted_score)
-            home_win_streak_component = score * (game.get('home_win_streak_score', 0) / unadjusted_score)
-            away_pitcher_component = score * (away_pitcher_score / unadjusted_score)
-            home_pitcher_component = score * (home_pitcher_score / unadjusted_score)
-        else:
-            away_playoff_component = 0
-            home_playoff_component = 0
-            away_wp_component = 0
-            home_wp_component = 0
-            team_diff_component = 0
-            division_component = 0
+        new_score_format = game.get('score_0_to_1') is not None
+        if new_score_format:
+            component_values = {}
+            remaining_score = 100
+            components = [
+                ('away_playoff_component', away_playoff_score),
+                ('home_playoff_component', home_playoff_score),
+                ('away_win_streak_component', numeric_score_value(game.get('away_win_streak_score'))),
+                ('home_win_streak_component', numeric_score_value(game.get('home_win_streak_score'))),
+                ('away_wp_component', numeric_score_value(game.get('away_wp_score'))),
+                ('home_wp_component', numeric_score_value(game.get('home_wp_score'))),
+                ('team_diff_component', numeric_score_value(game.get('team_diff_score', game.get('team_diff')))),
+                ('away_pitcher_component', away_pitcher_score),
+                ('home_pitcher_component', home_pitcher_score),
+                ('division_component', numeric_score_value(game.get('division_score'))),
+                ('away_milestone_component', numeric_score_value(game.get('away_milestone_score'))),
+                ('home_milestone_component', numeric_score_value(game.get('home_milestone_score'))),
+                ('away_prospect_component', numeric_score_value(game.get('away_prospect_score'))),
+                ('home_prospect_component', numeric_score_value(game.get('home_prospect_score'))),
+            ]
+
+            for component_name, component_score in components:
+                component_score = max(0, min(1, component_score))
+                component_values[component_name] = remaining_score * component_score
+                remaining_score *= (1 - component_score)
+
+            away_playoff_component = component_values['away_playoff_component']
+            home_playoff_component = component_values['home_playoff_component']
+            away_wp_component = component_values['away_wp_component']
+            home_wp_component = component_values['home_wp_component']
+            team_diff_component = component_values['team_diff_component']
+            division_component = component_values['division_component']
             wild_card_component = 0
-            away_milestone_component = 0
-            home_milestone_component = 0
-            away_prospect_component = 0
-            home_prospect_component = 0
-            away_win_streak_component = 0
-            home_win_streak_component = 0
-            away_pitcher_component = 0
-            home_pitcher_component = 0
+            away_milestone_component = component_values['away_milestone_component']
+            home_milestone_component = component_values['home_milestone_component']
+            away_prospect_component = component_values['away_prospect_component']
+            home_prospect_component = component_values['home_prospect_component']
+            away_win_streak_component = component_values['away_win_streak_component']
+            home_win_streak_component = component_values['home_win_streak_component']
+            away_pitcher_component = component_values['away_pitcher_component']
+            home_pitcher_component = component_values['home_pitcher_component']
+        else:
+            unadjusted_score = numeric_score_value(game.get('unadjusted_score'))
+            if unadjusted_score > 0:
+                away_playoff_component = score * (numeric_score_value(game.get('away_playoff_imp')) / unadjusted_score)
+                home_playoff_component = score * (numeric_score_value(game.get('home_playoff_imp')) / unadjusted_score)
+                away_wp_component = score * (numeric_score_value(game.get('away_wp_score')) / unadjusted_score)
+                home_wp_component = score * (numeric_score_value(game.get('home_wp_score')) / unadjusted_score)
+                team_diff_component = score * (numeric_score_value(game.get('team_diff')) / unadjusted_score)
+                division_component = score * (numeric_score_value(game.get('division_score')) / unadjusted_score)
+                wild_card_component = score * (numeric_score_value(game.get('min_wp_score')) / unadjusted_score)
+                away_milestone_component = score * (numeric_score_value(game.get('away_milestone_score')) / unadjusted_score)
+                home_milestone_component = score * (numeric_score_value(game.get('home_milestone_score')) / unadjusted_score)
+                away_prospect_component = score * (numeric_score_value(game.get('away_prospect_score')) / unadjusted_score)
+                home_prospect_component = score * (numeric_score_value(game.get('home_prospect_score')) / unadjusted_score)
+                away_win_streak_component = score * (numeric_score_value(game.get('away_win_streak_score')) / unadjusted_score)
+                home_win_streak_component = score * (numeric_score_value(game.get('home_win_streak_score')) / unadjusted_score)
+                away_pitcher_component = score * (away_pitcher_score / unadjusted_score)
+                home_pitcher_component = score * (home_pitcher_score / unadjusted_score)
+            else:
+                away_playoff_component = 0
+                home_playoff_component = 0
+                away_wp_component = 0
+                home_wp_component = 0
+                team_diff_component = 0
+                division_component = 0
+                wild_card_component = 0
+                away_milestone_component = 0
+                home_milestone_component = 0
+                away_prospect_component = 0
+                home_prospect_component = 0
+                away_win_streak_component = 0
+                home_win_streak_component = 0
+                away_pitcher_component = 0
+                home_pitcher_component = 0
 
         matchup_strength_component = (
             away_wp_component
@@ -1905,6 +1958,14 @@ elif games:
                     home_pitcher_component,
                 )
             )
+
+        if new_score_format and breakdown_rows:
+            displayed_total = sum(round(row["value"], 1) for row in breakdown_rows)
+            score_diff = round(score - displayed_total, 1)
+            if score_diff != 0:
+                max_row = max(breakdown_rows, key=lambda row: row["value"])
+                max_row["value"] += score_diff
+                max_row["html"] = render_breakdown_row(max_row["label"], max_row["value"])
 
         breakdown_rows.sort(key=lambda row: row["value"], reverse=True)
         breakdown_rows_html = "".join(row["html"] for row in breakdown_rows)
