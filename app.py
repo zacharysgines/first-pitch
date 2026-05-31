@@ -1713,7 +1713,7 @@ def render_breakdown_row(label, value):
 
 def format_pitcher_breakdown_label(starter, value, source, metric, current_war=None, projected_war=None):
     """Build the pitcher label used in the scoring breakdown rows."""
-    if starter is None or value is None:
+    if starter is None:
         return None
 
     starter_text = html.escape(str(starter))
@@ -1726,10 +1726,16 @@ def format_pitcher_breakdown_label(starter, value, source, metric, current_war=N
         if war_bits:
             return f"{starter_text}: {html.escape(', '.join(war_bits))}"
 
+        if value is None:
+            return None
+
         stat_text = html.escape(f"{float(value):.1f}")
         if source == "projected":
             return f"{starter_text}: {stat_text} projected WAR"
         return f"{starter_text}: {stat_text} WAR"
+
+    if value is None:
+        return None
 
     stat_text = html.escape(f"{float(value):.2f}")
     if source == "projected":
@@ -1793,7 +1799,7 @@ elif games:
             away_playoff_score,
             home_playoff_score,
         ) >= 0.2
-        has_division_rivals = numeric_score_value(game.get('division_score')) >= 0.02
+        has_division_rivals = numeric_score_value(game.get('division_score')) >= 0.2
         details_html = f'<div class="game-details">{notes_html}</div>' if notes else ""
         pill_items = []
         if has_playoff_implications:
@@ -1929,9 +1935,15 @@ elif games:
 
         away_pitcher_label = format_pitcher_breakdown_label(
             game.get('away_starter'),
-            game.get('away_war') if 'away_war' in game else game.get('away_era'),
-            game.get('away_war_source') if 'away_war' in game else game.get('away_era_source'),
-            'war' if 'away_war' in game else 'era',
+            game.get('away_war', game.get('away_projected_war', game.get('away_current_war')))
+            if any(key in game for key in ('away_war', 'away_war_score', 'away_current_war', 'away_projected_war'))
+            else game.get('away_era'),
+            game.get('away_war_source')
+            if any(key in game for key in ('away_war', 'away_war_score', 'away_current_war', 'away_projected_war'))
+            else game.get('away_era_source'),
+            'war'
+            if any(key in game for key in ('away_war', 'away_war_score', 'away_current_war', 'away_projected_war'))
+            else 'era',
             current_war=game.get('away_current_war'),
             projected_war=game.get('away_projected_war'),
         )
@@ -1945,9 +1957,15 @@ elif games:
 
         home_pitcher_label = format_pitcher_breakdown_label(
             game.get('home_starter'),
-            game.get('home_war') if 'home_war' in game else game.get('home_era'),
-            game.get('home_war_source') if 'home_war' in game else game.get('home_era_source'),
-            'war' if 'home_war' in game else 'era',
+            game.get('home_war', game.get('home_projected_war', game.get('home_current_war')))
+            if any(key in game for key in ('home_war', 'home_war_score', 'home_current_war', 'home_projected_war'))
+            else game.get('home_era'),
+            game.get('home_war_source')
+            if any(key in game for key in ('home_war', 'home_war_score', 'home_current_war', 'home_projected_war'))
+            else game.get('home_era_source'),
+            'war'
+            if any(key in game for key in ('home_war', 'home_war_score', 'home_current_war', 'home_projected_war'))
+            else 'era',
             current_war=game.get('home_current_war'),
             projected_war=game.get('home_projected_war'),
         )
