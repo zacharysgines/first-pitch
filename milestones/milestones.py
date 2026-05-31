@@ -167,7 +167,8 @@ def get_milestones(player, team_info, player_type, milestone_stat_list):
         
         #Save all debut info for this player into the team_info dictionary
         team_info['debuts'].append(debut_info)       
-        team_info['debut_score'] += debut_info['score']
+        debut_score = max(0, min(1, debut_info['score']))
+        team_info['debut_score'] = 1 - ((1 - team_info['debut_score']) * (1 - debut_score))
     return None
 
 
@@ -295,11 +296,12 @@ def add_milestone(record, margin, player_stat_value, team_info, scope, stat_name
             score = max(0, min(1, -.00000003 * target_stat_value**2 + 0.0003 * target_stat_value + 0.0857)) * max(0, min(1, 0.0006 * diff**3 - 0.0189 * diff**2 + 0.0883 * diff + 0.8579))
 
     #If the milestone score for this player was significant enough, add this milestone info to the team_info dictionary
-    if score > 0:
+    if score > .2:
         team_info['milestones'].setdefault(scope, []).append(
             {"stat": stat_name, "player": player_name, "value": player_stat_value, "target": target_stat_value, "diff": diff, "milestone_type": milestone_type, "milestone_score": score}
         )     
-        team_info['milestone_score'] += score
+        score = max(0, min(1, score))
+        team_info['milestone_score'] = 1 - ((1 - team_info['milestone_score']) * (1 - score))
     return None
 
 

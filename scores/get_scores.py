@@ -179,13 +179,11 @@ def get_scores(standings, games, gamedate_str):
             div_score = 0
         #Starting Pitcher WAR
         away_starter = away_team_info['pitcher_name']
-        away_war = away_team_info['pitcher_war']
         away_current_war = away_team_info['pitcher_current_war']
         away_projected_war = away_team_info['pitcher_projected_war']
         away_war_source = away_team_info['war_source']
         away_war_score = away_team_info['war_score']
         home_starter = home_team_info['pitcher_name']
-        home_war = home_team_info['pitcher_war']
         home_current_war = home_team_info['pitcher_current_war']
         home_projected_war = home_team_info['pitcher_projected_war']
         home_war_source = home_team_info['war_source']
@@ -197,7 +195,7 @@ def get_scores(standings, games, gamedate_str):
         away_prospect_score = away_team_info['debut_score']
         home_prospect_score = home_team_info['debut_score']
         
-        #SCORING
+        # SCORING
         components = [
             away_playoff_imp_score,
             home_playoff_imp_score,
@@ -215,14 +213,38 @@ def get_scores(standings, games, gamedate_str):
             home_prospect_score,
         ]
 
-        score_0_to_1 = 1
-        for component in components:
-            component = max(0, min(1, component))
-            score_0_to_1 *= (1 - component)
+        def clamp(value, low=0.0, high=1.0):
+            return max(low, min(high, value))
 
-        score_0_to_1 = 1 - score_0_to_1
+        def combine_component_scores(components, gamma=1.4, single_component_cap=0.90):
+            """
+            Combines component scores using diminishing returns.
 
-        score = round(100 * score_0_to_1, 1)  
+            gamma > 1 dampens small/background scores while preserving differences.
+            single_component_cap prevents one component from making the game a 100 by itself.
+            """
+            remaining = 1.0
+
+            for component in components:
+                component = clamp(component)
+
+                # Dampen smaller values without eliminating them
+                effective_component = component ** gamma
+
+                # Prevent one component from fully maxing out the game
+                effective_component = min(effective_component, single_component_cap)
+
+                remaining *= (1.0 - effective_component)
+
+            return 1.0 - remaining
+
+        score_0_to_1 = combine_component_scores(
+            components,
+            gamma=1.4,
+            single_component_cap=0.90
+        )
+
+        score = round(100 * score_0_to_1, 1) 
 
         #Add the scores for this game to the game_scores list
         game_scores.append({
@@ -238,8 +260,6 @@ def get_scores(standings, games, gamedate_str):
             'home_wp': home_wp,
             'away_starter': away_starter,
             'home_starter': home_starter,
-            'away_war': away_war,
-            'home_war': home_war,
             'away_current_war': away_current_war,
             'home_current_war': home_current_war,
             'away_projected_war': away_projected_war,
@@ -396,4 +416,4 @@ def update_scores(gamedate_str, games, games_to_update):
     return saved_scores
 
 #get_all_scores('08/21/2026', '12/31/2026')
-#score_games('05/11/2026', use_json=False)
+#score_games('05/31/2026', use_json=False)
