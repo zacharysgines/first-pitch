@@ -96,6 +96,8 @@ def add_pitcher_score(
         "pitcher_name": pitcher_name,
         "pitcher_current_war": team_info.get("pitcher_current_war"),
         "pitcher_projected_war": team_info.get("pitcher_projected_war"),
+        "pitcher_current_ip": team_info.get("pitcher_current_ip"),
+        "pitcher_projected_ip": team_info.get("pitcher_projected_ip"),
         "pitcher_blended_war": team_info.get("pitcher_blended_war"),
         "war_source": team_info.get("war_source"),
         "war_score": team_info.get("war_score"),

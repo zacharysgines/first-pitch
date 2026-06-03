@@ -159,7 +159,7 @@ def get_scores(standings, games, gamedate_str):
         home_wp_score = home_team_info['wp_score']
         #Team Diff
         team_diff = abs(away_wp - home_wp)
-        team_diff_score = min(1, max(0, -2.0688 * team_diff**5 + 7.6341 * team_diff**4 - 10.813 * team_diff**3 + 7.3312 * team_diff**2 - 2.3882 * team_diff + 0.3067))
+        team_diff_score = min(1, max(0, 1.6081 * team_diff**4 - 4.0586 * team_diff**3 + 3.6602 * team_diff**2 - 1.3977 * team_diff + .1947))
         # #Min WP
         # min_wp = min(away_wp, home_wp)
         # if min_wp < .5:
@@ -181,11 +181,15 @@ def get_scores(standings, games, gamedate_str):
         away_starter = away_team_info['pitcher_name']
         away_current_war = away_team_info['pitcher_current_war']
         away_projected_war = away_team_info['pitcher_projected_war']
+        away_current_ip = away_team_info['pitcher_current_ip']
+        away_projected_ip = away_team_info['pitcher_projected_ip']
         away_war_source = away_team_info['war_source']
         away_war_score = away_team_info['war_score']
         home_starter = home_team_info['pitcher_name']
         home_current_war = home_team_info['pitcher_current_war']
         home_projected_war = home_team_info['pitcher_projected_war']
+        home_current_ip = home_team_info['pitcher_current_ip']
+        home_projected_ip = home_team_info['pitcher_projected_ip']
         home_war_source = home_team_info['war_source']
         home_war_score = home_team_info['war_score']
         #Milestones
@@ -261,10 +265,16 @@ def get_scores(standings, games, gamedate_str):
             'away_starter': away_starter,
             'home_starter': home_starter,
             'away_current_war': away_current_war,
-            'home_current_war': home_current_war,
             'away_projected_war': away_projected_war,
-            'home_projected_war': home_projected_war,
+            'away_current_ip': away_current_ip,
+            'away_projected_ip': away_projected_ip,
+            'away_blended_war': away_team_info['pitcher_blended_war'],
             'away_war_source': away_war_source,
+            'home_current_war': home_current_war,
+            'home_projected_war': home_projected_war,
+            'home_current_ip': home_current_ip,
+            'home_projected_ip': home_projected_ip,
+            'home_blended_war': home_team_info['pitcher_blended_war'],
             'home_war_source': home_war_source,
             'away_win_streak': away_win_streak,
             'home_win_streak': home_win_streak,
@@ -349,6 +359,9 @@ def update_scores(gamedate_str, games, games_to_update):
             saved_game['away_war'] = away_team_info['pitcher_blended_war']
             saved_game['away_current_war'] = away_team_info['pitcher_current_war']
             saved_game['away_projected_war'] = away_team_info['pitcher_projected_war']
+            saved_game['away_current_ip'] = away_team_info['pitcher_current_ip']
+            saved_game['away_projected_ip'] = away_team_info['pitcher_projected_ip']
+            saved_game['away_blended_war'] = away_team_info['pitcher_blended_war']
             saved_game['away_war_source'] = away_team_info['war_source']
             saved_game['away_war_score'] = away_team_info['war_score']
             saved_game['away_career_milestones'] = away_team_info['milestones']['career']
@@ -368,6 +381,9 @@ def update_scores(gamedate_str, games, games_to_update):
             saved_game['home_war'] = home_team_info['pitcher_blended_war']
             saved_game['home_current_war'] = home_team_info['pitcher_current_war']
             saved_game['home_projected_war'] = home_team_info['pitcher_projected_war']
+            saved_game['home_current_ip'] = home_team_info['pitcher_current_ip']
+            saved_game['home_projected_ip'] = home_team_info['pitcher_projected_ip']
+            saved_game['home_blended_war'] = home_team_info['pitcher_blended_war']
             saved_game['home_war_source'] = home_team_info['war_source']
             saved_game['home_war_score'] = home_team_info['war_score']
             saved_game['home_career_milestones'] = home_team_info['milestones']['career']
@@ -416,4 +432,4 @@ def update_scores(gamedate_str, games, games_to_update):
     return saved_scores
 
 #get_all_scores('08/21/2026', '12/31/2026')
-#score_games('05/31/2026', use_json=False)
+score_games('06/03/2026', use_json=False)

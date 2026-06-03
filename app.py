@@ -1429,26 +1429,30 @@ def build_game_notes(game):
     def add_note(note, value):
         notes.append({"value": value, "html": note})
 
-    def format_pitcher_war_note(starter, current_war, projected_war, fallback_war, source):
+    def format_pitcher_war_note(starter, current_war, projected_war, fallback_war, source, current_ip=None):
         if starter is None:
             return None
 
         starter_text = f"<strong>{html.escape(str(starter))}</strong>"
-        war_bits = []
-        if current_war is not None:
-            war_bits.append(f"{html.escape(format_war(current_war))} current WAR")
-        if projected_war is not None:
-            war_bits.append(f"{html.escape(format_war(projected_war))} projected WAR")
+        if source == 'real' and current_war is not None:
+            current_text = html.escape(format_war(current_war))
+            return f"{starter_text}: {current_text} current WAR"
 
-        if war_bits:
-            return f"{starter_text}: {', '.join(war_bits)}"
+        if source == 'projected' and projected_war is not None:
+            projected_text = html.escape(format_war(projected_war))
+            return f"{starter_text}: {projected_text} preseason projected WAR"
+
+        if source == 'pace' and current_war is not None:
+            current_text = html.escape(format_war(current_war))
+            if current_ip is not None and current_ip > 0:
+                pace_text = html.escape(format_war(current_war / current_ip * 180))
+                return f"{starter_text}: {current_text} current WAR ({pace_text} WAR/180 IP pace)"
+            return f"{starter_text}: {current_text} current WAR"
 
         if fallback_war is None:
             return None
 
         fallback_text = html.escape(format_war(fallback_war))
-        if source == 'projected':
-            return f"{starter_text}: {fallback_text} projected WAR"
         return f"{starter_text}: {fallback_text} WAR"
 
     def format_count(diff_value, singular_label, plural_label):
@@ -1544,6 +1548,7 @@ def build_game_notes(game):
     away_war = numeric_value(game.get('away_war'))
     away_current_war = numeric_value(game.get('away_current_war'))
     away_projected_war = numeric_value(game.get('away_projected_war'))
+    away_current_ip = numeric_value(game.get('away_current_ip'))
     away_war_score = score_value('away_war_score')
     away_era_score = score_value('away_era_score')
     away_era = numeric_value(game.get('away_era'))
@@ -1554,6 +1559,7 @@ def build_game_notes(game):
             away_projected_war,
             away_war,
             game.get('away_war_source'),
+            away_current_ip,
         )
         if away_pitcher_note:
             add_note(away_pitcher_note, away_war_score)
@@ -1575,6 +1581,7 @@ def build_game_notes(game):
     home_war = numeric_value(game.get('home_war'))
     home_current_war = numeric_value(game.get('home_current_war'))
     home_projected_war = numeric_value(game.get('home_projected_war'))
+    home_current_ip = numeric_value(game.get('home_current_ip'))
     home_war_score = score_value('home_war_score')
     home_era_score = score_value('home_era_score')
     home_era = numeric_value(game.get('home_era'))
@@ -1585,6 +1592,7 @@ def build_game_notes(game):
             home_projected_war,
             home_war,
             game.get('home_war_source'),
+            home_current_ip,
         )
         if home_pitcher_note:
             add_note(home_pitcher_note, home_war_score)
@@ -1711,27 +1719,34 @@ def render_breakdown_row(label, value):
     )
     return row_html
 
-def format_pitcher_breakdown_label(starter, value, source, metric, current_war=None, projected_war=None):
+def format_pitcher_breakdown_label(starter, value, source, metric, current_war=None, projected_war=None, current_ip=None):
     """Build the pitcher label used in the scoring breakdown rows."""
     if starter is None:
         return None
 
     starter_text = html.escape(str(starter))
     if metric == "war":
-        war_bits = []
-        if current_war is not None:
-            war_bits.append(f"{float(current_war):.1f} current WAR")
-        if projected_war is not None:
-            war_bits.append(f"{float(projected_war):.1f} projected WAR")
-        if war_bits:
-            return f"{starter_text}: {html.escape(', '.join(war_bits))}"
+        if source == "real" and current_war is not None:
+            return f"{starter_text}: {html.escape(f'{float(current_war):.1f}')} current WAR"
+
+        if source == "projected" and projected_war is not None:
+            return f"{starter_text}: {html.escape(f'{float(projected_war):.1f}')} preseason projected WAR"
+
+        if source == "pace" and current_war is not None:
+            current_text = html.escape(f"{float(current_war):.1f}")
+            if current_ip is not None:
+                current_ip = float(current_ip)
+                if current_ip > 0:
+                    pace_text = html.escape(f"{float(current_war) / current_ip * 180:.1f}")
+                    return f"{starter_text}: {current_text} current WAR ({pace_text} WAR/180 IP pace)"
+            return f"{starter_text}: {current_text} current WAR"
 
         if value is None:
             return None
 
         stat_text = html.escape(f"{float(value):.1f}")
         if source == "projected":
-            return f"{starter_text}: {stat_text} projected WAR"
+            return f"{starter_text}: {stat_text} preseason projected WAR"
         return f"{starter_text}: {stat_text} WAR"
 
     if value is None:
@@ -1946,6 +1961,7 @@ elif games:
             else 'era',
             current_war=game.get('away_current_war'),
             projected_war=game.get('away_projected_war'),
+            current_ip=game.get('away_current_ip'),
         )
         if away_pitcher_label:
             breakdown_rows.append(
@@ -1968,6 +1984,7 @@ elif games:
             else 'era',
             current_war=game.get('home_current_war'),
             projected_war=game.get('home_projected_war'),
+            current_ip=game.get('home_current_ip'),
         )
         if home_pitcher_label:
             breakdown_rows.append(

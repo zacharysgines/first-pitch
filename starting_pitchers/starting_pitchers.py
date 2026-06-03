@@ -49,11 +49,11 @@ def starting_pitchers(games, teams_info, gamedate_str):
         if home_pitcher:
             get_sp_stats(home_pitcher[0], home_team_info, sp_projections, war_lookup, home_team_name)
         else:
-            set_pitcher_info(home_team_info, None, None, None, None, None, None)
+            set_pitcher_info(home_team_info, None, None, None, None, None, None, None)
         if away_pitcher:
             get_sp_stats(away_pitcher[0], away_team_info, sp_projections, war_lookup, away_team_name)
         else:
-            set_pitcher_info(away_team_info, None, None, None, None, None, None)
+            set_pitcher_info(away_team_info, None, None, None, None, None, None, None)
     return None
 
 
@@ -71,9 +71,13 @@ def get_sp_stats(pitcher, team_info, sp_projections, war_lookup, team_name):
                 current_war_per_180 = current_WAR / current_ip * 180
             else:
                 current_war_per_180 = 0
-                
-            saved_war = current_WAR
-            source = 'real'
+
+            if current_ip >= 180:
+                source = 'real'
+            elif current_ip < 50:
+                source = 'projected'
+            else:
+                source = 'pace'
             break
 
     #If we didn't find this player in the WAR dictionary, just use their projected stats
@@ -87,23 +91,18 @@ def get_sp_stats(pitcher, team_info, sp_projections, war_lookup, team_name):
 
     #If we don't find projected stats or current stats, set pitcher info to None
     if current_ip == 0 and proj_ip == 0:
-        set_pitcher_info(team_info, None, None, None, None, None, None)
+        set_pitcher_info(team_info, None, None, None, None, None, None, None)
         return None
 
     #Find the weighted WAR based on current and projected IP
     current_weight = min(1, current_ip / max(75, proj_ip * 0.75))
     proj_weight = 1 - current_weight
-
-    #If the current ip is less than half of the projected ip, save the projected ip to display on the app
-    if current_ip < .5 * proj_ip :
-        saved_war = proj_war
-        source = 'projected'
     
     #Use weights to find weighted war per 180 IP
     weighted_war_per_180 = current_weight * current_war_per_180 + proj_weight * proj_war_per_180
     
     #If we have either this players projected WAR or current WAR, calculate the score for this player and save it to the team_info dictionary
-    set_pitcher_info(team_info, pitcher['fullName'], weighted_war_per_180, saved_war, source, current_WAR, proj_war)
+    set_pitcher_info(team_info, pitcher['fullName'], weighted_war_per_180, source, current_WAR, proj_war, current_ip, proj_ip)
 
     return None
 
@@ -129,7 +128,7 @@ def get_projected_sp_stats(sp_projections, pitcher_name, team_name):
     return 0, 0, 0
 
 
-def set_pitcher_info(team_info, name, war_per_180, saved_war, source, current_war, projected_war):
+def set_pitcher_info(team_info, name, war_per_180, source, current_war, projected_war, current_ip, proj_ip):
     #Calculate the WAR score
     if war_per_180 is not None:
         floor = -1.5
@@ -141,7 +140,9 @@ def set_pitcher_info(team_info, name, war_per_180, saved_war, source, current_wa
     
     #Save all info to team_info
     team_info['pitcher_name'] = name
+    team_info['pitcher_current_ip'] = current_ip
     team_info['pitcher_current_war'] = current_war
+    team_info['pitcher_projected_ip'] = proj_ip
     team_info['pitcher_projected_war'] = projected_war
     team_info['pitcher_blended_war'] = war_per_180
     team_info['war_source'] = source

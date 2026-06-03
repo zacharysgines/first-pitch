@@ -189,7 +189,7 @@ def add_milestone(record, margin, player_stat_value, team_info, scope, stat_name
             if 1 <= diff <= margin:
                 milestone_type = 'Milestone'
         if milestone_type:
-            score = max(0, min(1, .00000005 * target_stat_value**2 + 0.0002 * target_stat_value + 0.1305)) * max(0, min(1, 0.03 * diff**3 - 0.305 * diff**2 + 0.6513 * diff + 0.5993))
+            score = max(0, min(1, .00000002 * target_stat_value**2 + 0.0003 * target_stat_value + 0.0032)) * max(0, min(1, 0.03 * diff**3 - 0.305 * diff**2 + 0.6513 * diff + 0.5993))
 
     #Get milestone score for doubles
     if stat_name == 'doubles':
@@ -202,7 +202,7 @@ def add_milestone(record, margin, player_stat_value, team_info, scope, stat_name
             if 1 <= diff <= margin:
                 milestone_type = 'Milestone'
         if milestone_type:
-            score = max(0, min(1, .000001 * target_stat_value**2 + 0.0003 * target_stat_value + 0.1698)) * max(0, min(1, 0.1198 * diff**3 - 0.8666 * diff**2 + 1.5026 * diff + 0.1951))
+            score = max(0, min(1, .0000009 * target_stat_value**2 + 0.0006 * target_stat_value + 0.0126)) * max(0, min(1, 0.1198 * diff**3 - 0.8666 * diff**2 + 1.5026 * diff + 0.1951))
     
     #Get milestone score for triples
     if stat_name == 'triples':
@@ -215,7 +215,7 @@ def add_milestone(record, margin, player_stat_value, team_info, scope, stat_name
             if 1 <= diff <= margin:
                 milestone_type = 'Milestone'
         if milestone_type:
-            score = max(0, min(1, -.000006 * target_stat_value**2 + 0.0042 * target_stat_value + 0.204)) * max(0, min(1, 0.3078 * diff**2 - 1.6001 * diff + 2.0321))
+            score = max(0, min(1, -.00001 * target_stat_value**2 + 0.0066 * target_stat_value - .0538)) * max(0, min(1, 0.3078 * diff**2 - 1.6001 * diff + 2.0321))
 
     #Get milestone score for home runs
     if stat_name == 'home_runs':
@@ -228,7 +228,7 @@ def add_milestone(record, margin, player_stat_value, team_info, scope, stat_name
             if 1 <= diff <= margin:
                 milestone_type = 'Milestone'
         if milestone_type:
-            score = max(0, min(1, .0000002 * target_stat_value**2 + 0.0009 * target_stat_value + 0.1928)) * max(0, min(1, 0.0862 * diff**3 - 0.5685 * diff**2 + 0.7238 * diff + 0.6888))
+            score = max(0, min(1, -.0000002 * target_stat_value**2 + 0.0015 * target_stat_value  - .0205)) * max(0, min(1, 0.0862 * diff**3 - 0.5685 * diff**2 + 0.7238 * diff + 0.6888))
 
     #Get milestone score for hits
     if stat_name == 'hits':
@@ -241,7 +241,7 @@ def add_milestone(record, margin, player_stat_value, team_info, scope, stat_name
             if 1 <= diff <= margin:
                 milestone_type = 'Milestone'
         if milestone_type:
-            score = max(0, min(1, -.00000001 * target_stat_value**2 + 0.0003 * target_stat_value + 0.0723)) * max(0, min(1, 0.0201 * diff**3 - 0.2455 * diff**2 + 0.6613 * diff + 0.5264))
+            score = max(0, min(1, -.00000001 * target_stat_value**2 + 0.0003 * target_stat_value - .0371)) * max(0, min(1, 0.0201 * diff**3 - 0.2455 * diff**2 + 0.6613 * diff + 0.5264))
 
     #Get milestone score for steals
     if stat_name == 'steals':
@@ -254,7 +254,7 @@ def add_milestone(record, margin, player_stat_value, team_info, scope, stat_name
             if 1 <= diff <= margin:
                 milestone_type = 'Milestone'
         if milestone_type:
-            score = max(0, min(1, -.0000006 * target_stat_value**2 + 0.0015 * target_stat_value + 0.139)) * max(0, min(1,  -0.007 * diff**3 + 0.1348 * diff**2 - 0.8207 * diff + 1.5901))
+            score = max(0, min(1, -.0000008 * target_stat_value**2 + 0.0018 * target_stat_value - .0216)) * max(0, min(1,  -0.007 * diff**3 + 0.1348 * diff**2 - 0.8207 * diff + 1.5901))
 
     #Get milestone score for rbi
     if stat_name == 'rbi':
@@ -267,7 +267,7 @@ def add_milestone(record, margin, player_stat_value, team_info, scope, stat_name
             if 1 <= diff <= margin:
                 milestone_type = 'Milestone'
         if milestone_type:
-            score = max(0, min(1, .0000001 * target_stat_value**2 + 8E-05 * target_stat_value + 0.2145)) * max(0, min(1, -0.0009 * diff**4 + 0.0232 * diff**3 - 0.1981 * diff**2 + 0.4591 * diff + 0.671))
+            score = max(0, min(1, .00000006 * target_stat_value**2 + .0002 * target_stat_value + 0.0317)) * max(0, min(1, -0.0009 * diff**4 + 0.0232 * diff**3 - 0.1981 * diff**2 + 0.4591 * diff + 0.671))
 
     #Get milestone score for strikeouts
     if stat_name == 'strikeouts':
@@ -280,20 +280,7 @@ def add_milestone(record, margin, player_stat_value, team_info, scope, stat_name
             if 1 <= diff <= margin:
                 milestone_type = 'Milestone'
         if milestone_type:
-            score = max(0, min(1, -.00000003 * target_stat_value**2 + 0.0003 * target_stat_value + 0.0857)) * max(0, min(1, 0.0006 * diff**3 - 0.0189 * diff**2 + 0.0883 * diff + 0.8579))
-
-    #Get milestone score for wins
-    if stat_name == 'wins':
-        if 1 <= diff <= margin:
-            target_stat_value = record
-            milestone_type = 'Record'
-        else:
-            target_stat_value = math.ceil((player_stat_value + 1) / 50) * 50
-            diff = target_stat_value - player_stat_value
-            if 1 <= diff <= margin:
-                milestone_type = 'Milestone'
-        if milestone_type:
-            score = max(0, min(1, -.00000003 * target_stat_value**2 + 0.0003 * target_stat_value + 0.0857)) * max(0, min(1, 0.0006 * diff**3 - 0.0189 * diff**2 + 0.0883 * diff + 0.8579))
+            score = max(0, min(1, -.00000004 * target_stat_value**2 + 0.0003 * target_stat_value - .001)) * max(0, min(1, 0.0006 * diff**3 - 0.0189 * diff**2 + 0.0883 * diff + 0.8579))
 
     #If the milestone score for this player was significant enough, add this milestone info to the team_info dictionary
     if score > .2:
