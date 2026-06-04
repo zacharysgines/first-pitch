@@ -1,4 +1,3 @@
-import math
 import sys
 from pathlib import Path
 
@@ -8,6 +7,12 @@ ROOT_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT_DIR))
 
 from save_load import load_projections
+from playoffs.playoffs_model import get_next_game_odds_changes
+
+
+def games_back(team_wins, team_losses, reference_wins, reference_losses):
+    return ((reference_wins - team_wins) + (team_losses - reference_losses)) / 2
+
 
 def playoff_imp(standings, teams):
     #Initialize dictionary to hold first and second place teams in each division and 4th place team in wild card
@@ -28,20 +33,26 @@ def playoff_imp(standings, teams):
                 league = 'National League'
 
             for team in division['teams']:
+                wins = team['w']
                 losses = team['l']
                 div_rank = team['div_rank']
                 wc_rank = team['wc_rank']
 
                 #If you're the first team in the division, save your wins and losses to gb_ref for this division
                 if div_rank == '1':
+                    div_name['first_w'] = wins
                     div_name['first_l'] = losses
-                #If you're the second team in the division, save your losses to gb_ref for this division
+                #If you're the second team in the division, save your wins and losses to gb_ref for this division
                 elif div_rank == '2':                
+                    div_name['second_w'] = wins
                     div_name['second_l'] = losses
 
-                #If you're the 4th team in the wild card, save your losses to gb_ref for your league
+                #If you're the 4th team in the wild card, save your wins and losses to gb_ref for your league
                 if wc_rank == '4':
-                    gb_ref['leagues'][league] = losses
+                    gb_ref['leagues'][league] = {
+                        'w': wins,
+                        'l': losses,
+                    }
 
         #Second pass: 
         for division in standings.values():
@@ -58,30 +69,29 @@ def playoff_imp(standings, teams):
                 gl = 162 - (gp)  #Games left
 
             #Playoff Implications
-                #If you are the first place team, calculate how many games ahead of the second place team you are. Otherwise, calculate games back from first place
+                #If you are the first place team, calculate signed games back from second place.
+                #Otherwise, calculate signed games back from first place. Negative means ahead of the reference.
                 if team['div_rank'] == '1':
-                    gb = abs(losses - div_name['second_l'])
+                    gb = games_back(wins, losses, div_name['second_w'], div_name['second_l'])
                 else:
-                    gb = abs(losses - div_name['first_l'])
+                    gb = games_back(wins, losses, div_name['first_w'], div_name['first_l'])
 
-                #Wild Card Games Back
-                wcgb = abs(losses - gb_ref['leagues'][league])
+                #Signed games back from the playoff cutline. Negative means ahead of the cutline.
+                wc_cutline = gb_ref['leagues'][league]
+                wcgb = games_back(wins, losses, wc_cutline['w'], wc_cutline['l'])
 
                 #Calculate division implications and wild card implications, then use those two to get overall playoff implications
                 if gl == 0:
                     gl += 1
                 
+                div_change, wc_change = get_next_game_odds_changes(gl, wcgb, gb)
+
                 if gb > gl:
-                    div_imp = 0
-                else:                                    
-                    div_imp = max(0, 1.107 * math.exp(-1 * (gl/16.77)**.598) * (1 - gb / gl)**2.547)
-                
+                    div_change = 0
                 if wcgb > gl:
-                    wc_imp = 0
-                else:                                    
-                    wc_imp = max(0, 1.107 * math.exp(-1 * (gl/16.77)**.598) * (1 - wcgb / gl)**2.547)
-                
-                playoff_imp = (div_imp * .4 + wc_imp * .6)
+                    wc_change = 0
+
+                playoff_imp = min(1, max(0, 2.0 * wc_change + 1.0 * div_change))
 
                 teams[team['name']]['playoff_imp'] = playoff_imp
     else:

@@ -62,10 +62,12 @@ def win_streak(standings, teams_info, gamedate_str):
                 streak_count += won_games
 
         #After the while loop ends, calculate the streak score
-        if streak_count <= 2:
+        if streak_count <= 4:
             win_streak_score = 0
+        elif streak_count >= 15:
+            win_streak_score = 1
         else:
-            win_streak_score = min(1, -0.0006 * streak_count**3 + 0.018 * streak_count**2 - 0.0763 * streak_count + 0.0957)
+            win_streak_score = max(0, min(1, -0.014 * streak_count**2 + 0.375 * streak_count - 1.5035))
 
         team_info['win_streak'] = streak_count
         team_info['win_streak_score'] = win_streak_score

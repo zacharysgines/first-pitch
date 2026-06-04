@@ -15,7 +15,7 @@ def update_scores():
     #Get today's date
     today_obj = date.today()
     #Specify how many days we're going to update
-    end_date_obj = today_obj + timedelta(days=14)
+    end_date_obj = today_obj + timedelta(days=5)
     #Convert start and end date to strings
     today_str = today_obj.strftime("%m/%d/%Y")
     end_date_str = end_date_obj.strftime("%m/%d/%Y")
