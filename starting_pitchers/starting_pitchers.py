@@ -85,6 +85,7 @@ def get_sp_stats(pitcher, team_info, sp_projections, war_lookup, team_name):
         current_WAR = 0
         current_ip = 0
         current_war_per_180 = 0
+        source = 'projected'
 
     #Get this players projected stats
     proj_ip, proj_war_per_180, proj_war = get_projected_sp_stats(sp_projections, pitcher['fullName'], team_name)
