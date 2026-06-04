@@ -69,17 +69,17 @@ def load_projections():
 #                 #Save each team's divison
 #                 team_name['division'] = division['div_name']
     
-    else:
-        #Load Projections
-        projections = load_projections()
-        for team in projections:
-            #Initialize the dictionary for each team within the teams_info dictionary
-            team_info = teams_info.setdefault(team['Name'], {})
-            #Save each team's id
-            team_obj = statsapi.lookup_team(team['Name'], activeStatus="Y")
-            team_info['id'] = team_obj[0]['id']
-            #Save each team's divison
-            team_info['division'] = team['Division']
+    # else:
+    #     #Load Projections
+    #     projections = load_projections()
+    #     for team in projections:
+    #         #Initialize the dictionary for each team within the teams_info dictionary
+    #         team_info = teams_info.setdefault(team['Name'], {})
+    #         #Save each team's id
+    #         team_obj = statsapi.lookup_team(team['Name'], activeStatus="Y")
+    #         team_info['id'] = team_obj[0]['id']
+    #         #Save each team's divison
+    #         team_info['division'] = team['Division']
     
 #     return teams
 
@@ -117,28 +117,6 @@ games = statsapi.schedule(gamedate)
 #     print(pitcher)
 
 
-#For each game, get each teams id
+
 for game in games:
-    #Get team details
-    home_team_id = game['home_id']
-    away_team_id = game['away_id']
-    home_team_name = game['home_name']
-    away_team_name = game['away_name']
-    #Get bio details for each teams starting pitcher
-    home_pitcher_name = game['home_probable_pitcher']
-    away_pitcher_name = game['away_probable_pitcher']
-    if home_pitcher_name != '':
-        home_pitcher = statsapi.lookup_player(home_pitcher_name)
-    else:
-        home_pitcher = None
-    if away_pitcher_name != '':
-        away_pitcher = statsapi.lookup_player(away_pitcher_name)
-    else:
-        away_pitcher = None
-    
-    if home_pitcher != None:
-        for pitcher in home_pitcher:
-            print(pitcher)
-    if away_pitcher != None:
-        for pitcher in away_pitcher:
-            print(pitcher)
+    print(game)

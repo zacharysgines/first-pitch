@@ -1,5 +1,6 @@
 import streamlit as st
 from datetime import date, datetime, timedelta, timezone
+import base64
 import html
 import json
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
@@ -8,10 +9,12 @@ import sys
 
 #Find the project root path and add that path to Python's import path so we can find the files we
 #need to import from
-ROOT_DIR = Path(__file__).resolve().parents[1]  
+ROOT_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT_DIR))
 
 from scores.get_scores import score_games
+
+BROADCAST_ASSET_DIR = ROOT_DIR / "assets" / "broadcasts"
 
 # Streamlit still handles layout/state, but most of the visual presentation in this
 # file is custom HTML/CSS injected with st.markdown. Treat this file more like a
@@ -410,12 +413,78 @@ st.markdown(
         div.st-key-date_toolbar {
             margin: 0.75rem auto 0.35rem auto;
             --date-input-width: 190px;
+            --date-step-button-size: 24px;
+            --date-step-gap: 0.55rem;
             position: relative;
         }
 
         div.st-key-date_toolbar div[data-testid="stHorizontalBlock"] {
             max-width: var(--date-input-width);
             margin: 0 auto;
+        }
+
+        div.st-key-previous_date_button,
+        div.st-key-next_date_button {
+            position: absolute;
+            top: 50%;
+            width: var(--date-step-button-size);
+            height: var(--date-step-button-size);
+            transform: translateY(-50%);
+            margin: 0;
+            padding: 0;
+            z-index: 3;
+        }
+
+        div.st-key-previous_date_button {
+            left: calc(50% - (var(--date-input-width) / 2) - var(--date-step-button-size) - var(--date-step-gap));
+        }
+
+        div.st-key-next_date_button {
+            right: calc(50% - (var(--date-input-width) / 2) - var(--date-step-button-size) - var(--date-step-gap));
+        }
+
+        div.st-key-previous_date_button div[data-testid="stButton"],
+        div.st-key-next_date_button div[data-testid="stButton"] {
+            height: var(--date-step-button-size);
+            margin: 0;
+        }
+
+        div.st-key-previous_date_button button[kind="secondary"],
+        div.st-key-next_date_button button[kind="secondary"] {
+            width: var(--date-step-button-size);
+            height: var(--date-step-button-size);
+            min-height: var(--date-step-button-size);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            border: none;
+            background: transparent;
+            color: #6c7280;
+            box-shadow: none;
+            line-height: 1;
+        }
+
+        div.st-key-previous_date_button button[kind="secondary"] p,
+        div.st-key-next_date_button button[kind="secondary"] p {
+            margin: 0;
+            font-size: 1.3rem;
+            font-weight: 500;
+            line-height: 1;
+        }
+
+        div.st-key-previous_date_button button[kind="secondary"]:hover,
+        div.st-key-previous_date_button button[kind="secondary"]:focus,
+        div.st-key-previous_date_button button[kind="secondary"]:focus-visible,
+        div.st-key-previous_date_button button[kind="secondary"]:active,
+        div.st-key-next_date_button button[kind="secondary"]:hover,
+        div.st-key-next_date_button button[kind="secondary"]:focus,
+        div.st-key-next_date_button button[kind="secondary"]:focus-visible,
+        div.st-key-next_date_button button[kind="secondary"]:active {
+            border: none;
+            background: transparent;
+            color: #6c7280;
+            box-shadow: none;
         }
 
         /* DATE LABEL */
@@ -560,8 +629,11 @@ st.markdown(
             flex-direction: column;
             align-items: flex-start;
             gap: 0.35rem;
+            flex: 1 1 auto;
+            width: 100%;
             padding-left: .5rem;
             padding-right: 6.2rem;
+            box-sizing: border-box;
         }
 
         .game-time {
@@ -574,13 +646,19 @@ st.markdown(
         }
 
         .team-column {
-            width: auto;
+            width: 100%;
         }
 
         .team-line {
             display: flex;
             align-items: baseline;
             gap: 0.45rem;
+            width: 100%;
+        }
+
+        .team-line-with-logo {
+            align-items: center;
+            width: calc(100% + 6.8rem);
         }
 
         .team-name {
@@ -645,8 +723,19 @@ st.markdown(
             margin-top: 0.25rem;
         }
 
-        .game-pill-row {
+        .game-card-meta-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
             margin: 0 0.9rem 0.9rem 0.9rem;
+        }
+
+        .game-pill-row {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.45rem;
         }
 
         .game-pill {
@@ -662,14 +751,41 @@ st.markdown(
             text-transform: capitalize;
         }
 
-        .game-pill + .game-pill {
-            margin-left: 0.45rem;
-        }
-
         .game-pill-division {
             background-color: #ffffff;
             color: #1F2A44;
             border: 1.5px solid #1F2A44;
+        }
+
+        .broadcast-logo-row {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 0.35rem;
+            min-height: 2rem;
+            margin-left: auto;
+        }
+
+        .broadcast-logo-row-inline {
+            min-height: 1.8rem;
+            flex-shrink: 0;
+        }
+
+        .broadcast-logo-frame {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 4.7rem;
+            height: 1.8rem;
+            padding: 0.15rem 0.25rem;
+            box-sizing: border-box;
+        }
+
+        .broadcast-logo {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
 
         .game-expand-panel {
@@ -804,6 +920,8 @@ st.markdown(
                 padding: 0;
                 box-sizing: border-box;
                 --date-input-width: 150px;
+                --date-step-button-size: 22px;
+                --date-step-gap: 0.45rem;
             }
 
             .date-filter-heading {
@@ -838,11 +956,15 @@ st.markdown(
             }
 
             .team-column {
-                width: auto;
+                width: 100%;
             }
 
             .team-line {
                 gap: 0.4rem;
+            }
+
+            .team-line-with-logo {
+                width: calc(100% + 5.05rem);
             }
 
             .team-name {
@@ -869,8 +991,24 @@ st.markdown(
                 padding: 0.5rem 0.7rem 0.55rem 1.85rem;
             }
 
-            .game-pill-row {
+            .game-card-meta-row {
+                align-items: flex-start;
+                gap: 0.55rem;
                 margin: 0 0.65rem 0.7rem 0.65rem;
+            }
+
+            .broadcast-logo-row {
+                min-height: 1.7rem;
+            }
+
+            .broadcast-logo {
+                width: 100%;
+                height: 100%;
+            }
+
+            .broadcast-logo-frame {
+                width: 4.2rem;
+                height: 1.6rem;
             }
 
             .game-expand-panel {
@@ -926,6 +1064,18 @@ def sync_selected_date_from_input():
     """Mirror the Streamlit date widget back into query params for shareable URLs."""
     selected = st.session_state.selected_date_input
     st.session_state.selected_date = selected
+    st.query_params["date"] = selected.isoformat()
+
+
+def shift_selected_date(days):
+    """Move the selected date by a fixed day offset and keep widget/query state synced."""
+    selected = st.session_state.get(
+        "selected_date",
+        datetime.now(get_user_display_timezone()).date(),
+    )
+    selected = selected + timedelta(days=days)
+    st.session_state.selected_date = selected
+    st.session_state.selected_date_input = selected
     st.query_params["date"] = selected.isoformat()
 
 
@@ -1298,6 +1448,20 @@ if current_page == "home":
             label_visibility="collapsed",
             on_change=sync_selected_date_from_input,
         )
+        st.button(
+            r"\<",
+            key="previous_date_button",
+            help="Previous day",
+            on_click=shift_selected_date,
+            args=(-1,),
+        )
+        st.button(
+            r"\>",
+            key="next_date_button",
+            help="Next day",
+            on_click=shift_selected_date,
+            args=(1,),
+        )
 
         selected_date_obj = st.session_state.selected_date
 
@@ -1342,6 +1506,131 @@ def score_class(score):
         return "score-green"
     else:
         return "score-blue"
+
+BROADCAST_LOGO_SPECS = [
+    {
+        "key": "peacock",
+        "tokens": ("peacock",),
+        "label": "Peacock",
+        "filename": "peacock.png",
+    },
+    {
+        "key": "apple-tv",
+        "tokens": ("apple tv", "apple tv+", "apple"),
+        "label": "Apple TV+",
+        "filename": "apple-tv-plus.png",
+    },
+    {
+        "key": "espn",
+        "tokens": ("espn",),
+        "label": "ESPN",
+        "filename": "espn.png",
+    },
+    {
+        "key": "fs1",
+        "tokens": ("fs1", "fox sports 1"),
+        "label": "FS1",
+        "filename": "fs1.png",
+    },
+    {
+        "key": "fox",
+        "tokens": ("fox",),
+        "label": "FOX",
+        "filename": "fox.png",
+    },
+    {
+        "key": "tbs",
+        "tokens": ("tbs",),
+        "label": "TBS",
+        "filename": "tbs.png",
+    },
+    {
+        "key": "mlb-network",
+        "tokens": ("mlb network", "mlbn"),
+        "label": "MLBN",
+        "filename": "mlb-network.png",
+    },
+    {
+        "key": "roku",
+        "tokens": ("roku",),
+        "label": "Roku",
+        "filename": "roku.png",
+    },
+    {
+        "key": "nbcsn",
+        "tokens": ("nbcsn", "nbc sports"),
+        "label": "NBCSN",
+        "filename": "nbcsn.png",
+    },
+]
+
+def build_image_data_uri(filename):
+    image_path = BROADCAST_ASSET_DIR / filename
+    if not image_path.exists():
+        return None
+
+    mime_type = {
+        ".png": "image/png",
+        ".jpg": "image/jpeg",
+        ".jpeg": "image/jpeg",
+        ".webp": "image/webp",
+        ".svg": "image/svg+xml",
+    }.get(image_path.suffix.lower())
+    if not mime_type:
+        return None
+
+    encoded = base64.b64encode(image_path.read_bytes()).decode("ascii")
+    return f"data:{mime_type};base64,{encoded}"
+
+def get_broadcast_logo_specs(national_broadcasts):
+    if not national_broadcasts:
+        return []
+
+    if isinstance(national_broadcasts, str):
+        broadcasts = [national_broadcasts]
+    else:
+        broadcasts = national_broadcasts
+
+    matched_specs = []
+    matched_keys = set()
+    for broadcast in broadcasts:
+        broadcast_text = str(broadcast).casefold()
+        for spec in BROADCAST_LOGO_SPECS:
+            if spec["key"] in matched_keys:
+                continue
+            if spec["key"] == "fox" and ("fs1" in broadcast_text or "fox sports 1" in broadcast_text):
+                continue
+            if any(token in broadcast_text for token in spec["tokens"]):
+                matched_specs.append(spec)
+                matched_keys.add(spec["key"])
+
+    return matched_specs
+
+def build_broadcast_logos_html(game, extra_class=""):
+    logo_specs = get_broadcast_logo_specs(game.get("national_broadcasts", []))
+    if not logo_specs:
+        return ""
+
+    logos_html = []
+    for spec in logo_specs[:3]:
+        label = html.escape(spec["label"], quote=True)
+        data_uri = build_image_data_uri(spec["filename"])
+        if not data_uri:
+            continue
+        logos_html.append(
+            '<span class="broadcast-logo-frame">'
+            f'<img class="broadcast-logo" src="{data_uri}" alt="{label}" title="{label}">'
+            '</span>'
+        )
+
+    if not logos_html:
+        return ""
+
+    class_name = "broadcast-logo-row"
+    if extra_class:
+        class_name = f'{class_name} {html.escape(extra_class, quote=True)}'
+
+    return f'<div class="{class_name}">{"".join(logos_html)}</div>'
 
 def load_lineups_snapshot():
     """Load the latest lineup snapshot saved by the lineup polling script."""
@@ -1816,12 +2105,26 @@ elif games:
         ) >= 0.2
         has_division_rivals = numeric_score_value(game.get('division_score')) >= 0.2
         details_html = f'<div class="game-details">{notes_html}</div>' if notes else ""
+        broadcast_logos_html = build_broadcast_logos_html(game)
         pill_items = []
         if has_playoff_implications:
             pill_items.append('<span class="game-pill">Playoff Implications</span>')
         if has_division_rivals:
-            pill_items.append('<span class="game-pill game-pill-division">Divison Rivals</span>')
+            pill_items.append('<span class="game-pill game-pill-division">Division Rivals</span>')
         pill_html = f'<div class="game-pill-row">{"".join(pill_items)}</div>' if pill_items else ""
+        has_badges = bool(pill_items)
+        has_info_box = bool(details_html)
+        use_meta_broadcast_row = has_badges or has_info_box
+        inline_broadcast_logos_html = (
+            build_broadcast_logos_html(game, "broadcast-logo-row-inline")
+            if broadcast_logos_html and not use_meta_broadcast_row
+            else ""
+        )
+        meta_html = (
+            f'<div class="game-card-meta-row">{pill_html}{broadcast_logos_html}</div>'
+            if use_meta_broadcast_row and (pill_html or broadcast_logos_html)
+            else ""
+        )
 
         away_pitcher_score = numeric_score_value(game.get('away_war_score', game.get('away_era_score', 0)))
         home_pitcher_score = numeric_score_value(game.get('home_war_score', game.get('home_era_score', 0)))
@@ -2043,16 +2346,17 @@ elif games:
             '</div>'
             '</div>'
             '<div class="team-column">'
-            '<div class="team-line">'
+            f'<div class="team-line{" team-line-with-logo" if inline_broadcast_logos_html else ""}">'
             f'<span class="team-name">{html.escape(str(game["home_team_name"]))}</span>'
             f'<span class="team-record">({game["home_wins"]} - {game["home_losses"]})</span>'
+            f'{inline_broadcast_logos_html}'
             '</div>'
             '</div>'
             '</div>'
             f'<div class="score-bubble {color_class}">{score:.0f}</div>'
             '</div>'
             f'{details_html}'
-            f'{pill_html}'
+            f'{meta_html}'
             '</summary>'
             f'{expanded_html}'
             '</details>'

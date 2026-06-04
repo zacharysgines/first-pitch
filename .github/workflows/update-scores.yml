@@ -2,8 +2,8 @@ name: Refresh daily game scores
 
 on:
   schedule:
-    # 12:00 UTC = 5:00 AM MST / 6:00 AM MDT
-    - cron: "0 12 * * *"
+    # 12:37 UTC = 6:37 AM MDT / 5:37 AM MST
+    - cron: "37 12 * * *"
   workflow_dispatch: {}
 
 permissions:
