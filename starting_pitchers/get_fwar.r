@@ -45,7 +45,7 @@ fg_pitchers <- fg_pitcher_leaders(
   qual = 0
 )
 
-required_columns <- c("xMLBAMID", "PlayerName", "team_name_abb", "IP", "WAR")
+required_columns <- c("xMLBAMID", "PlayerName", "team_name_abb", "G", "IP", "WAR")
 missing_columns <- setdiff(required_columns, names(fg_pitchers))
 
 if (length(missing_columns) > 0) {
@@ -61,6 +61,7 @@ pitcher_war <- fg_pitchers[!is.na(fg_pitchers$xMLBAMID), required_columns]
 pitcher_war$xMLBAMID <- as.character(as.integer(pitcher_war$xMLBAMID))
 pitcher_war$PlayerName <- as.character(pitcher_war$PlayerName)
 pitcher_war$team_name_abb <- as.character(pitcher_war$team_name_abb)
+pitcher_war$G <- as.integer(pitcher_war$G)
 pitcher_war$IP <- round(vapply(as.numeric(pitcher_war$IP), fangraphs_ip_to_decimal, numeric(1)), 1)
 pitcher_war$WAR <- round(as.numeric(pitcher_war$WAR), 1)
 
@@ -69,6 +70,7 @@ war_lookup <- setNames(
     list(
       Name = pitcher_war$PlayerName[[i]],
       Team = pitcher_war$team_name_abb[[i]],
+      G = pitcher_war$G[[i]],
       IP = pitcher_war$IP[[i]],
       WAR = pitcher_war$WAR[[i]]
     )
