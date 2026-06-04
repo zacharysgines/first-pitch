@@ -148,59 +148,109 @@ def get_scores(standings, games, gamedate_str):
         #Playoff Implications
         away_playoff_imp_score = away_team_info['playoff_imp']
         home_playoff_imp_score = home_team_info['playoff_imp'] 
-        playoff_imp_score = away_playoff_imp_score + home_playoff_imp_score
         #Win Streak
         away_win_streak = away_team_info['win_streak']
         away_win_streak_score = away_team_info['win_streak_score']
         home_win_streak = home_team_info['win_streak']
         home_win_streak_score = home_team_info['win_streak_score']
-        win_streak_score = away_win_streak_score + home_win_streak_score
         #Winning Percentage
         away_wp = away_team_info['win_perc']
         home_wp = home_team_info['win_perc']
         away_wp_score = away_team_info['wp_score']
         home_wp_score = home_team_info['wp_score']
-        wp_score = (away_wp_score + home_wp_score) / 2
-        #Winning Percentage Difference
+        #Team Diff
         team_diff = abs(away_wp - home_wp)
-        team_diff_score = max(0, 0.08 * (1 - (team_diff / 0.05)))
-        #Min WP
-        min_wp = min(away_wp, home_wp)
-        if min_wp < .5:
-            min_wp_score = 0
-        else:
-            min_wp_score = 8.9545 * min_wp**2 - 7.0217 * min_wp + 1.3316
+        team_diff_score = min(1, max(0, 1.6081 * team_diff**4 - 4.0586 * team_diff**3 + 3.6602 * team_diff**2 - 1.3977 * team_diff + .1947))
+        # #Min WP
+        # min_wp = min(away_wp, home_wp)
+        # if min_wp < .5:
+        #     min_wp_score = 0
+        # else:
+        #     min_wp_score = 8.9545 * min_wp**2 - 7.0217 * min_wp + 1.3316
         #Divisional Score
         if away_team_info['division'] == home_team_info['division']:
-            division_score = .0025 + .3085 * (min_wp_score + team_diff_score)
+            away_gb = away_team_info['games_back']
+            home_gb = home_team_info['games_back']
+            min_gb = min(away_gb, home_gb)
+            if min_gb >= 9:
+                div_score = 0
+            else:
+                div_score = -0.0002 * min_gb**3 + 0.0066 * min_gb**2 - 0.0808 * min_gb + 0.3379
         else:
-            division_score = 0
+            div_score = 0
         #Starting Pitcher WAR
         away_starter = away_team_info['pitcher_name']
-        away_war = away_team_info['pitcher_war']
         away_current_war = away_team_info['pitcher_current_war']
         away_projected_war = away_team_info['pitcher_projected_war']
+        away_current_ip = away_team_info['pitcher_current_ip']
+        away_projected_ip = away_team_info['pitcher_projected_ip']
         away_war_source = away_team_info['war_source']
         away_war_score = away_team_info['war_score']
         home_starter = home_team_info['pitcher_name']
-        home_war = home_team_info['pitcher_war']
         home_current_war = home_team_info['pitcher_current_war']
         home_projected_war = home_team_info['pitcher_projected_war']
+        home_current_ip = home_team_info['pitcher_current_ip']
+        home_projected_ip = home_team_info['pitcher_projected_ip']
         home_war_source = home_team_info['war_source']
         home_war_score = home_team_info['war_score']
-        war_score = away_war_score + home_war_score
         #Milestones
         away_milestone_score = away_team_info['milestone_score']
         home_milestone_score = home_team_info['milestone_score']
-        milestone_score = away_milestone_score + home_milestone_score
         #Prospects
         away_prospect_score = away_team_info['debut_score']
         home_prospect_score = home_team_info['debut_score']
-        prospect_score = away_prospect_score + home_prospect_score
-        #SCORING
-        unadjusted_score = playoff_imp_score + win_streak_score + wp_score + team_diff_score + war_score + division_score + milestone_score + prospect_score + min_wp_score
-        score = min(100, 100*((math.log(1+unadjusted_score))/(math.log(2.33))))    #Final Adjustment (in denominatior, math.log(x), x = 1 + 99th percentile score. 
-                                                                                   #Adjust higher to get less 100s, lower to get more 100s) 
+        
+        # SCORING
+        components = [
+            away_playoff_imp_score,
+            home_playoff_imp_score,
+            away_win_streak_score,
+            home_win_streak_score,
+            away_wp_score,
+            home_wp_score,
+            team_diff_score,
+            away_war_score,
+            home_war_score,
+            div_score,
+            away_milestone_score,
+            home_milestone_score,
+            away_prospect_score,
+            home_prospect_score,
+        ]
+
+        def clamp(value, low=0.0, high=1.0):
+            return max(low, min(high, value))
+
+        def combine_component_scores(components, gamma=1.4, single_component_cap=0.90):
+            """
+            Combines component scores using diminishing returns.
+
+            gamma > 1 dampens small/background scores while preserving differences.
+            single_component_cap prevents one component from making the game a 100 by itself.
+            """
+            remaining = 1.0
+
+            for component in components:
+                component = clamp(component)
+
+                # Dampen smaller values without eliminating them
+                effective_component = component ** gamma
+
+                # Prevent one component from fully maxing out the game
+                effective_component = min(effective_component, single_component_cap)
+
+                remaining *= (1.0 - effective_component)
+
+            return 1.0 - remaining
+
+        score_0_to_1 = combine_component_scores(
+            components,
+            gamma=1.4,
+            single_component_cap=0.90
+        )
+
+        score = round(100 * score_0_to_1, 1) 
+
         #Add the scores for this game to the game_scores list
         game_scores.append({
             'game_id': gameid,
@@ -214,46 +264,44 @@ def get_scores(standings, games, gamedate_str):
             'home_losses': home_losses,            
             'away_wp': away_wp,
             'home_wp': home_wp,
-            'away_wp_score': away_wp_score,  
-            'home_wp_score': home_wp_score,          
             'away_starter': away_starter,
             'home_starter': home_starter,
-            'away_war': away_war,
-            'home_war': home_war,
             'away_current_war': away_current_war,
-            'home_current_war': home_current_war,
             'away_projected_war': away_projected_war,
-            'home_projected_war': home_projected_war,
+            'away_current_ip': away_current_ip,
+            'away_projected_ip': away_projected_ip,
+            'away_blended_war': away_team_info['pitcher_blended_war'],
             'away_war_source': away_war_source,
+            'home_current_war': home_current_war,
+            'home_projected_war': home_projected_war,
+            'home_current_ip': home_current_ip,
+            'home_projected_ip': home_projected_ip,
+            'home_blended_war': home_team_info['pitcher_blended_war'],
             'home_war_source': home_war_source,
-            'home_war_score': home_war_score,
-            'away_war_score': away_war_score,
-            'away_playoff_imp': away_playoff_imp_score,
-            'home_playoff_imp': home_playoff_imp_score,
             'away_win_streak': away_win_streak,
             'home_win_streak': home_win_streak,
-            'away_win_streak_score': away_win_streak_score,
-            'home_win_streak_score': home_win_streak_score,
             'away_career_milestones': away_team_info['milestones']['career'],
             'away_season_milestones': away_team_info['milestones']['season'],
             'home_career_milestones': home_team_info['milestones']['career'],
             'home_season_milestones': home_team_info['milestones']['season'],
-            'away_milestone_score': away_milestone_score,
-            'home_milestone_score': home_milestone_score,
             'away_debuts': away_team_info['debuts'],
             'home_debuts': home_team_info['debuts'],
+            'away_wp_score': away_wp_score,  
+            'home_wp_score': home_wp_score,          
+            'team_diff_score': team_diff_score,
+            # 'min_wp_score': min_wp_score,
+            'division_score': div_score,
+            'away_war_score': away_war_score,
+            'home_war_score': home_war_score,
+            'away_playoff_imp_score': away_playoff_imp_score,
+            'home_playoff_imp_score': home_playoff_imp_score,
+            'away_win_streak_score': away_win_streak_score,
+            'home_win_streak_score': home_win_streak_score,
+            'away_milestone_score': away_milestone_score,
+            'home_milestone_score': home_milestone_score,
             'away_prospect_score': away_prospect_score,
             'home_prospect_score': home_prospect_score,
-            'playoff_imp_score': playoff_imp_score,
-            'win_streak_score': win_streak_score,                        
-            'wp_score': wp_score,
-            'team_diff': team_diff_score,
-            'min_wp_score': min_wp_score,
-            'war_score': war_score,
-            'division_score': division_score,
-            'milestone_score': milestone_score,
-            'prospect_score': prospect_score,
-            'unadjusted_score': unadjusted_score,
+            'score_0_to_1': score_0_to_1,
             'score': score,
         })
 
@@ -312,9 +360,12 @@ def update_scores(gamedate_str, games, games_to_update):
 
             #Update this game with the new information and set game_updated to True so we can recalculate the score
             saved_game['away_starter'] = away_team_info['pitcher_name']
-            saved_game['away_war'] = away_team_info['pitcher_war']
+            saved_game['away_war'] = away_team_info['pitcher_blended_war']
             saved_game['away_current_war'] = away_team_info['pitcher_current_war']
             saved_game['away_projected_war'] = away_team_info['pitcher_projected_war']
+            saved_game['away_current_ip'] = away_team_info['pitcher_current_ip']
+            saved_game['away_projected_ip'] = away_team_info['pitcher_projected_ip']
+            saved_game['away_blended_war'] = away_team_info['pitcher_blended_war']
             saved_game['away_war_source'] = away_team_info['war_source']
             saved_game['away_war_score'] = away_team_info['war_score']
             saved_game['away_career_milestones'] = away_team_info['milestones']['career']
@@ -331,9 +382,12 @@ def update_scores(gamedate_str, games, games_to_update):
 
             #Update this game with the new information
             saved_game['home_starter'] = home_team_info['pitcher_name']
-            saved_game['home_war'] = home_team_info['pitcher_war']
+            saved_game['home_war'] = home_team_info['pitcher_blended_war']
             saved_game['home_current_war'] = home_team_info['pitcher_current_war']
             saved_game['home_projected_war'] = home_team_info['pitcher_projected_war']
+            saved_game['home_current_ip'] = home_team_info['pitcher_current_ip']
+            saved_game['home_projected_ip'] = home_team_info['pitcher_projected_ip']
+            saved_game['home_blended_war'] = home_team_info['pitcher_blended_war']
             saved_game['home_war_source'] = home_team_info['war_source']
             saved_game['home_war_score'] = home_team_info['war_score']
             saved_game['home_career_milestones'] = home_team_info['milestones']['career']
@@ -347,22 +401,33 @@ def update_scores(gamedate_str, games, games_to_update):
         if not game_updated:
             continue
 
-        #Get the new overall scores for this game after each team has been recalculated
-        saved_game['war_score'] = saved_game['away_war_score'] + saved_game['home_war_score']
-        saved_game['milestone_score'] = saved_game['away_milestone_score'] + saved_game['home_milestone_score']
-        saved_game['prospect_score'] = saved_game['away_prospect_score'] + saved_game['home_prospect_score']
-        saved_game['unadjusted_score'] = (
-            saved_game['playoff_imp_score']
-            + saved_game['win_streak_score']
-            + saved_game['wp_score']
-            + saved_game['team_diff']
-            + saved_game['war_score']
-            + saved_game['division_score']
-            + saved_game['milestone_score']
-            + saved_game['prospect_score']
-            + saved_game['min_wp_score']
-        )
-        saved_game['score'] = min(100, 100*((math.log(1 + saved_game['unadjusted_score'])) / (math.log(2.33))))
+        #Get the new overall score for this game after each team has been recalculated
+        components = [
+            saved_game['away_playoff_imp_score'],
+            saved_game['home_playoff_imp_score'],
+            saved_game['away_win_streak_score'],
+            saved_game['home_win_streak_score'],
+            saved_game['away_wp_score'],
+            saved_game['home_wp_score'],
+            saved_game['team_diff_score'],
+            saved_game['away_war_score'],
+            saved_game['home_war_score'],
+            saved_game['division_score'],
+            saved_game['away_milestone_score'],
+            saved_game['home_milestone_score'],
+            saved_game['away_prospect_score'],
+            saved_game['home_prospect_score'],
+        ]
+
+        score_0_to_1 = 1
+        for component in components:
+            component = max(0, min(1, component))
+            score_0_to_1 *= (1 - component)
+
+        score_0_to_1 = 1 - score_0_to_1
+
+        saved_game['score_0_to_1'] = score_0_to_1
+        saved_game['score'] = round(100 * score_0_to_1, 1)
 
     #Re-sort all the games and resave them to the .json file
     saved_scores.sort(key=lambda x: x['score'], reverse=True)
@@ -371,4 +436,4 @@ def update_scores(gamedate_str, games, games_to_update):
     return saved_scores
 
 #get_all_scores('08/21/2026', '12/31/2026')
-#score_games('05/11/2026', use_json=False)
+#score_games('06/04/2026', use_json=False)

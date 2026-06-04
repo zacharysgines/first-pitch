@@ -1718,26 +1718,30 @@ def build_game_notes(game):
     def add_note(note, value):
         notes.append({"value": value, "html": note})
 
-    def format_pitcher_war_note(starter, current_war, projected_war, fallback_war, source):
+    def format_pitcher_war_note(starter, current_war, projected_war, fallback_war, source, current_ip=None):
         if starter is None:
             return None
 
         starter_text = f"<strong>{html.escape(str(starter))}</strong>"
-        war_bits = []
-        if current_war is not None:
-            war_bits.append(f"{html.escape(format_war(current_war))} current WAR")
-        if projected_war is not None:
-            war_bits.append(f"{html.escape(format_war(projected_war))} projected WAR")
+        if source == 'real' and current_war is not None:
+            current_text = html.escape(format_war(current_war))
+            return f"{starter_text}: {current_text} current WAR"
 
-        if war_bits:
-            return f"{starter_text}: {', '.join(war_bits)}"
+        if source == 'projected' and projected_war is not None:
+            projected_text = html.escape(format_war(projected_war))
+            return f"{starter_text}: {projected_text} preseason projected WAR"
+
+        if source == 'pace' and current_war is not None:
+            current_text = html.escape(format_war(current_war))
+            if current_ip is not None and current_ip > 0:
+                pace_text = html.escape(format_war(current_war / current_ip * 180))
+                return f"{starter_text}: {current_text} current WAR ({pace_text} WAR/180 IP pace)"
+            return f"{starter_text}: {current_text} current WAR"
 
         if fallback_war is None:
             return None
 
         fallback_text = html.escape(format_war(fallback_war))
-        if source == 'projected':
-            return f"{starter_text}: {fallback_text} projected WAR"
         return f"{starter_text}: {fallback_text} WAR"
 
     def format_count(diff_value, singular_label, plural_label):
@@ -1833,16 +1837,18 @@ def build_game_notes(game):
     away_war = numeric_value(game.get('away_war'))
     away_current_war = numeric_value(game.get('away_current_war'))
     away_projected_war = numeric_value(game.get('away_projected_war'))
+    away_current_ip = numeric_value(game.get('away_current_ip'))
     away_war_score = score_value('away_war_score')
     away_era_score = score_value('away_era_score')
     away_era = numeric_value(game.get('away_era'))
-    if away_war_score is not None and away_war_score >= .15:
+    if away_war_score is not None and away_war_score >= .25:
         away_pitcher_note = format_pitcher_war_note(
             game.get('away_starter'),
             away_current_war,
             away_projected_war,
             away_war,
             game.get('away_war_source'),
+            away_current_ip,
         )
         if away_pitcher_note:
             add_note(away_pitcher_note, away_war_score)
@@ -1864,16 +1870,18 @@ def build_game_notes(game):
     home_war = numeric_value(game.get('home_war'))
     home_current_war = numeric_value(game.get('home_current_war'))
     home_projected_war = numeric_value(game.get('home_projected_war'))
+    home_current_ip = numeric_value(game.get('home_current_ip'))
     home_war_score = score_value('home_war_score')
     home_era_score = score_value('home_era_score')
     home_era = numeric_value(game.get('home_era'))
-    if home_war_score is not None and home_war_score >= 0.15:
+    if home_war_score is not None and home_war_score >= 0.25:
         home_pitcher_note = format_pitcher_war_note(
             game.get('home_starter'),
             home_current_war,
             home_projected_war,
             home_war,
             game.get('home_war_source'),
+            home_current_ip,
         )
         if home_pitcher_note:
             add_note(home_pitcher_note, home_war_score)
@@ -1986,6 +1994,11 @@ def format_breakdown_team_name(team_name):
 
 def build_breakdown_row(label, value):
     """Build one breakdown row and keep the numeric value available for sorting."""
+    row_html = render_breakdown_row(label, value)
+    return {"label": label, "value": value, "html": row_html}
+
+def render_breakdown_row(label, value):
+    """Render one scoring breakdown row."""
     row_html = (
         '<div class="game-breakdown-row">'
         f'<div class="game-breakdown-label">{label}</div>'
@@ -1993,27 +2006,40 @@ def build_breakdown_row(label, value):
         f'<div class="game-breakdown-value">{format_breakdown_score(value)}</div>'
         '</div>'
     )
-    return {"value": value, "html": row_html}
+    return row_html
 
-def format_pitcher_breakdown_label(starter, value, source, metric, current_war=None, projected_war=None):
+def format_pitcher_breakdown_label(starter, value, source, metric, current_war=None, projected_war=None, current_ip=None):
     """Build the pitcher label used in the scoring breakdown rows."""
-    if starter is None or value is None:
+    if starter is None:
         return None
 
     starter_text = html.escape(str(starter))
     if metric == "war":
-        war_bits = []
-        if current_war is not None:
-            war_bits.append(f"{float(current_war):.1f} current WAR")
-        if projected_war is not None:
-            war_bits.append(f"{float(projected_war):.1f} projected WAR")
-        if war_bits:
-            return f"{starter_text}: {html.escape(', '.join(war_bits))}"
+        if source == "real" and current_war is not None:
+            return f"{starter_text}: {html.escape(f'{float(current_war):.1f}')} current WAR"
+
+        if source == "projected" and projected_war is not None:
+            return f"{starter_text}: {html.escape(f'{float(projected_war):.1f}')} preseason projected WAR"
+
+        if source == "pace" and current_war is not None:
+            current_text = html.escape(f"{float(current_war):.1f}")
+            if current_ip is not None:
+                current_ip = float(current_ip)
+                if current_ip > 0:
+                    pace_text = html.escape(f"{float(current_war) / current_ip * 180:.1f}")
+                    return f"{starter_text}: {current_text} current WAR ({pace_text} WAR/180 IP pace)"
+            return f"{starter_text}: {current_text} current WAR"
+
+        if value is None:
+            return None
 
         stat_text = html.escape(f"{float(value):.1f}")
         if source == "projected":
-            return f"{starter_text}: {stat_text} projected WAR"
+            return f"{starter_text}: {stat_text} preseason projected WAR"
         return f"{starter_text}: {stat_text} WAR"
+
+    if value is None:
+        return None
 
     stat_text = html.escape(f"{float(value):.2f}")
     if source == "projected":
@@ -2070,8 +2096,14 @@ elif games:
             f"<div class='game-note-item'>{note}</div>"
             for note in notes
         )
-        has_playoff_implications = game.get('playoff_imp_score', 0) >= 0.2
-        has_division_rivals = game.get('division_score', 0) >= 0.02
+        away_playoff_score = numeric_score_value(game.get('away_playoff_imp_score', game.get('away_playoff_imp')))
+        home_playoff_score = numeric_score_value(game.get('home_playoff_imp_score', game.get('home_playoff_imp')))
+        has_playoff_implications = max(
+            numeric_score_value(game.get('playoff_imp_score')),
+            away_playoff_score,
+            home_playoff_score,
+        ) >= 0.2
+        has_division_rivals = numeric_score_value(game.get('division_score')) >= 0.2
         details_html = f'<div class="game-details">{notes_html}</div>' if notes else ""
         broadcast_logos_html = build_broadcast_logos_html(game)
         pill_items = []
@@ -2094,41 +2126,83 @@ elif games:
             else ""
         )
 
-        unadjusted_score = numeric_score_value(game.get('unadjusted_score'))
         away_pitcher_score = numeric_score_value(game.get('away_war_score', game.get('away_era_score', 0)))
         home_pitcher_score = numeric_score_value(game.get('home_war_score', game.get('home_era_score', 0)))
-        if unadjusted_score > 0:
-            away_playoff_component = score * (game.get('away_playoff_imp', 0) / unadjusted_score)
-            home_playoff_component = score * (game.get('home_playoff_imp', 0) / unadjusted_score)
-            away_wp_component = score * (game.get('away_wp_score', 0) / unadjusted_score)
-            home_wp_component = score * (game.get('home_wp_score', 0) / unadjusted_score)
-            team_diff_component = score * (game.get('team_diff', 0) / unadjusted_score)
-            division_component = score * (game.get('division_score', 0) / unadjusted_score)
-            wild_card_component = score * (game.get('min_wp_score', 0) / unadjusted_score)
-            away_milestone_component = score * (game.get('away_milestone_score', 0) / unadjusted_score)
-            home_milestone_component = score * (game.get('home_milestone_score', 0) / unadjusted_score)
-            away_prospect_component = score * (game.get('away_prospect_score', 0) / unadjusted_score)
-            home_prospect_component = score * (game.get('home_prospect_score', 0) / unadjusted_score)
-            away_win_streak_component = score * (game.get('away_win_streak_score', 0) / unadjusted_score)
-            home_win_streak_component = score * (game.get('home_win_streak_score', 0) / unadjusted_score)
-            away_pitcher_component = score * (away_pitcher_score / unadjusted_score)
-            home_pitcher_component = score * (home_pitcher_score / unadjusted_score)
-        else:
-            away_playoff_component = 0
-            home_playoff_component = 0
-            away_wp_component = 0
-            home_wp_component = 0
-            team_diff_component = 0
-            division_component = 0
+        new_score_format = game.get('score_0_to_1') is not None
+        if new_score_format:
+            component_values = {}
+            remaining_score = 100
+            components = [
+                ('away_playoff_component', away_playoff_score),
+                ('home_playoff_component', home_playoff_score),
+                ('away_win_streak_component', numeric_score_value(game.get('away_win_streak_score'))),
+                ('home_win_streak_component', numeric_score_value(game.get('home_win_streak_score'))),
+                ('away_wp_component', numeric_score_value(game.get('away_wp_score'))),
+                ('home_wp_component', numeric_score_value(game.get('home_wp_score'))),
+                ('team_diff_component', numeric_score_value(game.get('team_diff_score', game.get('team_diff')))),
+                ('away_pitcher_component', away_pitcher_score),
+                ('home_pitcher_component', home_pitcher_score),
+                ('division_component', numeric_score_value(game.get('division_score'))),
+                ('away_milestone_component', numeric_score_value(game.get('away_milestone_score'))),
+                ('home_milestone_component', numeric_score_value(game.get('home_milestone_score'))),
+                ('away_prospect_component', numeric_score_value(game.get('away_prospect_score'))),
+                ('home_prospect_component', numeric_score_value(game.get('home_prospect_score'))),
+            ]
+
+            for component_name, component_score in components:
+                component_score = max(0, min(1, component_score))
+                component_values[component_name] = remaining_score * component_score
+                remaining_score *= (1 - component_score)
+
+            away_playoff_component = component_values['away_playoff_component']
+            home_playoff_component = component_values['home_playoff_component']
+            away_wp_component = component_values['away_wp_component']
+            home_wp_component = component_values['home_wp_component']
+            team_diff_component = component_values['team_diff_component']
+            division_component = component_values['division_component']
             wild_card_component = 0
-            away_milestone_component = 0
-            home_milestone_component = 0
-            away_prospect_component = 0
-            home_prospect_component = 0
-            away_win_streak_component = 0
-            home_win_streak_component = 0
-            away_pitcher_component = 0
-            home_pitcher_component = 0
+            away_milestone_component = component_values['away_milestone_component']
+            home_milestone_component = component_values['home_milestone_component']
+            away_prospect_component = component_values['away_prospect_component']
+            home_prospect_component = component_values['home_prospect_component']
+            away_win_streak_component = component_values['away_win_streak_component']
+            home_win_streak_component = component_values['home_win_streak_component']
+            away_pitcher_component = component_values['away_pitcher_component']
+            home_pitcher_component = component_values['home_pitcher_component']
+        else:
+            unadjusted_score = numeric_score_value(game.get('unadjusted_score'))
+            if unadjusted_score > 0:
+                away_playoff_component = score * (numeric_score_value(game.get('away_playoff_imp')) / unadjusted_score)
+                home_playoff_component = score * (numeric_score_value(game.get('home_playoff_imp')) / unadjusted_score)
+                away_wp_component = score * (numeric_score_value(game.get('away_wp_score')) / unadjusted_score)
+                home_wp_component = score * (numeric_score_value(game.get('home_wp_score')) / unadjusted_score)
+                team_diff_component = score * (numeric_score_value(game.get('team_diff')) / unadjusted_score)
+                division_component = score * (numeric_score_value(game.get('division_score')) / unadjusted_score)
+                wild_card_component = score * (numeric_score_value(game.get('min_wp_score')) / unadjusted_score)
+                away_milestone_component = score * (numeric_score_value(game.get('away_milestone_score')) / unadjusted_score)
+                home_milestone_component = score * (numeric_score_value(game.get('home_milestone_score')) / unadjusted_score)
+                away_prospect_component = score * (numeric_score_value(game.get('away_prospect_score')) / unadjusted_score)
+                home_prospect_component = score * (numeric_score_value(game.get('home_prospect_score')) / unadjusted_score)
+                away_win_streak_component = score * (numeric_score_value(game.get('away_win_streak_score')) / unadjusted_score)
+                home_win_streak_component = score * (numeric_score_value(game.get('home_win_streak_score')) / unadjusted_score)
+                away_pitcher_component = score * (away_pitcher_score / unadjusted_score)
+                home_pitcher_component = score * (home_pitcher_score / unadjusted_score)
+            else:
+                away_playoff_component = 0
+                home_playoff_component = 0
+                away_wp_component = 0
+                home_wp_component = 0
+                team_diff_component = 0
+                division_component = 0
+                wild_card_component = 0
+                away_milestone_component = 0
+                home_milestone_component = 0
+                away_prospect_component = 0
+                home_prospect_component = 0
+                away_win_streak_component = 0
+                home_win_streak_component = 0
+                away_pitcher_component = 0
+                home_pitcher_component = 0
 
         matchup_strength_component = (
             away_wp_component
@@ -2179,11 +2253,18 @@ elif games:
 
         away_pitcher_label = format_pitcher_breakdown_label(
             game.get('away_starter'),
-            game.get('away_war') if 'away_war' in game else game.get('away_era'),
-            game.get('away_war_source') if 'away_war' in game else game.get('away_era_source'),
-            'war' if 'away_war' in game else 'era',
+            game.get('away_war', game.get('away_projected_war', game.get('away_current_war')))
+            if any(key in game for key in ('away_war', 'away_war_score', 'away_current_war', 'away_projected_war'))
+            else game.get('away_era'),
+            game.get('away_war_source')
+            if any(key in game for key in ('away_war', 'away_war_score', 'away_current_war', 'away_projected_war'))
+            else game.get('away_era_source'),
+            'war'
+            if any(key in game for key in ('away_war', 'away_war_score', 'away_current_war', 'away_projected_war'))
+            else 'era',
             current_war=game.get('away_current_war'),
             projected_war=game.get('away_projected_war'),
+            current_ip=game.get('away_current_ip'),
         )
         if away_pitcher_label:
             breakdown_rows.append(
@@ -2195,11 +2276,18 @@ elif games:
 
         home_pitcher_label = format_pitcher_breakdown_label(
             game.get('home_starter'),
-            game.get('home_war') if 'home_war' in game else game.get('home_era'),
-            game.get('home_war_source') if 'home_war' in game else game.get('home_era_source'),
-            'war' if 'home_war' in game else 'era',
+            game.get('home_war', game.get('home_projected_war', game.get('home_current_war')))
+            if any(key in game for key in ('home_war', 'home_war_score', 'home_current_war', 'home_projected_war'))
+            else game.get('home_era'),
+            game.get('home_war_source')
+            if any(key in game for key in ('home_war', 'home_war_score', 'home_current_war', 'home_projected_war'))
+            else game.get('home_era_source'),
+            'war'
+            if any(key in game for key in ('home_war', 'home_war_score', 'home_current_war', 'home_projected_war'))
+            else 'era',
             current_war=game.get('home_current_war'),
             projected_war=game.get('home_projected_war'),
+            current_ip=game.get('home_current_ip'),
         )
         if home_pitcher_label:
             breakdown_rows.append(
@@ -2208,6 +2296,14 @@ elif games:
                     home_pitcher_component,
                 )
             )
+
+        if new_score_format and breakdown_rows:
+            displayed_total = sum(round(row["value"], 1) for row in breakdown_rows)
+            score_diff = round(score - displayed_total, 1)
+            if score_diff != 0:
+                max_row = max(breakdown_rows, key=lambda row: row["value"])
+                max_row["value"] += score_diff
+                max_row["html"] = render_breakdown_row(max_row["label"], max_row["value"])
 
         breakdown_rows.sort(key=lambda row: row["value"], reverse=True)
         breakdown_rows_html = "".join(row["html"] for row in breakdown_rows)
