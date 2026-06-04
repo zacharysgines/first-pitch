@@ -15,6 +15,8 @@ MILESTONE_RECORDS_FILE = ROOT_DIR / "milestones" / "milestone_records.json"
 PROSPECTS_FILE = ROOT_DIR / "milestones" / "prospects.csv"
 PITCHER_WAR_FILE = ROOT_DIR / "starting_pitchers" / "war_lookup.json"
 FANGRAPHS_WAR_SCRIPT = ROOT_DIR / "starting_pitchers" / "get_fwar.r"
+_PITCHER_WAR_REFRESH_ATTEMPTED = False
+_PITCHER_WAR_REFRESH_FAILED = False
 
 def get_pitcher_war_lookup_updated_date():
     if not PITCHER_WAR_FILE.exists():
@@ -135,26 +137,69 @@ def load_milestone_stat_list():
 
 
 def refresh_pitcher_war_lookup_if_needed():
+    global _PITCHER_WAR_REFRESH_ATTEMPTED, _PITCHER_WAR_REFRESH_FAILED
+
     last_updated = get_pitcher_war_lookup_updated_date()
     if last_updated is not None and last_updated >= date.today():
         return None
 
-    subprocess.run(
-        ["Rscript", str(FANGRAPHS_WAR_SCRIPT)],
-        cwd=ROOT_DIR,
-        check=True,
-    )
+    if _PITCHER_WAR_REFRESH_ATTEMPTED:
+        if _PITCHER_WAR_REFRESH_FAILED and PITCHER_WAR_FILE.exists():
+            return None
+        if _PITCHER_WAR_REFRESH_FAILED:
+            raise RuntimeError("FanGraphs WAR refresh already failed and no cached WAR file exists")
 
+    _PITCHER_WAR_REFRESH_ATTEMPTED = True
+
+    try:
+        result = subprocess.run(
+            ["Rscript", str(FANGRAPHS_WAR_SCRIPT)],
+            cwd=ROOT_DIR,
+            capture_output=True,
+            text=True,
+        )
+    except OSError as exc:
+        _PITCHER_WAR_REFRESH_FAILED = True
+        if PITCHER_WAR_FILE.exists():
+            print_cached_war_fallback(exc)
+            return None
+        raise
+
+    if result.returncode != 0:
+        _PITCHER_WAR_REFRESH_FAILED = True
+        error_output = (result.stderr or result.stdout or "").strip()
+        if PITCHER_WAR_FILE.exists():
+            print_cached_war_fallback(
+                f"Rscript exited with status {result.returncode}"
+            )
+            return None
+        raise RuntimeError(error_output or f"Rscript exited with status {result.returncode}")
+
+    _PITCHER_WAR_REFRESH_FAILED = False
     return None
+
+
+def print_cached_war_fallback(error):
+    cached_date = get_pitcher_war_lookup_updated_date()
+    cached_date_text = cached_date.isoformat() if cached_date else "unknown date"
+    reason = str(error).strip().splitlines()[0] if str(error).strip() else "unknown refresh failure"
+    print(
+        "Could not refresh FanGraphs WAR lookup. "
+        f"Using cached file from {cached_date_text} instead. Reason: {reason}"
+    )
 
 
 def load_pitcher_war_lookup(gamedate_str):
     try:
         refresh_pitcher_war_lookup_if_needed()
     except Exception as exc:
+        global _PITCHER_WAR_REFRESH_FAILED
+        _PITCHER_WAR_REFRESH_FAILED = True
+
         if not PITCHER_WAR_FILE.exists():
             raise
-        print(f"Could not refresh FanGraphs WAR lookup. Using cached file instead. Error: {exc}")
+
+        print_cached_war_fallback(exc)
 
     with open(PITCHER_WAR_FILE, "r", encoding="utf-8") as f:
         war_lookup = json.load(f)
