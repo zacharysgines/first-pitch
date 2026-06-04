@@ -1552,7 +1552,7 @@ def build_game_notes(game):
     away_war_score = score_value('away_war_score')
     away_era_score = score_value('away_era_score')
     away_era = numeric_value(game.get('away_era'))
-    if away_war_score is not None and away_war_score >= .3:
+    if away_war_score is not None and away_war_score >= .25:
         away_pitcher_note = format_pitcher_war_note(
             game.get('away_starter'),
             away_current_war,
@@ -1585,7 +1585,7 @@ def build_game_notes(game):
     home_war_score = score_value('home_war_score')
     home_era_score = score_value('home_era_score')
     home_era = numeric_value(game.get('home_era'))
-    if home_war_score is not None and home_war_score >= 0.3:
+    if home_war_score is not None and home_war_score >= 0.25:
         home_pitcher_note = format_pitcher_war_note(
             game.get('home_starter'),
             home_current_war,

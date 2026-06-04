@@ -131,10 +131,7 @@ def get_projected_sp_stats(sp_projections, pitcher_name, team_name):
 def set_pitcher_info(team_info, name, war_per_180, source, current_war, projected_war, current_ip, proj_ip):
     #Calculate the WAR score
     if war_per_180 is not None:
-        floor = -1.5
-        ceiling = 10
-        max_score = .75
-        war_score = max(0, min(1, (war_per_180 - floor) / (ceiling - floor))) * max_score
+        war_score = -.0001 * war_per_180**4 + .0011 * war_per_180**3 + .0018 * war_per_180**2 + .0425 * war_per_180 + .0696
     else:
         war_score = 0
     
