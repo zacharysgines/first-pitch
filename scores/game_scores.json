@@ -3508,6 +3508,78 @@
     "gamedate": "06/05/2026",
     "games": [
       {
+        "game_id": 822810,
+        "game_datetime": "2026-06-05T23:07:00Z",
+        "national_broadcasts": [],
+        "away_team_name": "Baltimore Orioles",
+        "home_team_name": "Toronto Blue Jays",
+        "away_wins": 30,
+        "home_wins": 30,
+        "away_losses": 33,
+        "home_losses": 33,
+        "away_wp": 0.5023518518518518,
+        "home_wp": 0.5060185185185185,
+        "away_starter": "Brandon Young",
+        "home_starter": "Trey Yesavage",
+        "away_current_war": 0.1,
+        "away_projected_war": 0.8,
+        "away_current_ip": 29.7,
+        "away_projected_ip": 84.0,
+        "away_blended_war": 1.2754285714285716,
+        "away_war_source": "projected",
+        "home_current_war": 1.1,
+        "home_projected_war": 1.8,
+        "home_current_ip": 25.3,
+        "home_projected_ip": 108.2,
+        "home_blended_war": 4.50080463029715,
+        "home_war_source": "projected",
+        "away_win_streak": 1,
+        "home_win_streak": 1,
+        "away_career_milestones": [],
+        "away_season_milestones": [],
+        "home_career_milestones": [
+          {
+            "stat": "runs",
+            "player": "George Springer",
+            "value": 998,
+            "target": 1000,
+            "diff": 2,
+            "milestone_type": "Milestone",
+            "milestone_score": 0.29795808
+          },
+          {
+            "stat": "home_runs",
+            "player": "George Springer",
+            "value": 298,
+            "target": 300,
+            "diff": 2,
+            "milestone_type": "Milestone",
+            "milestone_score": 0.22714799999999996
+          }
+        ],
+        "home_season_milestones": [],
+        "away_debuts": [],
+        "home_debuts": [],
+        "away_wp_score": 0.14957131666666662,
+        "home_wp_score": 0.15147541666666664,
+        "team_diff_score": 0.1896241095722764,
+        "division_score": 0.17402499999999999,
+        "away_war_score": 0.12875142453435895,
+        "home_war_score": 0.35660292535678856,
+        "away_playoff_imp_score": 0.07099078642456946,
+        "home_playoff_imp_score": 0.07099078642456946,
+        "away_win_streak_score": 0,
+        "home_win_streak_score": 0,
+        "away_milestone_score": 0,
+        "home_milestone_score": 0.45742549804416,
+        "away_prospect_score": 0,
+        "home_prospect_score": 0,
+        "score_0_to_1": 0.6751090851781254,
+        "score": 67.5,
+        "away_war": 1.2754285714285716,
+        "home_war": 4.50080463029715
+      },
+      {
         "game_id": 823538,
         "game_datetime": "2026-06-05T23:05:00Z",
         "national_broadcasts": [],
@@ -3556,58 +3628,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.5400375684790002,
-        "score": 54.0
-      },
-      {
-        "game_id": 822810,
-        "game_datetime": "2026-06-05T23:07:00Z",
-        "national_broadcasts": [],
-        "away_team_name": "Baltimore Orioles",
-        "home_team_name": "Toronto Blue Jays",
-        "away_wins": 30,
-        "home_wins": 30,
-        "away_losses": 33,
-        "home_losses": 33,
-        "away_wp": 0.5023518518518518,
-        "home_wp": 0.5060185185185185,
-        "away_starter": "Brandon Young",
-        "home_starter": "Trey Yesavage",
-        "away_current_war": 0.1,
-        "away_projected_war": 0.8,
-        "away_current_ip": 29.7,
-        "away_projected_ip": 84.0,
-        "away_blended_war": 1.2754285714285716,
-        "away_war_source": "projected",
-        "home_current_war": 1.1,
-        "home_projected_war": 1.8,
-        "home_current_ip": 25.3,
-        "home_projected_ip": 108.2,
-        "home_blended_war": 4.50080463029715,
-        "home_war_source": "projected",
-        "away_win_streak": 1,
-        "home_win_streak": 1,
-        "away_career_milestones": [],
-        "away_season_milestones": [],
-        "home_career_milestones": [],
-        "home_season_milestones": [],
-        "away_debuts": [],
-        "home_debuts": [],
-        "away_wp_score": 0.14957131666666662,
-        "home_wp_score": 0.15147541666666664,
-        "team_diff_score": 0.1896241095722764,
-        "division_score": 0.17402499999999999,
-        "away_war_score": 0.12875142453435895,
-        "home_war_score": 0.35660292535678856,
-        "away_playoff_imp_score": 0.07099078642456946,
-        "home_playoff_imp_score": 0.07099078642456946,
-        "away_win_streak_score": 0,
-        "home_win_streak_score": 0,
-        "away_milestone_score": 0,
-        "home_milestone_score": 0,
-        "away_prospect_score": 0,
-        "home_prospect_score": 0,
-        "score_0_to_1": 0.5117796867506332,
-        "score": 51.2
+        "score": 54.0,
+        "away_war": 3.173999906755238,
+        "home_war": 3.088501742160279
       },
       {
         "game_id": 823699,
@@ -3660,7 +3683,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.4937892332383961,
-        "score": 49.4
+        "score": 49.4,
+        "away_war": 2.7957239499743762,
+        "home_war": 3.732726049376326
       },
       {
         "game_id": 824271,
@@ -3711,7 +3736,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.43861719730999493,
-        "score": 43.9
+        "score": 43.9,
+        "away_war": 4.029513112250854,
+        "home_war": 2.6306258144274777
       },
       {
         "game_id": 822892,
@@ -3866,7 +3893,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.40367574995453737,
-        "score": 40.4
+        "score": 40.4,
+        "away_war": 1.0052405343034296,
+        "home_war": 4.163357895142934
       },
       {
         "game_id": 824914,
@@ -3917,7 +3946,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.38414461181557713,
-        "score": 38.4
+        "score": 38.4,
+        "away_war": 3.06090042822422,
+        "home_war": 1.719171328662184
       },
       {
         "game_id": 824186,
@@ -3968,7 +3999,8 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.37356645143278966,
-        "score": 37.4
+        "score": 37.4,
+        "home_war": 1.6799999999999997
       },
       {
         "game_id": 823049,
@@ -4019,7 +4051,8 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.34946383111765433,
-        "score": 34.9
+        "score": 34.9,
+        "home_war": 0.571044083526682
       },
       {
         "game_id": 823860,
@@ -4070,7 +4103,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.3475451004781557,
-        "score": 34.8
+        "score": 34.8,
+        "away_war": 3.010500409386686,
+        "home_war": 1.761252446183953
       },
       {
         "game_id": 825073,
@@ -4274,7 +4309,8 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.20698651191552464,
-        "score": 20.7
+        "score": 20.7,
+        "home_war": 0.8715789473684212
       }
     ]
   },
