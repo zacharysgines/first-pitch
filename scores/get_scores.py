@@ -20,6 +20,33 @@ from milestones.milestones import milestones
 from lineups.lineups import get_all_lineups
 
 
+def clamp(value, low=0.0, high=1.0):
+    return max(low, min(high, value))
+
+
+def combine_component_scores(components, gamma=1.4, single_component_cap=0.90):
+    """
+    Combines component scores using diminishing returns.
+
+    gamma > 1 dampens small/background scores while preserving differences.
+    single_component_cap prevents one component from making the game a 100 by itself.
+    """
+    remaining = 1.0
+
+    for component in components:
+        component = clamp(component)
+
+        # Dampen smaller values without eliminating them.
+        effective_component = component ** gamma
+
+        # Prevent one component from fully maxing out the game.
+        effective_component = min(effective_component, single_component_cap)
+
+        remaining *= (1.0 - effective_component)
+
+    return 1.0 - remaining
+
+
 def score_all_games(starting_date_str, ending_date_str):
     #Get all scores from game_scores.json 
     saved_scores = load_scores()
@@ -218,31 +245,6 @@ def get_scores(standings, games, gamedate_str):
             home_prospect_score,
         ]
 
-        def clamp(value, low=0.0, high=1.0):
-            return max(low, min(high, value))
-
-        def combine_component_scores(components, gamma=1.4, single_component_cap=0.90):
-            """
-            Combines component scores using diminishing returns.
-
-            gamma > 1 dampens small/background scores while preserving differences.
-            single_component_cap prevents one component from making the game a 100 by itself.
-            """
-            remaining = 1.0
-
-            for component in components:
-                component = clamp(component)
-
-                # Dampen smaller values without eliminating them
-                effective_component = component ** gamma
-
-                # Prevent one component from fully maxing out the game
-                effective_component = min(effective_component, single_component_cap)
-
-                remaining *= (1.0 - effective_component)
-
-            return 1.0 - remaining
-
         score_0_to_1 = combine_component_scores(
             components,
             gamma=1.4,
@@ -419,12 +421,11 @@ def update_scores(gamedate_str, games, games_to_update):
             saved_game['home_prospect_score'],
         ]
 
-        score_0_to_1 = 1
-        for component in components:
-            component = max(0, min(1, component))
-            score_0_to_1 *= (1 - component)
-
-        score_0_to_1 = 1 - score_0_to_1
+        score_0_to_1 = combine_component_scores(
+            components,
+            gamma=1.4,
+            single_component_cap=0.90
+        )
 
         saved_game['score_0_to_1'] = score_0_to_1
         saved_game['score'] = round(100 * score_0_to_1, 1)
