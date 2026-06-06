@@ -3149,6 +3149,78 @@
     "gamedate": "06/06/2026",
     "games": [
       {
+        "game_id": 822808,
+        "game_datetime": "2026-06-06T19:07:00Z",
+        "national_broadcasts": [],
+        "away_team_name": "Baltimore Orioles",
+        "home_team_name": "Toronto Blue Jays",
+        "away_wins": 31,
+        "home_wins": 30,
+        "away_losses": 33,
+        "home_losses": 34,
+        "away_wp": 0.505320987654321,
+        "home_wp": 0.5027777777777778,
+        "away_starter": "Kyle Bradish",
+        "home_starter": "Braydon Fisher",
+        "away_current_war": 0.7,
+        "away_projected_war": 2.2,
+        "away_current_ip": 52.3,
+        "away_projected_ip": 100.0,
+        "away_blended_war": 2.8785600000000002,
+        "away_war_source": "pace",
+        "home_current_war": 0.3,
+        "home_projected_war": 0.5,
+        "home_current_ip": 27.7,
+        "home_projected_ip": 61.0,
+        "home_blended_war": 1.6504918032786886,
+        "home_war_source": "projected",
+        "away_win_streak": 2,
+        "home_win_streak": 0,
+        "away_career_milestones": [],
+        "away_season_milestones": [],
+        "home_career_milestones": [
+          {
+            "stat": "runs",
+            "player": "George Springer",
+            "value": 999,
+            "target": 1000,
+            "diff": 1,
+            "milestone_type": "Milestone",
+            "milestone_score": 0.31531391999999997
+          },
+          {
+            "stat": "home_runs",
+            "player": "George Springer",
+            "value": 298,
+            "target": 300,
+            "diff": 2,
+            "milestone_type": "Milestone",
+            "milestone_score": 0.22714799999999996
+          }
+        ],
+        "home_season_milestones": [],
+        "away_debuts": [],
+        "home_debuts": [],
+        "away_wp_score": 0.15111318888888886,
+        "home_wp_score": 0.1497925,
+        "team_diff_score": 0.1911689627297113,
+        "division_score": 0.127375,
+        "away_war_score": 0.22622509969004057,
+        "home_war_score": 0.14885299597001336,
+        "away_playoff_imp_score": 0.0720165590097539,
+        "home_playoff_imp_score": 0.0728031585247273,
+        "away_win_streak_score": 0,
+        "home_win_streak_score": 0,
+        "away_milestone_score": 0,
+        "home_milestone_score": 0.47083899369983984,
+        "away_prospect_score": 0,
+        "home_prospect_score": 0,
+        "score_0_to_1": 0.629363378918498,
+        "score": 62.9,
+        "away_war": 2.8785600000000002,
+        "home_war": 1.6504918032786886
+      },
+      {
         "game_id": 823539,
         "game_datetime": "2026-06-06T23:35:00Z",
         "national_broadcasts": [
@@ -3304,7 +3376,8 @@
         "home_prospect_score": 0,
         "score_0_to_1": 0.4980147064927454,
         "score": 49.8,
-        "away_war": 4.229667003027245
+        "away_war": 4.229667003027245,
+        "home_war": 4.048
       },
       {
         "game_id": 824915,
@@ -3355,7 +3428,8 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.46643466209692275,
-        "score": 46.6
+        "score": 46.6,
+        "away_war": 4.0243342024934945
       },
       {
         "game_id": 824351,
@@ -3467,7 +3541,8 @@
         "away_prospect_score": 0.19920000000000004,
         "home_prospect_score": 0,
         "score_0_to_1": 0.41325684543830643,
-        "score": 41.3
+        "score": 41.3,
+        "home_war": 1.8666195817169844
       },
       {
         "game_id": 823859,
@@ -3518,7 +3593,8 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.41200702067619266,
-        "score": 41.2
+        "score": 41.2,
+        "home_war": 0.6660842433697348
       },
       {
         "game_id": 822891,
@@ -3572,57 +3648,6 @@
         "home_prospect_score": 0,
         "score_0_to_1": 0.39569950235251594,
         "score": 39.6
-      },
-      {
-        "game_id": 822808,
-        "game_datetime": "2026-06-06T19:07:00Z",
-        "national_broadcasts": [],
-        "away_team_name": "Baltimore Orioles",
-        "home_team_name": "Toronto Blue Jays",
-        "away_wins": 31,
-        "home_wins": 30,
-        "away_losses": 33,
-        "home_losses": 34,
-        "away_wp": 0.505320987654321,
-        "home_wp": 0.5027777777777778,
-        "away_starter": "Kyle Bradish",
-        "home_starter": null,
-        "away_current_war": 0.7,
-        "away_projected_war": 2.2,
-        "away_current_ip": 52.3,
-        "away_projected_ip": 100.0,
-        "away_blended_war": 2.8785600000000002,
-        "away_war_source": "pace",
-        "home_current_war": null,
-        "home_projected_war": null,
-        "home_current_ip": null,
-        "home_projected_ip": null,
-        "home_blended_war": null,
-        "home_war_source": null,
-        "away_win_streak": 2,
-        "home_win_streak": 0,
-        "away_career_milestones": [],
-        "away_season_milestones": [],
-        "home_career_milestones": [],
-        "home_season_milestones": [],
-        "away_debuts": [],
-        "home_debuts": [],
-        "away_wp_score": 0.15111318888888886,
-        "home_wp_score": 0.1497925,
-        "team_diff_score": 0.1911689627297113,
-        "division_score": 0.127375,
-        "away_war_score": 0.22622509969004057,
-        "home_war_score": 0,
-        "away_playoff_imp_score": 0.0720165590097539,
-        "home_playoff_imp_score": 0.0728031585247273,
-        "away_win_streak_score": 0,
-        "home_win_streak_score": 0,
-        "away_milestone_score": 0,
-        "home_milestone_score": 0,
-        "away_prospect_score": 0,
-        "home_prospect_score": 0,
-        "score_0_to_1": 0.38876071698966175,
-        "score": 38.9
       },
       {
         "game_id": 823048,
@@ -3880,7 +3905,8 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.2773734033001135,
-        "score": 27.7
+        "score": 27.7,
+        "home_war": 1.5819345489675158
       },
       {
         "game_id": 825075,
