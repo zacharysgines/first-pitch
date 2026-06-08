@@ -3535,7 +3535,26 @@
         "home_win_streak": 2,
         "away_career_milestones": [],
         "away_season_milestones": [],
-        "home_career_milestones": [],
+        "home_career_milestones": [
+          {
+            "stat": "runs",
+            "player": "George Springer",
+            "value": 999,
+            "target": 1000,
+            "diff": 1,
+            "milestone_type": "Milestone",
+            "milestone_score": 0.31531391999999997
+          },
+          {
+            "stat": "home_runs",
+            "player": "George Springer",
+            "value": 298,
+            "target": 300,
+            "diff": 2,
+            "milestone_type": "Milestone",
+            "milestone_score": 0.22714799999999996
+          }
+        ],
         "home_season_milestones": [],
         "away_debuts": [],
         "home_debuts": [],
@@ -3550,11 +3569,13 @@
         "away_win_streak_score": 0,
         "home_win_streak_score": 0,
         "away_milestone_score": 0,
-        "home_milestone_score": 0,
+        "home_milestone_score": 0.47083899369983984,
         "away_prospect_score": 0,
         "home_prospect_score": 0,
-        "score_0_to_1": 0.5342585130787856,
-        "score": 53.4
+        "score_0_to_1": 0.6965016435197489,
+        "score": 69.7,
+        "away_war": 5.620779436716587,
+        "home_war": 1.4330945101791563
       },
       {
         "game_id": 824998,
@@ -3658,7 +3679,8 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.4208459883143446,
-        "score": 42.1
+        "score": 42.1,
+        "home_war": 2.754206527754818
       },
       {
         "game_id": 823218,
@@ -3760,7 +3782,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.3981418063958737,
-        "score": 39.8
+        "score": 39.8,
+        "away_war": 1.4493729484050164,
+        "home_war": 2.118728610091502
       },
       {
         "game_id": 824025,
@@ -3877,19 +3901,19 @@
         "away_wp": 0.5316543209876543,
         "home_wp": 0.49891358024691357,
         "away_starter": "Emerson Hancock",
-        "home_starter": null,
+        "home_starter": "Trey Gibson",
         "away_current_war": 1,
         "away_projected_war": 0.9,
         "away_current_ip": 58.7,
         "away_projected_ip": 121.1,
         "away_blended_war": 2.454993825523126,
         "away_war_source": "pace",
-        "home_current_war": null,
-        "home_projected_war": null,
-        "home_current_ip": null,
-        "home_projected_ip": null,
-        "home_blended_war": null,
-        "home_war_source": null,
+        "home_current_war": -0.1,
+        "home_projected_war": 1.0,
+        "home_current_ip": 6.7,
+        "home_projected_ip": 105.1,
+        "home_blended_war": 1.3387277396996744,
+        "home_war_source": "projected",
         "away_win_streak": 0,
         "home_win_streak": 0,
         "away_career_milestones": [],
@@ -3903,7 +3927,7 @@
         "team_diff_score": 0.15272124504040138,
         "division_score": 0,
         "away_war_score": 0.1974292197309654,
-        "home_war_score": 0,
+        "home_war_score": 0.1320398620670127,
         "away_playoff_imp_score": 0.07562511554472784,
         "home_playoff_imp_score": 0.07525432831749151,
         "away_win_streak_score": 0,
@@ -3912,8 +3936,10 @@
         "home_milestone_score": 0,
         "away_prospect_score": 0,
         "home_prospect_score": 0,
-        "score_0_to_1": 0.32483860398749154,
-        "score": 32.5
+        "score_0_to_1": 0.364502437752966,
+        "score": 36.5,
+        "away_war": 2.454993825523126,
+        "home_war": 1.3387277396996744
       }
     ]
   },
