@@ -13,6 +13,7 @@ WIN_STREAKS_FILE = ROOT_DIR / "win_streaks" / "win_streaks.json"
 SP_PROJECTIONS_FILE = ROOT_DIR / "starting_pitchers" / "sp_projections_war.csv"
 MILESTONE_RECORDS_FILE = ROOT_DIR / "milestones" / "milestone_records.json"
 PROSPECTS_FILE = ROOT_DIR / "milestones" / "prospects.csv"
+PLAYER_STATS_FILE = ROOT_DIR / "milestones" / "player_stats.json"
 PITCHER_WAR_FILE = ROOT_DIR / "starting_pitchers" / "war_lookup.json"
 FANGRAPHS_WAR_SCRIPT = ROOT_DIR / "starting_pitchers" / "get_fwar.r"
 _PITCHER_WAR_REFRESH_ATTEMPTED = False
@@ -219,3 +220,15 @@ def load_pitcher_war_lookup(gamedate_str):
             raise ValueError(f"WAR lookup entry {player_id} is missing WAR or IP")
 
     return war_lookup
+
+def load_player_stats():
+    #Load player_stats.json
+    with open(PLAYER_STATS_FILE, "r", encoding="utf-8") as f:
+        player_stats = json.load(f)
+    
+    return player_stats
+
+def save_player_stats(player_stats):
+    with open(PLAYER_STATS_FILE, "w", encoding="utf-8") as f:
+            json.dump(player_stats, f, indent=2)
+    return None

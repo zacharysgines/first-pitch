@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 import statsapi
 import math
@@ -11,7 +11,7 @@ from pathlib import Path
 ROOT_DIR = Path(__file__).resolve().parents[1]  
 sys.path.insert(0, str(ROOT_DIR))
 
-from save_load import load_milestone_records, load_prospects, load_milestone_stat_list, load_saved_lineups, save_milestone_records
+from save_load import load_milestone_records, load_prospects, load_milestone_stat_list, load_saved_lineups, save_milestone_records, load_player_stats, save_player_stats
 
 
 def parse_future_value(fv):
@@ -60,6 +60,7 @@ def milestones(games, gamedate_str, teams_info):
         return None
     
     batter_milestone_stat_list, pitcher_milestone_stat_list = load_milestone_stat_list()
+    player_stats = load_player_stats()
     
     for game in games:
         #Get team info
@@ -74,7 +75,8 @@ def milestones(games, gamedate_str, teams_info):
         #Add all the milestones that need to be scored into the teams dictionary
         for player in game_lineup.get('away_lineup', []):
             get_milestones(player, away_team_info, 'hitting', batter_milestone_stat_list)
-
+            get_streaks(player, player_stats, gamedate_str, game['away_name'])
+            break
         for player in game_lineup.get('home_lineup', []):
             get_milestones(player, home_team_info, 'hitting', batter_milestone_stat_list)
 
@@ -85,6 +87,7 @@ def milestones(games, gamedate_str, teams_info):
         home_pitcher = game_lineup.get('home_pitcher')
         if home_pitcher:
             get_milestones(home_pitcher, home_team_info, 'pitching', pitcher_milestone_stat_list)
+        break
 
     return None
 
@@ -336,92 +339,109 @@ def update_milestone(player_stat_value, stat_name, scope):
 
 
 
-def get_streaks(player, player_stats, gamedate_str):
+def get_streaks(player, player_stats, gamedate_str, team_name):
     print("Player:", player)
     print("Player Stats:", player_stats)
     print("Gamedate:", gamedate_str)
 
     #Get today's date and the date of opening day so we know how far back we need to calculate streaks
+    gamedate_obj = datetime.strptime(gamedate_str, "%m/%d/%Y")
     season_dates = statsapi.get("season", {"seasonId": datetime.now().year,"sportId": 1})
     opening_day_str = season_dates["seasons"][0]["regularSeasonStartDate"]
     opening_day_obj = datetime.strptime(opening_day_str, "%Y-%m-%d")
-    gamedate_obj = datetime.strptime(gamedate_str, "%m/%d/%Y")
 
     #Set each streak as active and 0 for tracking
     hitting_streak_active = True
     hitting_streak = 0
 
-    found_player = False
+    #Set variable for player in .json file we're going to get the streaks for
+    streak_player = None
+
+    #Check all players in .json file to find the one we're looking for
     for saved_player in player_stats:
-        #Find the player in player_stats.json that matches the current player we're looking at
         if saved_player['player_id'] == player['id']:
-            found_player = True
-            #Loop through dates until we get back to opening day
-            while gamedate_obj >= opening_day_obj:
-                #Subtract one from the last day we looked at to get the previous date (gamedate starts as today, so first day we check is yesterday)
-                gamedate_obj -= timedelta(days=1)
-                check_date_str = gamedate_obj.strftime("%m/%d/%Y")
-                print(check_date_str)
-
-                #Initialize "found_date" as false and set true if we find this date in player_stats.json
-                found_date = False
-                #Loop through each date we have saved for this player
-                for saved_game in saved_player['games']:
-                    #If we find this date saved alraedy, check their streak numbers from the saved stats
-                    if saved_game['date'] == check_date_str:
-                        found_date = True                        
-                        print(saved_game)
-
-                        #Get this players saved stats for this day
-                        pa =  saved_game['stats']['pa']
-                        hits = saved_game['stats']['hits']
-
-                        #Make sure they had at least one at bat on this date. If they didn't, don't consider the hitting streak
-                        if pa > 0:
-                            #If they had a hit, add one to their hitting streak
-                            if hits > 0:
-                                hitting_streak += 1
-                            #If they didn't end the streak
-                            else:
-                                hitting_streak_active = False
-                        
-                        break
-                    
-                    #If we didn't find this date, add their stats for this date into player_stats.json
-                    if found_date == False:
-                        prior_games = statsapi.schedule(date=check_date_str)
-                        print(prior_games)
-
-        #                 break
-        #     break
-        # break
-    if found_player == False:
-        gamedate_obj -= timedelta(days=1)
-        check_date_str = gamedate_obj.strftime("%m/%d/%Y")
-
-        get_player_date_stats(check_date_str, player)
-
-        player_stats.append({
+            streak_player = saved_player
+            break
+    
+    #If we didn't find this player in the .json file, add them and use that as the streak player
+    if streak_player is None:
+        streak_player = {
             'player_id': player['id'],
             'games': []
-        })
+        }
+        player_stats.append(streak_player)
+
+    #Loop through dates until we get back to opening day
+    while gamedate_obj > opening_day_obj and hitting_streak_active:
+        #Subtract one from the last day we looked at to get the previous date (gamedate starts as today, so first day we check is yesterday)
+        gamedate_obj -= timedelta(days=1)
+        check_date_str = gamedate_obj.strftime("%m/%d/%Y")
+        print(check_date_str)
+
+        #Set variable for this players game on this day
+        streak_game = None
+
+        #Loop through each game we have saved for this player
+        for saved_game in streak_player['games']:
+            #If we find this date saved alraedy, set this game as the game we're checking the 
+            #streak for
+            if saved_game['date'] == check_date_str:
+                streak_game = saved_game  
+                break           
         
+        #If we didn't find a game for this date saved, get this players stats for this day and 
+        #save that to this players games list
+        if streak_game is None:
+            ab, pa, h = get_player_date_stats(check_date_str, player, team_name)
+            streak_game = {
+                'date': check_date_str,
+                'stats': {
+                    'at_bats': ab,
+                    'plate_apps': pa,
+                    'hits': h
+                    }
+            }
+            streak_player['games'].append(streak_game)
+
+        print(streak_game)
+
+        #Get this players saved stats for this day
+        at_bats = streak_game['stats']['at_bats']
+        plate_apps =  streak_game['stats']['plate_apps']
+        hits = streak_game['stats']['hits']
+
+        #Make sure they had at least one plate appearance on this date. If they didn't, don't 
+        #consider the hitting streak
+        if plate_apps is not None and plate_apps > 0:
+            #If they had a hit, add one to their hitting streak
+            if hits > 0:
+                hitting_streak += 1
+            #If they didn't end the streak
+            else:
+                hitting_streak_active = False
+    
+    save_player_stats(player_stats)
+
+    print(hitting_streak)
+
+    return None
         
 
-def get_player_date_stats(date, player):
+def get_player_date_stats(date, player, team_name):
+    #Get current player information
+    player_team = team_name
+    print("Player Team:", player_team)
+    
     #Get all the games for this date. If there are no games, return none
     prior_games = statsapi.schedule(date=date)
     if not prior_games:
-        return False, 0, 0, 0
-    
-    #Get current player information
-    player_team = player['team']
-    print("Player Team:", player_team)
+        return 0,0,0
 
+    #Track whether this team played this day or not
+    game_found = False
+    
     #Check each game in this date to find this player's team game for that date
     for game in prior_games:
-        #Track whether this team played this day or not
-        game_found = False
 
         #If the game we're looking at is not a regular season game, skip it
         if game['game_type'] != 'R':
@@ -440,7 +460,7 @@ def get_player_date_stats(date, player):
 
             #Define events that reult in an at bat
             ab_events = {
-                "sing'e",
+                "single",
                 "double",
                 "triple",
                 "home_run",
@@ -459,16 +479,18 @@ def get_player_date_stats(date, player):
                 'fan_interference'
             }
 
+            #Define events that result in a PA and not an AB
             pa_events = {
                 "sac_fly",
                 "sac_fly_double_play",
                 "sac_bunt",
-                "sac_bunt_double_play"
+                "sac_bunt_double_play",
                 "walk",
                 "intent_walk",
                 "hit_by_pitch",
             }
 
+            #Define events that result in a hit
             hit_events = {
                 "single",
                 "double",
@@ -478,8 +500,8 @@ def get_player_date_stats(date, player):
 
             #Initialize plate appearances, at bats and hits to 0 and increment if they had
             #an event that meets the criteria
-            plate_appearances = 0
             at_bats = 0
+            plate_apps = 0
             hits = 0
 
             #Go through each event that occured in the play by play data (essentially every 
@@ -496,17 +518,20 @@ def get_player_date_stats(date, player):
                 result = event.get("result", {}).get("eventType", "")
                 print(result)
 
+                #If this was an at bat event, add one to AB
                 if result in ab_events:
                     at_bats += 1
+                #If this was an at bat or a PA event, add one to PA
                 if result in ab_events or result in pa_events:
-                    plate_appearances += 1
+                    plate_apps += 1
+                #If this was a hit event, add one to hits
                 if result in hit_events:
                     hits += 1
 
-                return at_bats, plate_appearances, hits
+            return at_bats, plate_apps, hits
             
     if game_found == False:
-        return 0, 0, 0
+        return None, None, None
         
 
 
@@ -555,7 +580,7 @@ def get_teams_info(standings):
     
     return teams_info
 
-gamedate = '05/11/2026'
+gamedate = '06/09/2026'
 date_obj = datetime.strptime(gamedate, "%m/%d/%Y")
 
 games = statsapi.schedule(gamedate)
