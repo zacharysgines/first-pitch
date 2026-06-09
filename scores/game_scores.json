@@ -3569,7 +3569,8 @@
         "home_prospect_score": 0,
         "score_0_to_1": 0.7585861826887809,
         "score": 75.9,
-        "away_war": -1.44
+        "away_war": -1.44,
+        "home_war": 5.094597023493334
       },
       {
         "game_id": 822805,
@@ -3620,7 +3621,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.5919415210949664,
-        "score": 59.2
+        "score": 59.2,
+        "away_war": 4.600383079285731,
+        "home_war": 5.033462356147474
       },
       {
         "game_id": 824267,
@@ -3787,7 +3790,8 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.45843118571823305,
-        "score": 45.8
+        "score": 45.8,
+        "home_war": 1.6739366719495905
       },
       {
         "game_id": 823620,
@@ -3839,7 +3843,8 @@
         "home_prospect_score": 0,
         "score_0_to_1": 0.3972703773427305,
         "score": 39.7,
-        "home_war": 2.8537324948883143
+        "home_war": 2.8537324948883143,
+        "away_war": 2.430396975425331
       },
       {
         "game_id": 823858,
@@ -3944,7 +3949,71 @@
         "home_prospect_score": 0,
         "score_0_to_1": 0.3887075808569491,
         "score": 38.9,
-        "away_war": 2.319993266843412
+        "away_war": 2.319993266843412,
+        "home_war": 2.5952274770470107
+      },
+      {
+        "game_id": 824591,
+        "game_datetime": "2026-06-09T23:40:00Z",
+        "national_broadcasts": [],
+        "away_team_name": "Atlanta Braves",
+        "home_team_name": "Chicago White Sox",
+        "away_wins": 45,
+        "home_wins": 34,
+        "away_losses": 21,
+        "home_losses": 31,
+        "away_wp": 0.6143703703703703,
+        "home_wp": 0.46135802469135806,
+        "away_starter": "Grant Holmes",
+        "home_starter": "Brandon Eisert",
+        "away_current_war": 0.2,
+        "away_projected_war": 0.5,
+        "away_current_ip": 47.3,
+        "away_projected_ip": 71.1,
+        "away_blended_war": 0.9475105485232069,
+        "away_war_source": "projected",
+        "home_current_war": 0,
+        "home_projected_war": 0,
+        "home_current_ip": 5,
+        "home_projected_ip": 0,
+        "home_blended_war": 0.0,
+        "home_war_source": "projected",
+        "away_win_streak": 3,
+        "home_win_streak": 0,
+        "away_career_milestones": [],
+        "away_season_milestones": [],
+        "home_career_milestones": [],
+        "home_season_milestones": [],
+        "away_debuts": [],
+        "home_debuts": [
+          {
+            "name": "Braden Montgomery",
+            "org": "CHW",
+            "pos": "RF",
+            "mlb_rank": 100.0,
+            "org_rank": 5.0,
+            "pos_rank": 6.0,
+            "score": 0.2612
+          }
+        ],
+        "away_wp_score": 0.2300197400493822,
+        "home_wp_score": 0.12828322222222222,
+        "team_diff_score": 0.0528718798760304,
+        "division_score": 0,
+        "away_war_score": 0.11234031302873601,
+        "home_war_score": 0.0696,
+        "away_playoff_imp_score": 0.002683103299251477,
+        "home_playoff_imp_score": 0.06306516419584707,
+        "away_win_streak_score": 0,
+        "home_win_streak_score": 0,
+        "away_milestone_score": 0,
+        "home_milestone_score": 0,
+        "away_prospect_score": 0,
+        "home_prospect_score": 0.2612,
+        "score_0_to_1": 0.3753141422310611,
+        "score": 37.5,
+        "away_war": 0.9475105485232069,
+        "home_war": 0.0
       },
       {
         "game_id": 824999,
@@ -4046,7 +4115,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.34749441077690135,
-        "score": 34.7
+        "score": 34.7,
+        "away_war": 2.156023652214142,
+        "home_war": 1.9089131497474336
       },
       {
         "game_id": 824429,
@@ -4100,7 +4171,8 @@
         "home_prospect_score": 0,
         "score_0_to_1": 0.3417262193115679,
         "score": 34.2,
-        "home_war": 0.8922146636432351
+        "home_war": 0.8922146636432351,
+        "away_war": 2.8173913043478263
       },
       {
         "game_id": 823214,
@@ -4205,57 +4277,6 @@
         "score": 30.8
       },
       {
-        "game_id": 824591,
-        "game_datetime": "2026-06-09T23:40:00Z",
-        "national_broadcasts": [],
-        "away_team_name": "Atlanta Braves",
-        "home_team_name": "Chicago White Sox",
-        "away_wins": 45,
-        "home_wins": 34,
-        "away_losses": 21,
-        "home_losses": 31,
-        "away_wp": 0.6143703703703703,
-        "home_wp": 0.46135802469135806,
-        "away_starter": "Grant Holmes",
-        "home_starter": "Erick Fedde",
-        "away_current_war": 0.2,
-        "away_projected_war": 0.5,
-        "away_current_ip": 47.3,
-        "away_projected_ip": 71.1,
-        "away_blended_war": 0.9475105485232069,
-        "away_war_source": "projected",
-        "home_current_war": -0.4,
-        "home_projected_war": 0.6,
-        "home_current_ip": 46,
-        "home_projected_ip": 125.0,
-        "home_blended_war": -0.327936,
-        "home_war_source": "projected",
-        "away_win_streak": 3,
-        "home_win_streak": 0,
-        "away_career_milestones": [],
-        "away_season_milestones": [],
-        "home_career_milestones": [],
-        "home_season_milestones": [],
-        "away_debuts": [],
-        "home_debuts": [],
-        "away_wp_score": 0.2300197400493822,
-        "home_wp_score": 0.12828322222222222,
-        "team_diff_score": 0.0528718798760304,
-        "division_score": 0,
-        "away_war_score": 0.11234031302873601,
-        "home_war_score": 0.05581634551767174,
-        "away_playoff_imp_score": 0.002683103299251477,
-        "home_playoff_imp_score": 0.06306516419584707,
-        "away_win_streak_score": 0,
-        "home_win_streak_score": 0,
-        "away_milestone_score": 0,
-        "home_milestone_score": 0,
-        "away_prospect_score": 0,
-        "home_prospect_score": 0,
-        "score_0_to_1": 0.2579446198129093,
-        "score": 25.8
-      },
-      {
         "game_id": 824347,
         "game_datetime": "2026-06-10T00:40:00Z",
         "national_broadcasts": [],
@@ -4288,7 +4309,17 @@
         "home_career_milestones": [],
         "home_season_milestones": [],
         "away_debuts": [],
-        "home_debuts": [],
+        "home_debuts": [
+          {
+            "name": "Cole Carrigg",
+            "org": "COL",
+            "pos": "CF",
+            "mlb_rank": null,
+            "org_rank": 7.0,
+            "pos_rank": 17.0,
+            "score": 0.170075
+          }
+        ],
         "away_wp_score": 0.1610952888888889,
         "home_wp_score": 0.06826120841481464,
         "team_diff_score": 0.06097929888770773,
@@ -4302,9 +4333,10 @@
         "away_milestone_score": 0,
         "home_milestone_score": 0,
         "away_prospect_score": 0,
-        "home_prospect_score": 0,
-        "score_0_to_1": 0.225763475342438,
-        "score": 22.6
+        "home_prospect_score": 0.17007499999999998,
+        "score_0_to_1": 0.29059262525050056,
+        "score": 29.1,
+        "home_war": 0.64537365414428
       }
     ]
   },
