@@ -3345,7 +3345,17 @@
         "home_war_source": "projected",
         "away_win_streak": 1,
         "home_win_streak": 0,
-        "away_career_milestones": [],
+        "away_career_milestones": [
+          {
+            "stat": "doubles",
+            "player": "Mookie Betts",
+            "value": 398,
+            "target": 400,
+            "diff": 2,
+            "milestone_type": "Milestone",
+            "milestone_score": 0.27456618
+          }
+        ],
         "away_season_milestones": [],
         "home_career_milestones": [],
         "home_season_milestones": [],
@@ -3361,12 +3371,13 @@
         "home_playoff_imp_score": 0.07795818933462018,
         "away_win_streak_score": 0,
         "home_win_streak_score": 0,
-        "away_milestone_score": 0,
+        "away_milestone_score": 0.27456618,
         "home_milestone_score": 0,
         "away_prospect_score": 0,
         "home_prospect_score": 0,
-        "score_0_to_1": 0.5401326698647999,
-        "score": 54.0
+        "score_0_to_1": 0.6154228637669269,
+        "score": 61.5,
+        "away_war": 5.410636704119851
       },
       {
         "game_id": 824266,
@@ -3417,7 +3428,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.4559069267287237,
-        "score": 45.6
+        "score": 45.6,
+        "away_war": null,
+        "home_war": 2.6306258144274777
       },
       {
         "game_id": 824103,
@@ -3724,7 +3737,8 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.3877652209898844,
-        "score": 38.8
+        "score": 38.8,
+        "home_war": 1.2754285714285716
       },
       {
         "game_id": 824590,
@@ -3826,7 +3840,8 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.32611896756080805,
-        "score": 32.6
+        "score": 32.6,
+        "home_war": 0.7959375
       },
       {
         "game_id": 823856,
@@ -3877,7 +3892,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.31662571913655035,
-        "score": 31.7
+        "score": 31.7,
+        "away_war": 0.9735482440522182,
+        "home_war": 1.761252446183953
       },
       {
         "game_id": 824348,
@@ -3928,7 +3945,8 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.2997833133548047,
-        "score": 30.0
+        "score": 30.0,
+        "home_war": 0.7428503619318856
       },
       {
         "game_id": 823215,
@@ -3979,7 +3997,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.2945506287158053,
-        "score": 29.5
+        "score": 29.5,
+        "away_war": 1.3475229357798164,
+        "home_war": 0.5374332032714046
       },
       {
         "game_id": 824996,
