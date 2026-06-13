@@ -3283,7 +3283,17 @@
         "home_win_streak": 1,
         "away_career_milestones": [],
         "away_season_milestones": [],
-        "home_career_milestones": [],
+        "home_career_milestones": [
+          {
+            "stat": "home_runs",
+            "player": "George Springer",
+            "value": 299,
+            "target": 300,
+            "diff": 1,
+            "milestone_type": "Milestone",
+            "milestone_score": 0.3828184499999999
+          }
+        ],
         "home_season_milestones": [],
         "away_debuts": [],
         "home_debuts": [],
@@ -3298,11 +3308,12 @@
         "away_win_streak_score": 0,
         "home_win_streak_score": 0,
         "away_milestone_score": 0,
-        "home_milestone_score": 0,
+        "home_milestone_score": 0.3828184499999999,
         "away_prospect_score": 0,
         "home_prospect_score": 0,
-        "score_0_to_1": 0.6985123965541182,
-        "score": 69.9
+        "score_0_to_1": 0.7771190784134193,
+        "score": 77.7,
+        "home_war": 3.9248285322359395
       },
       {
         "game_id": 824426,
@@ -3916,7 +3927,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.3283146105525476,
-        "score": 32.8
+        "score": 32.8,
+        "away_war": 1.2893939393939395,
+        "home_war": 2.085360303413401
       },
       {
         "game_id": 824100,
