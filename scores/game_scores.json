@@ -3311,7 +3311,8 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.6114074205014071,
-        "score": 61.1
+        "score": 61.1,
+        "away_war": 5.620779436716587
       },
       {
         "game_id": 824424,
@@ -3362,7 +3363,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.5801228912392198,
-        "score": 58.0
+        "score": 58.0,
+        "away_war": 4.184470169667623,
+        "home_war": 2.754206527754818
       },
       {
         "game_id": 823368,
@@ -3468,6 +3471,71 @@
         "home_prospect_score": 0,
         "score_0_to_1": 0.5352732682000557,
         "score": 53.5
+      },
+      {
+        "game_id": 823212,
+        "game_datetime": "2026-06-14T19:10:00Z",
+        "national_broadcasts": [
+          "ABC/ESPN App"
+        ],
+        "away_team_name": "Chicago Cubs",
+        "home_team_name": "San Francisco Giants",
+        "away_wins": 37,
+        "home_wins": 28,
+        "away_losses": 34,
+        "home_losses": 43,
+        "away_wp": 0.5266728395061728,
+        "home_wp": 0.457074074074074,
+        "away_starter": "Ryan Rolison",
+        "home_starter": "Logan Webb",
+        "away_current_war": -0.2,
+        "away_projected_war": -0.2,
+        "away_current_ip": 14,
+        "away_projected_ip": 61.2,
+        "away_blended_war": -0.9584313725490197,
+        "away_war_source": "projected",
+        "home_current_war": 0,
+        "home_projected_war": 5.0,
+        "home_current_ip": 0,
+        "home_projected_ip": 200.0,
+        "home_blended_war": 4.5,
+        "home_war_source": "projected",
+        "away_win_streak": 3,
+        "home_win_streak": 0,
+        "away_career_milestones": [],
+        "away_season_milestones": [],
+        "home_career_milestones": [
+          {
+            "stat": "hits",
+            "player": "Willy Adames",
+            "value": 997,
+            "target": 1000,
+            "diff": 3,
+            "milestone_type": "Milestone",
+            "milestone_score": 0.21332115
+          }
+        ],
+        "home_season_milestones": [],
+        "away_debuts": [],
+        "home_debuts": [],
+        "away_wp_score": 0.1622012055555555,
+        "home_wp_score": 0.12605856666666665,
+        "team_diff_score": 0.1138212052692827,
+        "division_score": 0,
+        "away_war_score": 0.02946730227698908,
+        "home_war_score": 0.35653124999999997,
+        "away_playoff_imp_score": 0.08364872135061518,
+        "home_playoff_imp_score": 0.006904413033548079,
+        "away_win_streak_score": 0,
+        "home_win_streak_score": 0,
+        "away_milestone_score": 0,
+        "home_milestone_score": 0.21332114999999996,
+        "away_prospect_score": 0,
+        "home_prospect_score": 0,
+        "score_0_to_1": 0.4610560381490896,
+        "score": 46.1,
+        "away_war": -0.9584313725490197,
+        "home_war": 4.5
       },
       {
         "game_id": 824586,
@@ -3583,59 +3651,6 @@
         "score_0_to_1": 0.39351858984485466,
         "score": 39.4,
         "home_war": 2.5952274770470107
-      },
-      {
-        "game_id": 823212,
-        "game_datetime": "2026-06-14T19:10:00Z",
-        "national_broadcasts": [
-          "ABC/ESPN App"
-        ],
-        "away_team_name": "Chicago Cubs",
-        "home_team_name": "San Francisco Giants",
-        "away_wins": 37,
-        "home_wins": 28,
-        "away_losses": 34,
-        "home_losses": 43,
-        "away_wp": 0.5266728395061728,
-        "home_wp": 0.457074074074074,
-        "away_starter": "Ryan Rolison",
-        "home_starter": "Logan Webb",
-        "away_current_war": -0.2,
-        "away_projected_war": -0.2,
-        "away_current_ip": 14,
-        "away_projected_ip": 61.2,
-        "away_blended_war": -0.9584313725490197,
-        "away_war_source": "projected",
-        "home_current_war": 0,
-        "home_projected_war": 5.0,
-        "home_current_ip": 0,
-        "home_projected_ip": 200.0,
-        "home_blended_war": 4.5,
-        "home_war_source": "projected",
-        "away_win_streak": 3,
-        "home_win_streak": 0,
-        "away_career_milestones": [],
-        "away_season_milestones": [],
-        "home_career_milestones": [],
-        "home_season_milestones": [],
-        "away_debuts": [],
-        "home_debuts": [],
-        "away_wp_score": 0.1622012055555555,
-        "home_wp_score": 0.12605856666666665,
-        "team_diff_score": 0.1138212052692827,
-        "division_score": 0,
-        "away_war_score": 0.02946730227698908,
-        "home_war_score": 0.35653124999999997,
-        "away_playoff_imp_score": 0.08364872135061518,
-        "home_playoff_imp_score": 0.006904413033548079,
-        "away_win_streak_score": 0,
-        "home_win_streak_score": 0,
-        "away_milestone_score": 0,
-        "home_milestone_score": 0,
-        "away_prospect_score": 0,
-        "home_prospect_score": 0,
-        "score_0_to_1": 0.3910329468696482,
-        "score": 39.1
       },
       {
         "game_id": 823693,
@@ -3956,7 +3971,8 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.3124212459259256,
-        "score": 31.2
+        "score": 31.2,
+        "home_war": 3.0270967741935486
       },
       {
         "game_id": 824994,
@@ -4007,7 +4023,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.24994708336778082,
-        "score": 25.0
+        "score": 25.0,
+        "away_war": 0.64537365414428,
+        "home_war": 1.973478606132539
       }
     ]
   },
