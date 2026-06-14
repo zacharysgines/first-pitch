@@ -1980,6 +1980,12 @@ def numeric_score_value(value, default=0):
     except (TypeError, ValueError):
         return default
 
+def proportional_component_points(value, component_total, score):
+    """Allocate the final game score proportionally across raw component scores."""
+    if component_total <= 0:
+        return 0
+    return score * (max(0, min(1, numeric_score_value(value))) / component_total)
+
 def format_breakdown_team_name(team_name):
     """Shorten full MLB team names for the expanded scoring breakdown."""
     team_text = str(team_name).strip()
@@ -2057,6 +2063,10 @@ def format_matchup_strength_breakdown_label():
     """Build the combined matchup-strength label used in the scoring breakdown rows."""
     return "Matchup strength"
 
+def format_division_breakdown_label():
+    """Build the division-rivalry label used in the scoring breakdown rows."""
+    return "Division score"
+
 def format_milestone_breakdown_label(team_name):
     """Build the milestone label used in the scoring breakdown rows."""
     team_text = format_breakdown_team_name(team_name)
@@ -2130,45 +2140,39 @@ elif games:
         home_pitcher_score = numeric_score_value(game.get('home_war_score', game.get('home_era_score', 0)))
         new_score_format = game.get('score_0_to_1') is not None
         if new_score_format:
-            component_values = {}
-            remaining_score = 100
-            components = [
-                ('away_playoff_component', away_playoff_score),
-                ('home_playoff_component', home_playoff_score),
-                ('away_win_streak_component', numeric_score_value(game.get('away_win_streak_score'))),
-                ('home_win_streak_component', numeric_score_value(game.get('home_win_streak_score'))),
-                ('away_wp_component', numeric_score_value(game.get('away_wp_score'))),
-                ('home_wp_component', numeric_score_value(game.get('home_wp_score'))),
-                ('team_diff_component', numeric_score_value(game.get('team_diff_score', game.get('team_diff')))),
-                ('away_pitcher_component', away_pitcher_score),
-                ('home_pitcher_component', home_pitcher_score),
-                ('division_component', numeric_score_value(game.get('division_score'))),
-                ('away_milestone_component', numeric_score_value(game.get('away_milestone_score'))),
-                ('home_milestone_component', numeric_score_value(game.get('home_milestone_score'))),
-                ('away_prospect_component', numeric_score_value(game.get('away_prospect_score'))),
-                ('home_prospect_component', numeric_score_value(game.get('home_prospect_score'))),
+            raw_components = [
+                away_playoff_score,
+                home_playoff_score,
+                numeric_score_value(game.get('away_win_streak_score')),
+                numeric_score_value(game.get('home_win_streak_score')),
+                numeric_score_value(game.get('away_wp_score')),
+                numeric_score_value(game.get('home_wp_score')),
+                numeric_score_value(game.get('team_diff_score', game.get('team_diff'))),
+                away_pitcher_score,
+                home_pitcher_score,
+                numeric_score_value(game.get('division_score')),
+                numeric_score_value(game.get('away_milestone_score')),
+                numeric_score_value(game.get('home_milestone_score')),
+                numeric_score_value(game.get('away_prospect_score')),
+                numeric_score_value(game.get('home_prospect_score')),
             ]
+            component_total = sum(max(0, min(1, component)) for component in raw_components)
 
-            for component_name, component_score in components:
-                component_score = max(0, min(1, component_score))
-                component_values[component_name] = remaining_score * component_score
-                remaining_score *= (1 - component_score)
-
-            away_playoff_component = component_values['away_playoff_component']
-            home_playoff_component = component_values['home_playoff_component']
-            away_wp_component = component_values['away_wp_component']
-            home_wp_component = component_values['home_wp_component']
-            team_diff_component = component_values['team_diff_component']
-            division_component = component_values['division_component']
+            away_playoff_component = proportional_component_points(away_playoff_score, component_total, score)
+            home_playoff_component = proportional_component_points(home_playoff_score, component_total, score)
+            away_wp_component = proportional_component_points(game.get('away_wp_score'), component_total, score)
+            home_wp_component = proportional_component_points(game.get('home_wp_score'), component_total, score)
+            team_diff_component = proportional_component_points(game.get('team_diff_score', game.get('team_diff')), component_total, score)
+            division_component = proportional_component_points(game.get('division_score'), component_total, score)
             wild_card_component = 0
-            away_milestone_component = component_values['away_milestone_component']
-            home_milestone_component = component_values['home_milestone_component']
-            away_prospect_component = component_values['away_prospect_component']
-            home_prospect_component = component_values['home_prospect_component']
-            away_win_streak_component = component_values['away_win_streak_component']
-            home_win_streak_component = component_values['home_win_streak_component']
-            away_pitcher_component = component_values['away_pitcher_component']
-            home_pitcher_component = component_values['home_pitcher_component']
+            away_milestone_component = proportional_component_points(game.get('away_milestone_score'), component_total, score)
+            home_milestone_component = proportional_component_points(game.get('home_milestone_score'), component_total, score)
+            away_prospect_component = proportional_component_points(game.get('away_prospect_score'), component_total, score)
+            home_prospect_component = proportional_component_points(game.get('home_prospect_score'), component_total, score)
+            away_win_streak_component = proportional_component_points(game.get('away_win_streak_score'), component_total, score)
+            home_win_streak_component = proportional_component_points(game.get('home_win_streak_score'), component_total, score)
+            away_pitcher_component = proportional_component_points(away_pitcher_score, component_total, score)
+            home_pitcher_component = proportional_component_points(home_pitcher_score, component_total, score)
         else:
             unadjusted_score = numeric_score_value(game.get('unadjusted_score'))
             if unadjusted_score > 0:
@@ -2208,7 +2212,6 @@ elif games:
             away_wp_component
             + home_wp_component
             + team_diff_component
-            + division_component
             + wild_card_component
         )
 
@@ -2224,6 +2227,10 @@ elif games:
             build_breakdown_row(
                 format_matchup_strength_breakdown_label(),
                 matchup_strength_component,
+            ),
+            build_breakdown_row(
+                format_division_breakdown_label(),
+                division_component,
             ),
             build_breakdown_row(
                 format_milestone_breakdown_label(game["away_team_name"]),
