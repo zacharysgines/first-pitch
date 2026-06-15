@@ -198,11 +198,11 @@ def get_scores(standings, games, gamedate_str):
         if away_team_info['division'] == home_team_info['division']:
             away_gb = away_team_info['games_back']
             home_gb = home_team_info['games_back']
-            min_gb = min(away_gb, home_gb)
-            if min_gb >= 9:
+            max_gb = max(away_gb, home_gb)
+            if max_gb >= 9:
                 div_score = 0
             else:
-                div_score = -0.0002 * min_gb**3 + 0.0066 * min_gb**2 - 0.0808 * min_gb + 0.3379
+                div_score = -0.0002 * max_gb**3 + 0.0066 * max_gb**2 - 0.0808 * max_gb + 0.3379
         else:
             div_score = 0
         #Starting Pitcher WAR
