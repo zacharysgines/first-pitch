@@ -81,7 +81,7 @@ def get_sp_stats(pitcher, team_info, sp_projections, war_lookup, team_name):
 
             if current_ip >= 180:
                 source = 'real'
-            elif current_ip < 50:
+            elif current_ip < 40:
                 source = 'projected'
             else:
                 source = 'pace'
