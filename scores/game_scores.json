@@ -4117,7 +4117,8 @@
         "home_prospect_score": 0,
         "score_0_to_1": 0.34140523193843375,
         "score": 34.1,
-        "home_war": 1.4128649699989044
+        "home_war": 1.4128649699989044,
+        "away_war": 1.6686216498538111
       },
       {
         "game_id": 824017,
@@ -4168,7 +4169,8 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.3315126536148122,
-        "score": 33.2
+        "score": 33.2,
+        "home_war": 2.3629508196721307
       },
       {
         "game_id": 824501,
@@ -4325,7 +4327,8 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.28194548805093056,
-        "score": 28.2
+        "score": 28.2,
+        "home_war": 0.5374332032714046
       },
       {
         "game_id": 823286,
@@ -4340,19 +4343,19 @@
         "away_wp": 0.594320987654321,
         "home_wp": 0.5061111111111112,
         "away_starter": "JR Ritchie",
-        "home_starter": null,
+        "home_starter": "Wandy Peralta",
         "away_current_war": -0.2,
         "away_projected_war": 1.1,
         "away_current_ip": 25.7,
         "away_projected_ip": 118.0,
         "away_blended_war": 0.7839126687733411,
         "away_war_source": "projected",
-        "home_current_war": null,
-        "home_projected_war": null,
-        "home_current_ip": null,
-        "home_projected_ip": null,
-        "home_blended_war": null,
-        "home_war_source": null,
+        "home_current_war": -0.1,
+        "home_projected_war": 0.1,
+        "home_current_ip": 23,
+        "home_projected_ip": 58.0,
+        "home_blended_war": -0.02482758620689654,
+        "home_war_source": "projected",
         "away_win_streak": 0,
         "home_win_streak": 1,
         "away_career_milestones": [],
@@ -4366,7 +4369,7 @@
         "team_diff_score": 0.09720070871825442,
         "division_score": 0,
         "away_war_score": 0.10451456159846856,
-        "home_war_score": 0,
+        "home_war_score": 0.06854592025013388,
         "away_playoff_imp_score": 0.00883374340020937,
         "home_playoff_imp_score": 0.09696235996061636,
         "away_win_streak_score": 0,
@@ -4375,8 +4378,10 @@
         "home_milestone_score": 0,
         "away_prospect_score": 0,
         "home_prospect_score": 0,
-        "score_0_to_1": 0.26302428032780856,
-        "score": 26.3
+        "score_0_to_1": 0.28031557196609047,
+        "score": 28.0,
+        "away_war": 0.7839126687733411,
+        "home_war": -0.02482758620689654
       },
       {
         "game_id": 824340,
@@ -4428,7 +4433,8 @@
         "home_prospect_score": 0,
         "score_0_to_1": 0.26061436269730665,
         "score": 26.1,
-        "home_war": null
+        "home_war": null,
+        "away_war": 3.173999906755238
       }
     ]
   },
