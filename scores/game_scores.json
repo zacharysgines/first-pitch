@@ -4444,7 +4444,8 @@
         "home_prospect_score": 0,
         "score_0_to_1": 0.33667879482385377,
         "score": 33.7,
-        "home_war": 1.3023843723068083
+        "home_war": 1.3023843723068083,
+        "away_war": 2.2961278306048425
       },
       {
         "game_id": 823688,
@@ -4587,7 +4588,17 @@
         "home_career_milestones": [],
         "home_season_milestones": [],
         "away_debuts": [],
-        "home_debuts": [],
+        "home_debuts": [
+          {
+            "name": "Drew Cavanaugh",
+            "org": null,
+            "pos": "C",
+            "mlb_rank": null,
+            "org_rank": null,
+            "pos_rank": null,
+            "score": 0.1
+          }
+        ],
         "away_wp_score": 0.19368937777777773,
         "home_wp_score": 0.1274882444444444,
         "team_diff_score": 0.0680192141542259,
@@ -4602,9 +4613,11 @@
         "away_milestone_score": 0,
         "home_milestone_score": 0,
         "away_prospect_score": 0,
-        "home_prospect_score": 0,
-        "score_0_to_1": 0.22102864709718129,
-        "score": 22.1
+        "home_prospect_score": 0.09999999999999998,
+        "score_0_to_1": 0.2520400552218184,
+        "score": 25.2,
+        "away_war": 1.2346020761245673,
+        "home_war": null
       }
     ]
   },
