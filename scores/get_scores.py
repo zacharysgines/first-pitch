@@ -39,9 +39,6 @@ def combine_component_scores(components, gamma=1.4, single_component_cap=0.90):
         # Dampen smaller values without eliminating them.
         effective_component = component ** gamma
 
-        # Prevent one component from fully maxing out the game.
-        effective_component = min(effective_component, single_component_cap)
-
         remaining *= (1.0 - effective_component)
 
     return 1.0 - remaining
@@ -188,12 +185,12 @@ def get_scores(standings, games, gamedate_str):
         #Team Diff
         team_diff = abs(away_wp - home_wp)
         team_diff_score = min(1, max(0, 1.6081 * team_diff**4 - 4.0586 * team_diff**3 + 3.6602 * team_diff**2 - 1.3977 * team_diff + .1947))
-        # #Min WP
-        # min_wp = min(away_wp, home_wp)
-        # if min_wp < .5:
-        #     min_wp_score = 0
-        # else:
-        #     min_wp_score = 8.9545 * min_wp**2 - 7.0217 * min_wp + 1.3316
+        #Min WP
+        min_wp = min(away_wp, home_wp)
+        if min_wp < .5:
+            min_wp_score = 0
+        else:
+            min_wp_score = 8.9545 * min_wp**2 - 7.0217 * min_wp + 1.3316
         #Divisional Score
         if away_team_info['division'] == home_team_info['division']:
             away_gb = away_team_info['games_back']
@@ -238,6 +235,7 @@ def get_scores(standings, games, gamedate_str):
             team_diff_score,
             away_war_score,
             home_war_score,
+            min_wp_score,
             div_score,
             away_milestone_score,
             home_milestone_score,
@@ -248,7 +246,6 @@ def get_scores(standings, games, gamedate_str):
         score_0_to_1 = combine_component_scores(
             components,
             gamma=1.4,
-            single_component_cap=0.90
         )
 
         score = round(100 * score_0_to_1, 1) 
@@ -291,7 +288,7 @@ def get_scores(standings, games, gamedate_str):
             'away_wp_score': away_wp_score,  
             'home_wp_score': home_wp_score,          
             'team_diff_score': team_diff_score,
-            # 'min_wp_score': min_wp_score,
+            'min_wp_score': min_wp_score,
             'division_score': div_score,
             'away_war_score': away_war_score,
             'home_war_score': home_war_score,
