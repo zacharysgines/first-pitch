@@ -3631,183 +3631,6 @@
         "823931": {
             "away_team": "San Diego Padres",
             "home_team": "Los Angeles Dodgers",
-            "away_lineup": [],
-            "home_lineup": [
-                {
-                    "id": 518692,
-                    "name": "Freddie Freeman",
-                    "position": "1B",
-                    "stats": {
-                        "runs": 51,
-                        "doubles": 22,
-                        "triples": 1,
-                        "home_runs": 15,
-                        "hits": 97,
-                        "steals": 3,
-                        "rbi": 49
-                    }
-                },
-                {
-                    "id": 672613,
-                    "name": "Eliezer Alfonzo",
-                    "position": "C",
-                    "stats": {
-                        "runs": 0,
-                        "doubles": 0,
-                        "triples": 0,
-                        "home_runs": 0,
-                        "hits": 0,
-                        "steals": 0,
-                        "rbi": 0
-                    }
-                },
-                {
-                    "id": 669242,
-                    "name": "Tommy Edman",
-                    "position": "3B",
-                    "stats": {
-                        "runs": 6,
-                        "doubles": 3,
-                        "triples": 1,
-                        "home_runs": 1,
-                        "hits": 17,
-                        "steals": 1,
-                        "rbi": 9
-                    }
-                },
-                {
-                    "id": 660271,
-                    "name": "Shohei Ohtani",
-                    "position": "DH",
-                    "stats": {
-                        "runs": 60,
-                        "doubles": 15,
-                        "triples": 2,
-                        "home_runs": 18,
-                        "hits": 89,
-                        "steals": 6,
-                        "rbi": 50
-                    }
-                },
-                {
-                    "id": 606192,
-                    "name": "Teoscar Hern\u00e1ndez",
-                    "position": "LF",
-                    "stats": {
-                        "runs": 33,
-                        "doubles": 8,
-                        "triples": 0,
-                        "home_runs": 8,
-                        "hits": 53,
-                        "steals": 2,
-                        "rbi": 36
-                    }
-                },
-                {
-                    "id": 681624,
-                    "name": "Andy Pages",
-                    "position": "CF",
-                    "stats": {
-                        "runs": 53,
-                        "doubles": 21,
-                        "triples": 1,
-                        "home_runs": 16,
-                        "hits": 93,
-                        "steals": 8,
-                        "rbi": 63
-                    }
-                },
-                {
-                    "id": 605141,
-                    "name": "Mookie Betts",
-                    "position": "SS",
-                    "stats": {
-                        "runs": 34,
-                        "doubles": 10,
-                        "triples": 0,
-                        "home_runs": 11,
-                        "hits": 53,
-                        "steals": 1,
-                        "rbi": 29
-                    }
-                },
-                {
-                    "id": 669743,
-                    "name": "Alex Call",
-                    "position": "RF",
-                    "stats": {
-                        "runs": 19,
-                        "doubles": 5,
-                        "triples": 0,
-                        "home_runs": 1,
-                        "hits": 28,
-                        "steals": 1,
-                        "rbi": 16
-                    }
-                },
-                {
-                    "id": 500743,
-                    "name": "Miguel Rojas",
-                    "position": "2B",
-                    "stats": {
-                        "runs": 15,
-                        "doubles": 8,
-                        "triples": 0,
-                        "home_runs": 3,
-                        "hits": 37,
-                        "steals": 0,
-                        "rbi": 15
-                    }
-                }
-            ],
-            "away_pitcher": {
-                "id": 676664,
-                "name": "JP Sears",
-                "stats": {
-                    "strikeouts": 9,
-                    "era": "6.97",
-                    "ip": "10.1"
-                }
-            },
-            "home_pitcher": {
-                "id": 686218,
-                "name": "Emmet Sheehan",
-                "stats": {
-                    "strikeouts": 81,
-                    "era": "5.08",
-                    "ip": "72.2"
-                }
-            },
-            "lineup_hash": "441c994147d3f7499f5920b07b9c7c2f"
-        },
-        "824010": {
-            "away_team": "Boston Red Sox",
-            "home_team": "Los Angeles Angels",
-            "away_lineup": [],
-            "home_lineup": [],
-            "away_pitcher": {
-                "id": 624133,
-                "name": "Ranger Suarez",
-                "stats": {
-                    "strikeouts": 92,
-                    "era": "2.94",
-                    "ip": "88.2"
-                }
-            },
-            "home_pitcher": {
-                "id": 696270,
-                "name": "Ryan Johnson",
-                "stats": {
-                    "strikeouts": 18,
-                    "era": "7.40",
-                    "ip": "24.1"
-                }
-            },
-            "lineup_hash": "baf074dd5ceabf3ba8814e67b3f61d67"
-        },
-        "823931": {
-            "away_team": "San Diego Padres",
-            "home_team": "Los Angeles Dodgers",
             "away_lineup": [
                 {
                     "id": 669134,
@@ -4083,6 +3906,183 @@
                 }
             },
             "lineup_hash": "5ab9c396b378ab85f549f1e38c9e0497"
+        },
+        "824010": {
+            "away_team": "Boston Red Sox",
+            "home_team": "Los Angeles Angels",
+            "away_lineup": [],
+            "home_lineup": [],
+            "away_pitcher": {
+                "id": 624133,
+                "name": "Ranger Suarez",
+                "stats": {
+                    "strikeouts": 92,
+                    "era": "2.94",
+                    "ip": "88.2"
+                }
+            },
+            "home_pitcher": {
+                "id": 696270,
+                "name": "Ryan Johnson",
+                "stats": {
+                    "strikeouts": 18,
+                    "era": "7.40",
+                    "ip": "24.1"
+                }
+            },
+            "lineup_hash": "baf074dd5ceabf3ba8814e67b3f61d67"
+        },
+        "824010": {
+            "away_team": "Boston Red Sox",
+            "home_team": "Los Angeles Angels",
+            "away_lineup": [],
+            "home_lineup": [
+                {
+                    "id": 672724,
+                    "name": "Oswald Peraza",
+                    "position": "2B",
+                    "stats": {
+                        "runs": 24,
+                        "doubles": 11,
+                        "triples": 2,
+                        "home_runs": 7,
+                        "hits": 60,
+                        "steals": 9,
+                        "rbi": 22
+                    }
+                },
+                {
+                    "id": 642350,
+                    "name": "Jose Siri",
+                    "position": "CF",
+                    "stats": {
+                        "runs": 18,
+                        "doubles": 3,
+                        "triples": 0,
+                        "home_runs": 5,
+                        "hits": 20,
+                        "steals": 1,
+                        "rbi": 17
+                    }
+                },
+                {
+                    "id": 687263,
+                    "name": "Zach Neto",
+                    "position": "SS",
+                    "stats": {
+                        "runs": 59,
+                        "doubles": 17,
+                        "triples": 2,
+                        "home_runs": 18,
+                        "hits": 77,
+                        "steals": 11,
+                        "rbi": 43
+                    }
+                },
+                {
+                    "id": 624585,
+                    "name": "Jorge Soler",
+                    "position": "DH",
+                    "stats": {
+                        "runs": 31,
+                        "doubles": 10,
+                        "triples": 1,
+                        "home_runs": 11,
+                        "hits": 54,
+                        "steals": 0,
+                        "rbi": 37
+                    }
+                },
+                {
+                    "id": 666176,
+                    "name": "Jo Adell",
+                    "position": "RF",
+                    "stats": {
+                        "runs": 39,
+                        "doubles": 15,
+                        "triples": 1,
+                        "home_runs": 11,
+                        "hits": 83,
+                        "steals": 3,
+                        "rbi": 45
+                    }
+                },
+                {
+                    "id": 694203,
+                    "name": "Denzer Guzman",
+                    "position": "3B",
+                    "stats": {
+                        "runs": 7,
+                        "doubles": 3,
+                        "triples": 0,
+                        "home_runs": 3,
+                        "hits": 21,
+                        "steals": 1,
+                        "rbi": 13
+                    }
+                },
+                {
+                    "id": 687093,
+                    "name": "Vaughn Grissom",
+                    "position": "1B",
+                    "stats": {
+                        "runs": 19,
+                        "doubles": 10,
+                        "triples": 0,
+                        "home_runs": 4,
+                        "hits": 39,
+                        "steals": 0,
+                        "rbi": 30
+                    }
+                },
+                {
+                    "id": 666139,
+                    "name": "Josh Lowe",
+                    "position": "LF",
+                    "stats": {
+                        "runs": 13,
+                        "doubles": 4,
+                        "triples": 0,
+                        "home_runs": 7,
+                        "hits": 33,
+                        "steals": 2,
+                        "rbi": 19
+                    }
+                },
+                {
+                    "id": 681351,
+                    "name": "Logan O'Hoppe",
+                    "position": "C",
+                    "stats": {
+                        "runs": 20,
+                        "doubles": 8,
+                        "triples": 0,
+                        "home_runs": 4,
+                        "hits": 43,
+                        "steals": 0,
+                        "rbi": 23
+                    }
+                }
+            ],
+            "away_pitcher": {
+                "id": 624133,
+                "name": "Ranger Suarez",
+                "stats": {
+                    "strikeouts": 92,
+                    "era": "2.94",
+                    "ip": "88.2"
+                }
+            },
+            "home_pitcher": {
+                "id": 696270,
+                "name": "Ryan Johnson",
+                "stats": {
+                    "strikeouts": 18,
+                    "era": "7.40",
+                    "ip": "24.1"
+                }
+            },
+            "lineup_hash": "79fe8fa3ce77f4d3542ebc5ea8311ed5"
         }
     }
 }
