@@ -4043,7 +4043,8 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.504822906698819,
-        "score": 50.5
+        "score": 50.5,
+        "home_war": 4.229667003027245
       },
       {
         "game_id": 822712,
@@ -4224,7 +4225,8 @@
         "home_prospect_score": 0,
         "score_0_to_1": 0.3937118248076049,
         "score": 39.4,
-        "home_war": 2.430396975425331
+        "home_war": 2.430396975425331,
+        "away_war": 2.2340425531914896
       },
       {
         "game_id": 823282,
@@ -4278,7 +4280,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.34948619969647976,
-        "score": 34.9
+        "score": 34.9,
+        "away_war": 1.264362011060327,
+        "home_war": 1.765215359756103
       },
       {
         "game_id": 823930,
@@ -4310,7 +4314,17 @@
         "home_win_streak": 0,
         "away_career_milestones": [],
         "away_season_milestones": [],
-        "home_career_milestones": [],
+        "home_career_milestones": [
+          {
+            "stat": "home_runs",
+            "player": "Shohei Ohtani",
+            "value": 298,
+            "target": 300,
+            "diff": 2,
+            "milestone_type": "Milestone",
+            "milestone_score": 0.22714799999999996
+          }
+        ],
         "home_season_milestones": [],
         "away_debuts": [],
         "home_debuts": [],
@@ -4326,12 +4340,13 @@
         "away_win_streak_score": 0,
         "home_win_streak_score": 0,
         "away_milestone_score": 0,
-        "home_milestone_score": 0,
+        "home_milestone_score": 0.2271479999999999,
         "away_prospect_score": 0,
         "home_prospect_score": 0,
-        "score_0_to_1": 0.2368301667395919,
-        "score": 23.7,
-        "away_war": 1.1480690452014986
+        "score_0_to_1": 0.33264961798475834,
+        "score": 33.3,
+        "away_war": 1.1480690452014986,
+        "home_war": -1.44
       }
     ]
   },
