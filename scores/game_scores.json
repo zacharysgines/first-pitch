@@ -914,14 +914,14 @@
         "home_losses": 55,
         "away_wp": 0.4958641975308642,
         "home_wp": 0.47686419753086423,
-        "away_starter": null,
+        "away_starter": "Eduardo Rivera",
         "home_starter": "Freddy Peralta",
-        "away_current_war": null,
-        "away_projected_war": null,
-        "away_current_ip": null,
-        "away_projected_ip": null,
-        "away_blended_war": null,
-        "away_war_source": null,
+        "away_current_war": 0.1,
+        "away_projected_war": 0.5,
+        "away_current_ip": 3.3,
+        "away_projected_ip": 77.1,
+        "away_blended_war": 1.3559533073929961,
+        "away_war_source": "projected",
         "home_current_war": 0.8,
         "home_projected_war": 2.7,
         "home_current_ip": 54.3,
@@ -941,7 +941,7 @@
         "team_diff_score": 0.16943740383180017,
         "min_wp_score": 0,
         "division_score": 0,
-        "away_war_score": 0,
+        "away_war_score": 0.13294183929588854,
         "home_war_score": 0.2244745366404324,
         "away_playoff_imp_score": 0.13741575929229113,
         "home_playoff_imp_score": 0.006007704842536488,
@@ -951,8 +951,9 @@
         "home_milestone_score": 0,
         "away_prospect_score": 0,
         "home_prospect_score": 0,
-        "score_0_to_1": 0.5469130941730611,
-        "score": 54.7
+        "score_0_to_1": 0.5737855815539536,
+        "score": 57.4,
+        "away_war": 1.3559533073929961
       },
       {
         "game_id": 822711,
@@ -1222,7 +1223,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.4693958281435272,
-        "score": 46.9
+        "score": 46.9,
+        "away_war": 2.3629508196721307,
+        "home_war": 4.586594800829687
       },
       {
         "game_id": 823926,
@@ -1430,7 +1433,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.3717043823572356,
-        "score": 37.2
+        "score": 37.2,
+        "away_war": 2.6422018348623855,
+        "home_war": 1.2
       },
       {
         "game_id": 823357,
