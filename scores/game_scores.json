@@ -3472,7 +3472,8 @@
         "home_prospect_score": 0,
         "score_0_to_1": 0.943825456558558,
         "score": 94.4,
-        "home_war": 2.6834862385321103
+        "home_war": 2.6834862385321103,
+        "away_war": 2.118728610091502
       },
       {
         "game_id": 824008,
@@ -3699,6 +3700,70 @@
         "home_war": 4.163357895142934
       },
       {
+        "game_id": 825059,
+        "game_datetime": "2026-07-18T20:10:00Z",
+        "national_broadcasts": [],
+        "away_team_name": "St. Louis Cardinals",
+        "home_team_name": "Arizona Diamondbacks",
+        "away_wins": 51,
+        "home_wins": 49,
+        "away_losses": 45,
+        "home_losses": 48,
+        "away_wp": 0.5034444444444444,
+        "home_wp": 0.5030864197530864,
+        "away_starter": "Dustin May",
+        "home_starter": "Brandon Pfaadt",
+        "away_current_war": 0.8,
+        "away_projected_war": 1.3,
+        "away_current_ip": 54,
+        "away_projected_ip": 115.0,
+        "away_blended_war": 2.430396975425331,
+        "away_war_source": "pace",
+        "home_current_war": -0.3,
+        "home_projected_war": 2.2,
+        "home_current_ip": 37,
+        "home_projected_ip": 159.2,
+        "home_blended_war": 1.264362011060327,
+        "home_war_source": "projected",
+        "away_win_streak": 1,
+        "home_win_streak": 0,
+        "away_career_milestones": [],
+        "away_season_milestones": [],
+        "home_career_milestones": [
+          {
+            "stat": "hits",
+            "player": "Nolan Arenado",
+            "value": 1996,
+            "target": 2000,
+            "diff": 4,
+            "milestone_type": "Milestone",
+            "milestone_score": 0.27713699999999997
+          }
+        ],
+        "home_season_milestones": [],
+        "away_debuts": [],
+        "home_debuts": [],
+        "away_wp_score": 0.15013869999999996,
+        "home_wp_score": 0.14995277777777777,
+        "team_diff_score": 0.1942000578732411,
+        "min_wp_score": 0.06542573254839201,
+        "division_score": 0,
+        "away_war_score": 0.19582663554988655,
+        "home_war_score": 0.12818067572488462,
+        "away_playoff_imp_score": 0.1433749430843702,
+        "home_playoff_imp_score": 0.12127019791146043,
+        "away_win_streak_score": 0,
+        "home_win_streak_score": 0,
+        "away_milestone_score": 0,
+        "home_milestone_score": 0.27713699999999997,
+        "away_prospect_score": 0,
+        "home_prospect_score": 0,
+        "score_0_to_1": 0.5135889516196952,
+        "score": 51.4,
+        "away_war": 2.430396975425331,
+        "home_war": 1.264362011060327
+      },
+      {
         "game_id": 823523,
         "game_datetime": "2026-07-19T00:08:00Z",
         "national_broadcasts": [
@@ -3855,8 +3920,10 @@
         "home_milestone_score": 0,
         "away_prospect_score": 0,
         "home_prospect_score": 0,
-        "score_0_to_1": 0.46570177954362646,
-        "score": 46.6
+        "score_0_to_1": 0.4532637792484846,
+        "score": 45.3,
+        "away_war": 3.8836363636363633,
+        "home_war": 2.2340425531914896
       },
       {
         "game_id": 824169,
@@ -3910,58 +3977,6 @@
         "score_0_to_1": 0.4451591453815482,
         "score": 44.5,
         "home_war": 2.361081081081081
-      },
-      {
-        "game_id": 825059,
-        "game_datetime": "2026-07-18T20:10:00Z",
-        "national_broadcasts": [],
-        "away_team_name": "St. Louis Cardinals",
-        "home_team_name": "Arizona Diamondbacks",
-        "away_wins": 51,
-        "home_wins": 49,
-        "away_losses": 45,
-        "home_losses": 48,
-        "away_wp": 0.5034444444444444,
-        "home_wp": 0.5030864197530864,
-        "away_starter": "Dustin May",
-        "home_starter": "Brandon Pfaadt",
-        "away_current_war": 0.8,
-        "away_projected_war": 1.3,
-        "away_current_ip": 54,
-        "away_projected_ip": 115.0,
-        "away_blended_war": 2.430396975425331,
-        "away_war_source": "pace",
-        "home_current_war": -0.3,
-        "home_projected_war": 2.2,
-        "home_current_ip": 37,
-        "home_projected_ip": 159.2,
-        "home_blended_war": 1.264362011060327,
-        "home_war_source": "projected",
-        "away_win_streak": 1,
-        "home_win_streak": 0,
-        "away_career_milestones": [],
-        "away_season_milestones": [],
-        "home_career_milestones": [],
-        "home_season_milestones": [],
-        "away_debuts": [],
-        "home_debuts": [],
-        "away_wp_score": 0.15013869999999996,
-        "home_wp_score": 0.14995277777777777,
-        "team_diff_score": 0.1942000578732411,
-        "min_wp_score": 0.06542573254839201,
-        "division_score": 0,
-        "away_war_score": 0.19582663554988655,
-        "home_war_score": 0.12818067572488462,
-        "away_playoff_imp_score": 0.1433749430843702,
-        "home_playoff_imp_score": 0.12127019791146043,
-        "away_win_streak_score": 0,
-        "home_win_streak_score": 0,
-        "away_milestone_score": 0,
-        "home_milestone_score": 0,
-        "away_prospect_score": 0,
-        "home_prospect_score": 0,
-        "score_0_to_1": 0.4296809769729213,
-        "score": 43.0
       },
       {
         "game_id": 824412,
@@ -4119,7 +4134,8 @@
         "home_prospect_score": 0,
         "score_0_to_1": 0.370189481327746,
         "score": 37.0,
-        "home_war": null
+        "home_war": null,
+        "away_war": 3.0782587528905836
       },
       {
         "game_id": 824979,
@@ -4224,7 +4240,8 @@
         "home_prospect_score": 0,
         "score_0_to_1": 0.2731807926271912,
         "score": 27.3,
-        "away_war": 2.886013031855647
+        "away_war": 2.886013031855647,
+        "home_war": 0.64537365414428
       },
       {
         "game_id": 824088,
@@ -4277,7 +4294,8 @@
         "home_prospect_score": 0,
         "score_0_to_1": 0.23145198174543347,
         "score": 23.1,
-        "home_war": null
+        "home_war": null,
+        "away_war": 0.9331026528258362
       }
     ]
   },
