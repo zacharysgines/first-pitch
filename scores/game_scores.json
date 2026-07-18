@@ -3634,7 +3634,8 @@
         "home_prospect_score": 0,
         "score_0_to_1": 0.5503286030378083,
         "score": 55.0,
-        "home_war": 4.029513112250854
+        "home_war": 4.029513112250854,
+        "away_war": 4.5
       },
       {
         "game_id": 823441,
@@ -3767,9 +3768,7 @@
       {
         "game_id": 823523,
         "game_datetime": "2026-07-19T00:08:00Z",
-        "national_broadcasts": [
-          "FOX"
-        ],
+        "national_broadcasts": [],
         "away_team_name": "Los Angeles Dodgers",
         "home_team_name": "New York Yankees",
         "away_wins": 62,
@@ -3992,14 +3991,14 @@
         "home_losses": 46,
         "away_wp": 0.5116666666666667,
         "home_wp": 0.5005864197530864,
-        "away_starter": null,
+        "away_starter": "Mason Montgomery",
         "home_starter": "Logan Allen",
-        "away_current_war": null,
-        "away_projected_war": null,
-        "away_current_ip": null,
-        "away_projected_ip": null,
-        "away_blended_war": null,
-        "away_war_source": null,
+        "away_current_war": 0.2,
+        "away_projected_war": 1.0,
+        "away_current_ip": 19,
+        "away_projected_ip": 82.1,
+        "away_blended_war": 2.117028014616322,
+        "away_war_source": "projected",
         "home_current_war": 0.1,
         "home_projected_war": 1.4,
         "home_current_ip": 4,
@@ -4019,7 +4018,7 @@
         "team_diff_score": 0.17965701164565523,
         "min_wp_score": 0.06051151144499656,
         "division_score": 0,
-        "away_war_score": 0,
+        "away_war_score": 0.1760692078821242,
         "home_war_score": 0.16325690791812747,
         "away_playoff_imp_score": 0.1431549114913526,
         "home_playoff_imp_score": 0.16302449558631843,
@@ -4029,8 +4028,10 @@
         "home_milestone_score": 0,
         "away_prospect_score": 0,
         "home_prospect_score": 0,
-        "score_0_to_1": 0.3904963817650341,
-        "score": 39.0
+        "score_0_to_1": 0.43289303045821925,
+        "score": 43.3,
+        "away_war": 2.117028014616322,
+        "home_war": 1.902857142857143
       },
       {
         "game_id": 824414,
