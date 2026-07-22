@@ -3335,19 +3335,19 @@
         "away_wp": 0.4978950617283951,
         "home_wp": 0.5166481481481482,
         "away_starter": "Kyle Bradish",
-        "home_starter": null,
+        "home_starter": "Eduardo Rivera",
         "away_current_war": 0.7,
         "away_projected_war": 2.2,
         "away_current_ip": 52.3,
         "away_projected_ip": 100.0,
         "away_blended_war": 2.8785600000000002,
         "away_war_source": "pace",
-        "home_current_war": null,
-        "home_projected_war": null,
-        "home_current_ip": null,
-        "home_projected_ip": null,
-        "home_blended_war": null,
-        "home_war_source": null,
+        "home_current_war": 0.1,
+        "home_projected_war": 0.5,
+        "home_current_ip": 3.3,
+        "home_projected_ip": 77.1,
+        "home_blended_war": 1.3559533073929961,
+        "home_war_source": "projected",
         "away_win_streak": 0,
         "home_win_streak": 14,
         "away_career_milestones": [],
@@ -3362,7 +3362,7 @@
         "min_wp_score": 0,
         "division_score": 0.05987500000000001,
         "away_war_score": 0.22622509969004057,
-        "home_war_score": 0,
+        "home_war_score": 0.13294183929588854,
         "away_playoff_imp_score": 0.15424133756924865,
         "home_playoff_imp_score": 0.12250631221223557,
         "away_win_streak_score": 0,
@@ -3372,7 +3372,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 1.0,
-        "score": 100.0
+        "score": 100.0,
+        "away_war": 2.8785600000000002,
+        "home_war": 1.3559533073929961
       },
       {
         "game_id": 823518,
@@ -3475,8 +3477,9 @@
         "home_milestone_score": 0,
         "away_prospect_score": 0,
         "home_prospect_score": 0,
-        "score_0_to_1": 0.5127184306536638,
-        "score": 51.3
+        "score_0_to_1": 0.4973474504559938,
+        "score": 49.7,
+        "away_war": 1.2071389940508384
       },
       {
         "game_id": 823761,
@@ -3700,7 +3703,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.4543804007448743,
-        "score": 45.4
+        "score": 45.4,
+        "away_war": 2.978065317546302,
+        "home_war": 1.6799999999999997
       },
       {
         "game_id": 824004,
@@ -4130,7 +4135,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.35043858347455037,
-        "score": 35.0
+        "score": 35.0,
+        "away_war": 2.5280981595092027,
+        "home_war": 1.6504918032786886
       },
       {
         "game_id": 824650,
@@ -4184,7 +4191,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.3343586710619122,
-        "score": 33.4
+        "score": 33.4,
+        "away_war": 1.7830602740865047,
+        "home_war": 1.4375035332692634
       }
     ]
   },
