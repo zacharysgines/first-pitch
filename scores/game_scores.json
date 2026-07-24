@@ -3838,8 +3838,10 @@
         "home_milestone_score": 0,
         "away_prospect_score": 0,
         "home_prospect_score": 0,
-        "score_0_to_1": 0.6721310826203983,
-        "score": 67.2
+        "score_0_to_1": 0.6462747435734724,
+        "score": 64.6,
+        "away_war": 5.982262832571889,
+        "home_war": 4.163357895142934
       },
       {
         "game_id": 822872,
@@ -3871,7 +3873,17 @@
         "home_win_streak": 0,
         "away_career_milestones": [],
         "away_season_milestones": [],
-        "home_career_milestones": [],
+        "home_career_milestones": [
+          {
+            "stat": "hits",
+            "player": "Joc Pederson",
+            "value": 999,
+            "target": 1000,
+            "diff": 1,
+            "milestone_type": "Milestone",
+            "milestone_score": 0.24336566999999995
+          }
+        ],
         "home_season_milestones": [],
         "away_debuts": [],
         "home_debuts": [],
@@ -3887,11 +3899,12 @@
         "away_win_streak_score": 0,
         "home_win_streak_score": 0,
         "away_milestone_score": 0,
-        "home_milestone_score": 0,
+        "home_milestone_score": 0.24336566999999998,
         "away_prospect_score": 0,
         "home_prospect_score": 0,
-        "score_0_to_1": 0.5850127530871299,
-        "score": 58.5
+        "score_0_to_1": 0.642397674561495,
+        "score": 64.2,
+        "home_war": 3.0782587528905836
       },
       {
         "game_id": 824573,
@@ -3943,7 +3956,8 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.5505409900783291,
-        "score": 55.1
+        "score": 55.1,
+        "home_war": 4.870107481359748
       },
       {
         "game_id": 824248,
@@ -3996,7 +4010,8 @@
         "home_prospect_score": 0,
         "score_0_to_1": 0.5451122938356168,
         "score": 54.5,
-        "home_war": 6.250600053521676
+        "home_war": 6.250600053521676,
+        "away_war": -1.3595166163141994
       },
       {
         "game_id": 822952,
@@ -4048,7 +4063,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.5073011095923083,
-        "score": 50.7
+        "score": 50.7,
+        "away_war": 2.3517137505515255,
+        "home_war": 4.663241132511194
       },
       {
         "game_id": 824733,
@@ -4102,7 +4119,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.502101304224036,
-        "score": 50.2
+        "score": 50.2,
+        "away_war": 4.50080463029715,
+        "home_war": 2.6834862385321103
       },
       {
         "game_id": 823352,
@@ -4153,8 +4172,9 @@
         "home_milestone_score": 0,
         "away_prospect_score": 0,
         "home_prospect_score": 0,
-        "score_0_to_1": 0.47488018492472317,
-        "score": 47.5
+        "score_0_to_1": 0.4583613502476356,
+        "score": 45.8,
+        "away_war": 3.395085066162571
       },
       {
         "game_id": 823196,
@@ -4209,6 +4229,70 @@
         "score": 44.5
       },
       {
+        "game_id": 823601,
+        "game_datetime": "2026-07-24T23:10:00Z",
+        "national_broadcasts": [],
+        "away_team_name": "Los Angeles Dodgers",
+        "home_team_name": "New York Mets",
+        "away_wins": 65,
+        "home_wins": 43,
+        "away_losses": 38,
+        "home_losses": 60,
+        "away_wp": 0.6259444444444444,
+        "home_wp": 0.4679259259259259,
+        "away_starter": "Roki Sasaki",
+        "home_starter": "Sean Manaea",
+        "away_current_war": 0,
+        "away_projected_war": 1.4,
+        "away_current_ip": 40.7,
+        "away_projected_ip": 89.2,
+        "away_blended_war": 1.292017937219731,
+        "away_war_source": "pace",
+        "home_current_war": 0.1,
+        "home_projected_war": 1.1,
+        "home_current_ip": 27.3,
+        "home_projected_ip": 101.2,
+        "home_blended_war": 1.4899467262416226,
+        "home_war_source": "projected",
+        "away_win_streak": 2,
+        "home_win_streak": 0,
+        "away_career_milestones": [],
+        "away_season_milestones": [],
+        "home_career_milestones": [
+          {
+            "stat": "runs",
+            "player": "Marcus Semien",
+            "value": 999,
+            "target": 1000,
+            "diff": 1,
+            "milestone_type": "Milestone",
+            "milestone_score": 0.31531391999999997
+          }
+        ],
+        "home_season_milestones": [],
+        "away_debuts": [],
+        "home_debuts": [],
+        "away_wp_score": 0.25184497538888895,
+        "home_wp_score": 0.13169393333333335,
+        "team_diff_score": 0.05022079542713412,
+        "min_wp_score": 0,
+        "division_score": 0,
+        "away_war_score": 0.12960931806414366,
+        "home_war_score": 0.140064169808728,
+        "away_playoff_imp_score": 9.348681690246607e-05,
+        "home_playoff_imp_score": 0.005341581369027001,
+        "away_win_streak_score": 0,
+        "home_win_streak_score": 0,
+        "away_milestone_score": 0,
+        "home_milestone_score": 0.3153139199999999,
+        "away_prospect_score": 0,
+        "home_prospect_score": 0,
+        "score_0_to_1": 0.4397817341949454,
+        "score": 44.0,
+        "away_war": 1.292017937219731,
+        "home_war": 1.4899467262416226
+      },
+      {
         "game_id": 823031,
         "game_datetime": "2026-07-25T00:15:00Z",
         "national_broadcasts": [],
@@ -4258,7 +4342,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.4301781184414777,
-        "score": 43.0
+        "score": 43.0,
+        "away_war": 2.886013031855647,
+        "home_war": 2.430396975425331
       },
       {
         "game_id": 823680,
@@ -4363,7 +4449,8 @@
         "home_prospect_score": 0,
         "score_0_to_1": 0.37712721663741666,
         "score": 37.7,
-        "home_war": 1.761252446183953
+        "home_war": 1.761252446183953,
+        "away_war": -0.10332654796567797
       },
       {
         "game_id": 824812,
@@ -4416,7 +4503,8 @@
         "home_prospect_score": 0,
         "score_0_to_1": 0.37283928861423477,
         "score": 37.3,
-        "home_war": 2.5952274770470107
+        "home_war": 2.5952274770470107,
+        "away_war": 0.9475105485232069
       },
       {
         "game_id": 822707,
@@ -4469,59 +4557,8 @@
         "home_prospect_score": 0,
         "score_0_to_1": 0.307179983322286,
         "score": 30.7,
-        "away_war": null
-      },
-      {
-        "game_id": 823601,
-        "game_datetime": "2026-07-24T23:10:00Z",
-        "national_broadcasts": [],
-        "away_team_name": "Los Angeles Dodgers",
-        "home_team_name": "New York Mets",
-        "away_wins": 65,
-        "home_wins": 43,
-        "away_losses": 38,
-        "home_losses": 60,
-        "away_wp": 0.6259444444444444,
-        "home_wp": 0.4679259259259259,
-        "away_starter": "Roki Sasaki",
-        "home_starter": "Sean Manaea",
-        "away_current_war": 0,
-        "away_projected_war": 1.4,
-        "away_current_ip": 40.7,
-        "away_projected_ip": 89.2,
-        "away_blended_war": 1.292017937219731,
-        "away_war_source": "pace",
-        "home_current_war": 0.1,
-        "home_projected_war": 1.1,
-        "home_current_ip": 27.3,
-        "home_projected_ip": 101.2,
-        "home_blended_war": 1.4899467262416226,
-        "home_war_source": "projected",
-        "away_win_streak": 2,
-        "home_win_streak": 0,
-        "away_career_milestones": [],
-        "away_season_milestones": [],
-        "home_career_milestones": [],
-        "home_season_milestones": [],
-        "away_debuts": [],
-        "home_debuts": [],
-        "away_wp_score": 0.25184497538888895,
-        "home_wp_score": 0.13169393333333335,
-        "team_diff_score": 0.05022079542713412,
-        "min_wp_score": 0,
-        "division_score": 0,
-        "away_war_score": 0.12960931806414366,
-        "home_war_score": 0.140064169808728,
-        "away_playoff_imp_score": 9.348681690246607e-05,
-        "home_playoff_imp_score": 0.005341581369027001,
-        "away_win_streak_score": 0,
-        "home_win_streak_score": 0,
-        "away_milestone_score": 0,
-        "home_milestone_score": 0,
-        "away_prospect_score": 0,
-        "home_prospect_score": 0,
-        "score_0_to_1": 0.30084628445958594,
-        "score": 30.1
+        "away_war": null,
+        "home_war": null
       },
       {
         "game_id": 823759,
