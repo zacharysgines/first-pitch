@@ -1,4 +1,5 @@
 import json
+import os
 import subprocess
 from datetime import date
 from pathlib import Path
@@ -17,6 +18,9 @@ PITCHER_WAR_FILE = ROOT_DIR / "starting_pitchers" / "war_lookup.json"
 FANGRAPHS_WAR_SCRIPT = ROOT_DIR / "starting_pitchers" / "get_fwar.r"
 _PITCHER_WAR_REFRESH_ATTEMPTED = False
 _PITCHER_WAR_REFRESH_FAILED = False
+
+def require_fresh_pitcher_war():
+    return os.environ.get("REQUIRE_FRESH_PITCHER_WAR", "").casefold() in ("1", "true", "yes")
 
 def get_pitcher_war_lookup_updated_date():
     if not PITCHER_WAR_FILE.exists():
@@ -161,6 +165,8 @@ def refresh_pitcher_war_lookup_if_needed():
         )
     except OSError as exc:
         _PITCHER_WAR_REFRESH_FAILED = True
+        if require_fresh_pitcher_war():
+            raise
         if PITCHER_WAR_FILE.exists():
             print_cached_war_fallback(exc)
             return None
@@ -169,6 +175,8 @@ def refresh_pitcher_war_lookup_if_needed():
     if result.returncode != 0:
         _PITCHER_WAR_REFRESH_FAILED = True
         error_output = (result.stderr or result.stdout or "").strip()
+        if require_fresh_pitcher_war():
+            raise RuntimeError(error_output or f"Rscript exited with status {result.returncode}")
         if PITCHER_WAR_FILE.exists():
             print_cached_war_fallback(
                 f"Rscript exited with status {result.returncode}"
