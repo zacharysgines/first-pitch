@@ -56,7 +56,15 @@
             "home_team": "Washington Nationals",
             "away_lineup": [],
             "home_lineup": [],
-            "away_pitcher": null,
+            "away_pitcher": {
+                "id": 695534,
+                "name": "Chase Petty",
+                "stats": {
+                    "strikeouts": 14,
+                    "era": "4.50",
+                    "ip": "30.0"
+                }
+            },
             "home_pitcher": {
                 "id": 676917,
                 "name": "Cade Cavalli",
@@ -66,7 +74,7 @@
                     "ip": "122.2"
                 }
             },
-            "lineup_hash": "0c40a0dbc586e89a5a0c84ccf18b997c"
+            "lineup_hash": "3ad2013d1bdec590e13892dbe6af1d5b"
         },
         "823515": {
             "away_team": "Atlanta Braves",
@@ -352,30 +360,30 @@
             "home_pitcher": null,
             "lineup_hash": "43bf76cf4a370d16f8b7e1020131000b"
         },
-        "822699": {
-            "away_team": "Cincinnati Reds",
-            "home_team": "Washington Nationals",
+        "823191": {
+            "away_team": "Detroit Tigers",
+            "home_team": "San Francisco Giants",
             "away_lineup": [],
             "home_lineup": [],
             "away_pitcher": {
-                "id": 695534,
-                "name": "Chase Petty",
+                "id": 672456,
+                "name": "Keider Montero",
                 "stats": {
-                    "strikeouts": 14,
-                    "era": "4.50",
-                    "ip": "30.0"
+                    "strikeouts": 81,
+                    "era": "3.17",
+                    "ip": "116.1"
                 }
             },
             "home_pitcher": {
-                "id": 676917,
-                "name": "Cade Cavalli",
+                "id": 664141,
+                "name": "JT Brubaker",
                 "stats": {
-                    "strikeouts": 133,
-                    "era": "3.52",
-                    "ip": "122.2"
+                    "strikeouts": 36,
+                    "era": "3.17",
+                    "ip": "54.0"
                 }
             },
-            "lineup_hash": "3ad2013d1bdec590e13892dbe6af1d5b"
+            "lineup_hash": "bf65099fba5d4a9f6faeda856854c674"
         }
     }
 }
