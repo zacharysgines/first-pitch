@@ -2112,7 +2112,7 @@ elif games:
             numeric_score_value(game.get('playoff_imp_score')),
             away_playoff_score,
             home_playoff_score,
-        ) >= 0.2
+        ) >= 0.3
         has_division_rivals = numeric_score_value(game.get('division_score')) >= 0.2
         details_html = f'<div class="game-details">{notes_html}</div>' if notes else ""
         broadcast_logos_html = build_broadcast_logos_html(game)
