@@ -4058,7 +4058,17 @@
         "away_season_milestones": [],
         "home_career_milestones": [],
         "home_season_milestones": [],
-        "away_debuts": [],
+        "away_debuts": [
+          {
+            "name": "Brock Rodden",
+            "org": "SEA",
+            "pos": "2B",
+            "mlb_rank": 690,
+            "org_rank": 23,
+            "pos_rank": 30,
+            "score": 0.11557499999999998
+          }
+        ],
         "home_debuts": [],
         "away_wp_score": 0.1410413333333333,
         "home_wp_score": 0.15155555555555555,
@@ -4073,11 +4083,12 @@
         "home_win_streak_score": 0,
         "away_milestone_score": 0,
         "home_milestone_score": 0,
-        "away_prospect_score": 0,
+        "away_prospect_score": 0.11557499999999998,
         "home_prospect_score": 0,
-        "score_0_to_1": 0.5254492404396589,
-        "score": 52.5,
-        "home_war": 3.0079155672823217
+        "score_0_to_1": 0.5485854460834889,
+        "score": 54.9,
+        "home_war": 3.0079155672823217,
+        "away_war": 3.0
       },
       {
         "game_id": 824237,
@@ -4455,7 +4466,8 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.33049659146354327,
-        "score": 33.0
+        "score": 33.0,
+        "away_war": 1.91659272404614
       },
       {
         "game_id": 823993,
