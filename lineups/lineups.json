@@ -5,7 +5,134 @@
             "away_team": "Baltimore Orioles",
             "home_team": "Tampa Bay Rays",
             "away_lineup": [],
-            "home_lineup": [],
+            "home_lineup": [
+                {
+                    "id": 670764,
+                    "name": "Taylor Walls",
+                    "position": "SS",
+                    "stats": {
+                        "runs": 47,
+                        "doubles": 14,
+                        "triples": 2,
+                        "home_runs": 2,
+                        "hits": 65,
+                        "steals": 18,
+                        "rbi": 28
+                    }
+                },
+                {
+                    "id": 622761,
+                    "name": "Jorge Mateo",
+                    "position": "2B",
+                    "stats": {
+                        "runs": 31,
+                        "doubles": 6,
+                        "triples": 0,
+                        "home_runs": 4,
+                        "hits": 31,
+                        "steals": 11,
+                        "rbi": 11
+                    }
+                },
+                {
+                    "id": 668723,
+                    "name": "Ryan Vilade",
+                    "position": "RF",
+                    "stats": {
+                        "runs": 20,
+                        "doubles": 7,
+                        "triples": 1,
+                        "home_runs": 9,
+                        "hits": 43,
+                        "steals": 3,
+                        "rbi": 35
+                    }
+                },
+                {
+                    "id": 802415,
+                    "name": "Chandler Simpson",
+                    "position": "LF",
+                    "stats": {
+                        "runs": 49,
+                        "doubles": 12,
+                        "triples": 6,
+                        "home_runs": 0,
+                        "hits": 131,
+                        "steals": 35,
+                        "rbi": 25
+                    }
+                },
+                {
+                    "id": 676356,
+                    "name": "Jonny DeLuca",
+                    "position": "CF",
+                    "stats": {
+                        "runs": 33,
+                        "doubles": 17,
+                        "triples": 0,
+                        "home_runs": 8,
+                        "hits": 62,
+                        "steals": 14,
+                        "rbi": 34
+                    }
+                },
+                {
+                    "id": 666018,
+                    "name": "Jonathan Aranda",
+                    "position": "1B",
+                    "stats": {
+                        "runs": 58,
+                        "doubles": 19,
+                        "triples": 0,
+                        "home_runs": 15,
+                        "hits": 129,
+                        "steals": 0,
+                        "rbi": 75
+                    }
+                },
+                {
+                    "id": 663743,
+                    "name": "Nick Fortes",
+                    "position": "C",
+                    "stats": {
+                        "runs": 28,
+                        "doubles": 14,
+                        "triples": 0,
+                        "home_runs": 4,
+                        "hits": 67,
+                        "steals": 0,
+                        "rbi": 29
+                    }
+                },
+                {
+                    "id": 650490,
+                    "name": "Yandy D\u00edaz",
+                    "position": "DH",
+                    "stats": {
+                        "runs": 68,
+                        "doubles": 21,
+                        "triples": 1,
+                        "home_runs": 17,
+                        "hits": 140,
+                        "steals": 3,
+                        "rbi": 69
+                    }
+                },
+                {
+                    "id": 691406,
+                    "name": "Junior Caminero",
+                    "position": "3B",
+                    "stats": {
+                        "runs": 77,
+                        "doubles": 18,
+                        "triples": 1,
+                        "home_runs": 35,
+                        "hits": 128,
+                        "steals": 3,
+                        "rbi": 79
+                    }
+                }
+            ],
             "away_pitcher": {
                 "id": 669432,
                 "name": "Trevor Rogers",
@@ -24,12 +151,139 @@
                     "ip": "123.1"
                 }
             },
-            "lineup_hash": "fbac3846fbc5da9b09787e0f5e346619"
+            "lineup_hash": "00885d2a0253d09d4d14c0a29b3e0e21"
         },
         "823344": {
             "away_team": "Boston Red Sox",
             "home_team": "Pittsburgh Pirates",
-            "away_lineup": [],
+            "away_lineup": [
+                {
+                    "id": 678011,
+                    "name": "Anthony Seigler",
+                    "position": "2B",
+                    "stats": {
+                        "runs": 19,
+                        "doubles": 11,
+                        "triples": 0,
+                        "home_runs": 3,
+                        "hits": 34,
+                        "steals": 2,
+                        "rbi": 12
+                    }
+                },
+                {
+                    "id": 657136,
+                    "name": "Connor Wong",
+                    "position": "C",
+                    "stats": {
+                        "runs": 17,
+                        "doubles": 10,
+                        "triples": 0,
+                        "home_runs": 3,
+                        "hits": 39,
+                        "steals": 3,
+                        "rbi": 19
+                    }
+                },
+                {
+                    "id": 668939,
+                    "name": "Adley Rutschman",
+                    "position": "DH",
+                    "stats": {
+                        "runs": 30,
+                        "doubles": 19,
+                        "triples": 1,
+                        "home_runs": 8,
+                        "hits": 63,
+                        "steals": 0,
+                        "rbi": 47
+                    }
+                },
+                {
+                    "id": 677800,
+                    "name": "Wilyer Abreu",
+                    "position": "RF",
+                    "stats": {
+                        "runs": 69,
+                        "doubles": 27,
+                        "triples": 3,
+                        "home_runs": 22,
+                        "hits": 118,
+                        "steals": 8,
+                        "rbi": 65
+                    }
+                },
+                {
+                    "id": 655316,
+                    "name": "Andruw Monasterio",
+                    "position": "SS",
+                    "stats": {
+                        "runs": 31,
+                        "doubles": 22,
+                        "triples": 1,
+                        "home_runs": 6,
+                        "hits": 65,
+                        "steals": 4,
+                        "rbi": 35
+                    }
+                },
+                {
+                    "id": 702332,
+                    "name": "Caleb Durbin",
+                    "position": "3B",
+                    "stats": {
+                        "runs": 59,
+                        "doubles": 22,
+                        "triples": 1,
+                        "home_runs": 12,
+                        "hits": 98,
+                        "steals": 14,
+                        "rbi": 60
+                    }
+                },
+                {
+                    "id": 680776,
+                    "name": "Jarren Duran",
+                    "position": "LF",
+                    "stats": {
+                        "runs": 55,
+                        "doubles": 13,
+                        "triples": 3,
+                        "home_runs": 16,
+                        "hits": 90,
+                        "steals": 17,
+                        "rbi": 61
+                    }
+                },
+                {
+                    "id": 686765,
+                    "name": "Nick Sogard",
+                    "position": "1B",
+                    "stats": {
+                        "runs": 12,
+                        "doubles": 5,
+                        "triples": 1,
+                        "home_runs": 0,
+                        "hits": 24,
+                        "steals": 0,
+                        "rbi": 5
+                    }
+                },
+                {
+                    "id": 678882,
+                    "name": "Ceddanne Rafaela",
+                    "position": "CF",
+                    "stats": {
+                        "runs": 63,
+                        "doubles": 29,
+                        "triples": 3,
+                        "home_runs": 16,
+                        "hits": 133,
+                        "steals": 16,
+                        "rbi": 63
+                    }
+                }
+            ],
             "home_lineup": [],
             "away_pitcher": {
                 "id": 663776,
@@ -49,7 +303,7 @@
                     "ip": "65.2"
                 }
             },
-            "lineup_hash": "c99f2b098b7d89df9b8c164a00734f20"
+            "lineup_hash": "2c7389000affe32e57e74040dfcaf2b5"
         },
         "824880": {
             "away_team": "Arizona Diamondbacks",
@@ -379,7 +633,134 @@
         "822940": {
             "away_team": "Baltimore Orioles",
             "home_team": "Tampa Bay Rays",
-            "away_lineup": [],
+            "away_lineup": [
+                {
+                    "id": 683002,
+                    "name": "Gunnar Henderson",
+                    "position": "SS",
+                    "stats": {
+                        "runs": 74,
+                        "doubles": 21,
+                        "triples": 4,
+                        "home_runs": 20,
+                        "hits": 109,
+                        "steals": 9,
+                        "rbi": 51
+                    }
+                },
+                {
+                    "id": 665750,
+                    "name": "Leody Taveras",
+                    "position": "RF",
+                    "stats": {
+                        "runs": 46,
+                        "doubles": 12,
+                        "triples": 6,
+                        "home_runs": 7,
+                        "hits": 74,
+                        "steals": 10,
+                        "rbi": 44
+                    }
+                },
+                {
+                    "id": 687637,
+                    "name": "Dylan Beavers",
+                    "position": "LF",
+                    "stats": {
+                        "runs": 24,
+                        "doubles": 12,
+                        "triples": 0,
+                        "home_runs": 3,
+                        "hits": 49,
+                        "steals": 5,
+                        "rbi": 24
+                    }
+                },
+                {
+                    "id": 650968,
+                    "name": "Yohel Pozo",
+                    "position": "C",
+                    "stats": {
+                        "runs": 2,
+                        "doubles": 1,
+                        "triples": 0,
+                        "home_runs": 1,
+                        "hits": 11,
+                        "steals": 0,
+                        "rbi": 7
+                    }
+                },
+                {
+                    "id": 624413,
+                    "name": "Pete Alonso",
+                    "position": "DH",
+                    "stats": {
+                        "runs": 75,
+                        "doubles": 22,
+                        "triples": 0,
+                        "home_runs": 27,
+                        "hits": 122,
+                        "steals": 5,
+                        "rbi": 78
+                    }
+                },
+                {
+                    "id": 702616,
+                    "name": "Jackson Holliday",
+                    "position": "2B",
+                    "stats": {
+                        "runs": 28,
+                        "doubles": 8,
+                        "triples": 1,
+                        "home_runs": 6,
+                        "hits": 49,
+                        "steals": 6,
+                        "rbi": 22
+                    }
+                },
+                {
+                    "id": 687952,
+                    "name": "Christian Encarnacion-Strand",
+                    "position": "3B",
+                    "stats": {
+                        "runs": 7,
+                        "doubles": 3,
+                        "triples": 0,
+                        "home_runs": 5,
+                        "hits": 18,
+                        "steals": 1,
+                        "rbi": 15
+                    }
+                },
+                {
+                    "id": 681297,
+                    "name": "Colton Cowser",
+                    "position": "CF",
+                    "stats": {
+                        "runs": 33,
+                        "doubles": 4,
+                        "triples": 0,
+                        "home_runs": 10,
+                        "hits": 53,
+                        "steals": 8,
+                        "rbi": 31
+                    }
+                },
+                {
+                    "id": 691723,
+                    "name": "Coby Mayo",
+                    "position": "1B",
+                    "stats": {
+                        "runs": 40,
+                        "doubles": 11,
+                        "triples": 3,
+                        "home_runs": 15,
+                        "hits": 60,
+                        "steals": 2,
+                        "rbi": 45
+                    }
+                }
+            ],
             "home_lineup": [
                 {
                     "id": 670764,
@@ -526,159 +907,1021 @@
                     "ip": "123.1"
                 }
             },
-            "lineup_hash": "00885d2a0253d09d4d14c0a29b3e0e21"
+            "lineup_hash": "57337bfe43bfcba614a89d383f5a4863"
         },
-        "823344": {
-            "away_team": "Boston Red Sox",
-            "home_team": "Pittsburgh Pirates",
-            "away_lineup": [
+        "824880": {
+            "away_team": "Arizona Diamondbacks",
+            "home_team": "Atlanta Braves",
+            "away_lineup": [],
+            "home_lineup": [
                 {
-                    "id": 678011,
-                    "name": "Anthony Seigler",
-                    "position": "2B",
-                    "stats": {
-                        "runs": 19,
-                        "doubles": 11,
-                        "triples": 0,
-                        "home_runs": 3,
-                        "hits": 34,
-                        "steals": 2,
-                        "rbi": 12
-                    }
-                },
-                {
-                    "id": 657136,
-                    "name": "Connor Wong",
-                    "position": "C",
-                    "stats": {
-                        "runs": 17,
-                        "doubles": 10,
-                        "triples": 0,
-                        "home_runs": 3,
-                        "hits": 39,
-                        "steals": 3,
-                        "rbi": 19
-                    }
-                },
-                {
-                    "id": 668939,
-                    "name": "Adley Rutschman",
-                    "position": "DH",
-                    "stats": {
-                        "runs": 30,
-                        "doubles": 19,
-                        "triples": 1,
-                        "home_runs": 8,
-                        "hits": 63,
-                        "steals": 0,
-                        "rbi": 47
-                    }
-                },
-                {
-                    "id": 677800,
-                    "name": "Wilyer Abreu",
-                    "position": "RF",
-                    "stats": {
-                        "runs": 69,
-                        "doubles": 27,
-                        "triples": 3,
-                        "home_runs": 22,
-                        "hits": 118,
-                        "steals": 8,
-                        "rbi": 65
-                    }
-                },
-                {
-                    "id": 655316,
-                    "name": "Andruw Monasterio",
-                    "position": "SS",
-                    "stats": {
-                        "runs": 31,
-                        "doubles": 22,
-                        "triples": 1,
-                        "home_runs": 6,
-                        "hits": 65,
-                        "steals": 4,
-                        "rbi": 35
-                    }
-                },
-                {
-                    "id": 702332,
-                    "name": "Caleb Durbin",
-                    "position": "3B",
+                    "id": 671739,
+                    "name": "Michael Harris II",
+                    "position": "CF",
                     "stats": {
                         "runs": 59,
-                        "doubles": 22,
+                        "doubles": 25,
                         "triples": 1,
-                        "home_runs": 12,
-                        "hits": 98,
-                        "steals": 14,
-                        "rbi": 60
+                        "home_runs": 20,
+                        "hits": 128,
+                        "steals": 6,
+                        "rbi": 68
                     }
                 },
                 {
-                    "id": 680776,
-                    "name": "Jarren Duran",
-                    "position": "LF",
+                    "id": 686948,
+                    "name": "Drake Baldwin",
+                    "position": "C",
                     "stats": {
-                        "runs": 55,
-                        "doubles": 13,
-                        "triples": 3,
-                        "home_runs": 16,
-                        "hits": 90,
-                        "steals": 17,
+                        "runs": 65,
+                        "doubles": 9,
+                        "triples": 0,
+                        "home_runs": 20,
+                        "hits": 107,
+                        "steals": 2,
                         "rbi": 61
                     }
                 },
                 {
-                    "id": 686765,
-                    "name": "Nick Sogard",
-                    "position": "1B",
+                    "id": 805347,
+                    "name": "Jim Jarvis",
+                    "position": "SS",
                     "stats": {
-                        "runs": 12,
+                        "runs": 10,
                         "doubles": 5,
                         "triples": 1,
-                        "home_runs": 0,
-                        "hits": 24,
+                        "home_runs": 1,
+                        "hits": 22,
                         "steals": 0,
-                        "rbi": 5
+                        "rbi": 11
                     }
                 },
                 {
-                    "id": 678882,
-                    "name": "Ceddanne Rafaela",
-                    "position": "CF",
+                    "id": 621566,
+                    "name": "Matt Olson",
+                    "position": "1B",
                     "stats": {
-                        "runs": 63,
-                        "doubles": 29,
-                        "triples": 3,
-                        "home_runs": 16,
-                        "hits": 133,
-                        "steals": 16,
-                        "rbi": 63
+                        "runs": 87,
+                        "doubles": 30,
+                        "triples": 0,
+                        "home_runs": 35,
+                        "hits": 126,
+                        "steals": 2,
+                        "rbi": 74
+                    }
+                },
+                {
+                    "id": 642086,
+                    "name": "Dominic Smith",
+                    "position": "DH",
+                    "stats": {
+                        "runs": 38,
+                        "doubles": 6,
+                        "triples": 1,
+                        "home_runs": 8,
+                        "hits": 65,
+                        "steals": 0,
+                        "rbi": 44
+                    }
+                },
+                {
+                    "id": 660670,
+                    "name": "Ronald Acu\u00f1a Jr.",
+                    "position": "RF",
+                    "stats": {
+                        "runs": 43,
+                        "doubles": 11,
+                        "triples": 1,
+                        "home_runs": 13,
+                        "hits": 65,
+                        "steals": 15,
+                        "rbi": 31
+                    }
+                },
+                {
+                    "id": 645277,
+                    "name": "Ozzie Albies",
+                    "position": "2B",
+                    "stats": {
+                        "runs": 72,
+                        "doubles": 22,
+                        "triples": 0,
+                        "home_runs": 20,
+                        "hits": 119,
+                        "steals": 2,
+                        "rbi": 64
+                    }
+                },
+                {
+                    "id": 663586,
+                    "name": "Austin Riley",
+                    "position": "3B",
+                    "stats": {
+                        "runs": 50,
+                        "doubles": 18,
+                        "triples": 1,
+                        "home_runs": 15,
+                        "hits": 97,
+                        "steals": 7,
+                        "rbi": 58
+                    }
+                },
+                {
+                    "id": 573262,
+                    "name": "Mike Yastrzemski",
+                    "position": "LF",
+                    "stats": {
+                        "runs": 40,
+                        "doubles": 16,
+                        "triples": 1,
+                        "home_runs": 9,
+                        "hits": 63,
+                        "steals": 1,
+                        "rbi": 34
                     }
                 }
             ],
-            "home_lineup": [],
             "away_pitcher": {
-                "id": 663776,
-                "name": "Patrick Sandoval",
+                "id": 647336,
+                "name": "Michael Soroka",
                 "stats": {
-                    "strikeouts": 29,
-                    "era": "3.30",
-                    "ip": "30.0"
+                    "strikeouts": 83,
+                    "era": "2.92",
+                    "ip": "86.1"
                 }
             },
             "home_pitcher": {
-                "id": 669199,
-                "name": "Lake Bachar",
+                "id": 693821,
+                "name": "Bryce Elder",
                 "stats": {
-                    "strikeouts": 68,
-                    "era": "3.97",
-                    "ip": "65.2"
+                    "strikeouts": 108,
+                    "era": "4.03",
+                    "ip": "131.2"
                 }
             },
-            "lineup_hash": "2c7389000affe32e57e74040dfcaf2b5"
+            "lineup_hash": "88617761fb55984c82f5ddd85f5d65c0"
+        },
+        "822774": {
+            "away_team": "New York Yankees",
+            "home_team": "Toronto Blue Jays",
+            "away_lineup": [],
+            "home_lineup": [
+                {
+                    "id": 676391,
+                    "name": "Ernie Clement",
+                    "position": "2B",
+                    "stats": {
+                        "runs": 51,
+                        "doubles": 28,
+                        "triples": 1,
+                        "home_runs": 9,
+                        "hits": 132,
+                        "steals": 5,
+                        "rbi": 42
+                    }
+                },
+                {
+                    "id": 807727,
+                    "name": "Charles McAdoo",
+                    "position": "1B",
+                    "stats": {
+                        "runs": 3,
+                        "doubles": 1,
+                        "triples": 0,
+                        "home_runs": 2,
+                        "hits": 9,
+                        "steals": 0,
+                        "rbi": 7
+                    }
+                },
+                {
+                    "id": 665926,
+                    "name": "Andr\u00e9s Gim\u00e9nez",
+                    "position": "SS",
+                    "stats": {
+                        "runs": 34,
+                        "doubles": 19,
+                        "triples": 1,
+                        "home_runs": 8,
+                        "hits": 89,
+                        "steals": 16,
+                        "rbi": 48
+                    }
+                },
+                {
+                    "id": 703520,
+                    "name": "Brett Bateman",
+                    "position": "RF",
+                    "stats": {
+                        "runs": 3,
+                        "doubles": 2,
+                        "triples": 0,
+                        "home_runs": 0,
+                        "hits": 11,
+                        "steals": 0,
+                        "rbi": 3
+                    }
+                },
+                {
+                    "id": 543807,
+                    "name": "George Springer",
+                    "position": "DH",
+                    "stats": {
+                        "runs": 44,
+                        "doubles": 14,
+                        "triples": 2,
+                        "home_runs": 12,
+                        "hits": 80,
+                        "steals": 9,
+                        "rbi": 37
+                    }
+                },
+                {
+                    "id": 663662,
+                    "name": "Daz Cameron",
+                    "position": "LF",
+                    "stats": {
+                        "runs": 0,
+                        "doubles": 0,
+                        "triples": 0,
+                        "home_runs": 0,
+                        "hits": 0,
+                        "steals": 0,
+                        "rbi": 0
+                    }
+                },
+                {
+                    "id": 664702,
+                    "name": "Myles Straw",
+                    "position": "CF",
+                    "stats": {
+                        "runs": 34,
+                        "doubles": 13,
+                        "triples": 1,
+                        "home_runs": 3,
+                        "hits": 48,
+                        "steals": 7,
+                        "rbi": 21
+                    }
+                },
+                {
+                    "id": 672386,
+                    "name": "Alejandro Kirk",
+                    "position": "C",
+                    "stats": {
+                        "runs": 12,
+                        "doubles": 5,
+                        "triples": 0,
+                        "home_runs": 5,
+                        "hits": 44,
+                        "steals": 0,
+                        "rbi": 22
+                    }
+                },
+                {
+                    "id": 672960,
+                    "name": "Kazuma Okamoto",
+                    "position": "3B",
+                    "stats": {
+                        "runs": 63,
+                        "doubles": 16,
+                        "triples": 0,
+                        "home_runs": 24,
+                        "hits": 100,
+                        "steals": 1,
+                        "rbi": 71
+                    }
+                }
+            ],
+            "away_pitcher": {
+                "id": 677960,
+                "name": "Ryan Weathers",
+                "stats": {
+                    "strikeouts": 136,
+                    "era": "3.69",
+                    "ip": "126.2"
+                }
+            },
+            "home_pitcher": {
+                "id": 656302,
+                "name": "Dylan Cease",
+                "stats": {
+                    "strikeouts": 191,
+                    "era": "2.40",
+                    "ip": "131.1"
+                }
+            },
+            "lineup_hash": "2722e70996b38f4cc4bd8e2639e2b523"
+        },
+        "824397": {
+            "away_team": "San Diego Padres",
+            "home_team": "Cleveland Guardians",
+            "away_lineup": [
+                {
+                    "id": 650859,
+                    "name": "Luis Rengifo",
+                    "position": "3B",
+                    "stats": {
+                        "runs": 34,
+                        "doubles": 11,
+                        "triples": 0,
+                        "home_runs": 3,
+                        "hits": 66,
+                        "steals": 6,
+                        "rbi": 31
+                    }
+                },
+                {
+                    "id": 666023,
+                    "name": "Freddy Fermin",
+                    "position": "C",
+                    "stats": {
+                        "runs": 18,
+                        "doubles": 10,
+                        "triples": 0,
+                        "home_runs": 4,
+                        "hits": 35,
+                        "steals": 0,
+                        "rbi": 16
+                    }
+                },
+                {
+                    "id": 701538,
+                    "name": "Jackson Merrill",
+                    "position": "CF",
+                    "stats": {
+                        "runs": 64,
+                        "doubles": 20,
+                        "triples": 2,
+                        "home_runs": 19,
+                        "hits": 114,
+                        "steals": 24,
+                        "rbi": 63
+                    }
+                },
+                {
+                    "id": 657757,
+                    "name": "Gavin Sheets",
+                    "position": "LF",
+                    "stats": {
+                        "runs": 44,
+                        "doubles": 15,
+                        "triples": 0,
+                        "home_runs": 15,
+                        "hits": 71,
+                        "steals": 4,
+                        "rbi": 44
+                    }
+                },
+                {
+                    "id": 592518,
+                    "name": "Manny Machado",
+                    "position": "DH",
+                    "stats": {
+                        "runs": 62,
+                        "doubles": 20,
+                        "triples": 0,
+                        "home_runs": 23,
+                        "hits": 96,
+                        "steals": 2,
+                        "rbi": 70
+                    }
+                },
+                {
+                    "id": 664034,
+                    "name": "Ty France",
+                    "position": "1B",
+                    "stats": {
+                        "runs": 43,
+                        "doubles": 16,
+                        "triples": 2,
+                        "home_runs": 17,
+                        "hits": 92,
+                        "steals": 1,
+                        "rbi": 51
+                    }
+                },
+                {
+                    "id": 665487,
+                    "name": "Fernando Tatis Jr.",
+                    "position": "RF",
+                    "stats": {
+                        "runs": 69,
+                        "doubles": 25,
+                        "triples": 2,
+                        "home_runs": 13,
+                        "hits": 132,
+                        "steals": 28,
+                        "rbi": 56
+                    }
+                },
+                {
+                    "id": 593428,
+                    "name": "Xander Bogaerts",
+                    "position": "SS",
+                    "stats": {
+                        "runs": 48,
+                        "doubles": 11,
+                        "triples": 0,
+                        "home_runs": 11,
+                        "hits": 89,
+                        "steals": 16,
+                        "rbi": 45
+                    }
+                },
+                {
+                    "id": 630105,
+                    "name": "Jake Cronenworth",
+                    "position": "2B",
+                    "stats": {
+                        "runs": 30,
+                        "doubles": 7,
+                        "triples": 0,
+                        "home_runs": 3,
+                        "hits": 54,
+                        "steals": 7,
+                        "rbi": 19
+                    }
+                }
+            ],
+            "home_lineup": [
+                {
+                    "id": 800050,
+                    "name": "Chase DeLauter",
+                    "position": "RF",
+                    "stats": {
+                        "runs": 49,
+                        "doubles": 22,
+                        "triples": 1,
+                        "home_runs": 13,
+                        "hits": 115,
+                        "steals": 9,
+                        "rbi": 57
+                    }
+                },
+                {
+                    "id": 595978,
+                    "name": "Austin Hedges",
+                    "position": "C",
+                    "stats": {
+                        "runs": 19,
+                        "doubles": 7,
+                        "triples": 0,
+                        "home_runs": 4,
+                        "hits": 43,
+                        "steals": 1,
+                        "rbi": 19
+                    }
+                },
+                {
+                    "id": 663993,
+                    "name": "Nathaniel Lowe",
+                    "position": "1B",
+                    "stats": {
+                        "runs": 29,
+                        "doubles": 19,
+                        "triples": 0,
+                        "home_runs": 14,
+                        "hits": 75,
+                        "steals": 0,
+                        "rbi": 45
+                    }
+                },
+                {
+                    "id": 683953,
+                    "name": "Travis Bazzana",
+                    "position": "2B",
+                    "stats": {
+                        "runs": 37,
+                        "doubles": 15,
+                        "triples": 2,
+                        "home_runs": 9,
+                        "hits": 79,
+                        "steals": 17,
+                        "rbi": 36
+                    }
+                },
+                {
+                    "id": 677587,
+                    "name": "Brayan Rocchio",
+                    "position": "SS",
+                    "stats": {
+                        "runs": 45,
+                        "doubles": 18,
+                        "triples": 2,
+                        "home_runs": 10,
+                        "hits": 107,
+                        "steals": 15,
+                        "rbi": 51
+                    }
+                },
+                {
+                    "id": 666176,
+                    "name": "Jo Adell",
+                    "position": "LF",
+                    "stats": {
+                        "runs": 51,
+                        "doubles": 20,
+                        "triples": 1,
+                        "home_runs": 18,
+                        "hits": 108,
+                        "steals": 3,
+                        "rbi": 67
+                    }
+                },
+                {
+                    "id": 608070,
+                    "name": "Jos\u00e9 Ram\u00edrez",
+                    "position": "3B",
+                    "stats": {
+                        "runs": 54,
+                        "doubles": 19,
+                        "triples": 0,
+                        "home_runs": 10,
+                        "hits": 77,
+                        "steals": 29,
+                        "rbi": 38
+                    }
+                },
+                {
+                    "id": 680757,
+                    "name": "Steven Kwan",
+                    "position": "CF",
+                    "stats": {
+                        "runs": 54,
+                        "doubles": 15,
+                        "triples": 2,
+                        "home_runs": 2,
+                        "hits": 106,
+                        "steals": 9,
+                        "rbi": 23
+                    }
+                },
+                {
+                    "id": 656555,
+                    "name": "Rhys Hoskins",
+                    "position": "DH",
+                    "stats": {
+                        "runs": 33,
+                        "doubles": 13,
+                        "triples": 0,
+                        "home_runs": 13,
+                        "hits": 46,
+                        "steals": 1,
+                        "rbi": 38
+                    }
+                }
+            ],
+            "away_pitcher": {
+                "id": 663554,
+                "name": "Casey Mize",
+                "stats": {
+                    "strikeouts": 92,
+                    "era": "3.38",
+                    "ip": "96.0"
+                }
+            },
+            "home_pitcher": {
+                "id": 676440,
+                "name": "Tanner Bibee",
+                "stats": {
+                    "strikeouts": 114,
+                    "era": "3.99",
+                    "ip": "144.1"
+                }
+            },
+            "lineup_hash": "829d84a19ca2990da16a5ab1cab07ae2"
+        },
+        "824236": {
+            "away_team": "Chicago White Sox",
+            "home_team": "Detroit Tigers",
+            "away_lineup": [
+                {
+                    "id": 671976,
+                    "name": "Tristan Peters",
+                    "position": "CF",
+                    "stats": {
+                        "runs": 44,
+                        "doubles": 23,
+                        "triples": 3,
+                        "home_runs": 7,
+                        "hits": 88,
+                        "steals": 6,
+                        "rbi": 42
+                    }
+                },
+                {
+                    "id": 808959,
+                    "name": "Munetaka Murakami",
+                    "position": "1B",
+                    "stats": {
+                        "runs": 63,
+                        "doubles": 13,
+                        "triples": 0,
+                        "home_runs": 27,
+                        "hits": 73,
+                        "steals": 1,
+                        "rbi": 55
+                    }
+                },
+                {
+                    "id": 805367,
+                    "name": "Chase Meidroth",
+                    "position": "2B",
+                    "stats": {
+                        "runs": 71,
+                        "doubles": 24,
+                        "triples": 0,
+                        "home_runs": 12,
+                        "hits": 121,
+                        "steals": 2,
+                        "rbi": 49
+                    }
+                },
+                {
+                    "id": 695657,
+                    "name": "Colson Montgomery",
+                    "position": "SS",
+                    "stats": {
+                        "runs": 56,
+                        "doubles": 19,
+                        "triples": 0,
+                        "home_runs": 26,
+                        "hits": 92,
+                        "steals": 1,
+                        "rbi": 70
+                    }
+                },
+                {
+                    "id": 691011,
+                    "name": "Drew Romo",
+                    "position": "C",
+                    "stats": {
+                        "runs": 13,
+                        "doubles": 5,
+                        "triples": 0,
+                        "home_runs": 6,
+                        "hits": 20,
+                        "steals": 1,
+                        "rbi": 13
+                    }
+                },
+                {
+                    "id": 695731,
+                    "name": "Braden Montgomery",
+                    "position": "RF",
+                    "stats": {
+                        "runs": 30,
+                        "doubles": 10,
+                        "triples": 3,
+                        "home_runs": 4,
+                        "hits": 47,
+                        "steals": 1,
+                        "rbi": 28
+                    }
+                },
+                {
+                    "id": 643217,
+                    "name": "Andrew Benintendi",
+                    "position": "DH",
+                    "stats": {
+                        "runs": 47,
+                        "doubles": 18,
+                        "triples": 2,
+                        "home_runs": 12,
+                        "hits": 82,
+                        "steals": 1,
+                        "rbi": 60
+                    }
+                },
+                {
+                    "id": 803011,
+                    "name": "Sam Antonacci",
+                    "position": "LF",
+                    "stats": {
+                        "runs": 63,
+                        "doubles": 18,
+                        "triples": 2,
+                        "home_runs": 8,
+                        "hits": 98,
+                        "steals": 15,
+                        "rbi": 35
+                    }
+                },
+                {
+                    "id": 678246,
+                    "name": "Miguel Vargas",
+                    "position": "3B",
+                    "stats": {
+                        "runs": 82,
+                        "doubles": 28,
+                        "triples": 1,
+                        "home_runs": 27,
+                        "hits": 107,
+                        "steals": 12,
+                        "rbi": 71
+                    }
+                }
+            ],
+            "home_lineup": [
+                {
+                    "id": 814430,
+                    "name": "Brett Callahan",
+                    "position": "LF",
+                    "stats": {
+                        "runs": 0,
+                        "doubles": 0,
+                        "triples": 0,
+                        "home_runs": 0,
+                        "hits": 0,
+                        "steals": 0,
+                        "rbi": 0
+                    }
+                },
+                {
+                    "id": 656716,
+                    "name": "Zach McKinstry",
+                    "position": "RF",
+                    "stats": {
+                        "runs": 32,
+                        "doubles": 13,
+                        "triples": 3,
+                        "home_runs": 4,
+                        "hits": 64,
+                        "steals": 1,
+                        "rbi": 24
+                    }
+                },
+                {
+                    "id": 595879,
+                    "name": "Javier B\u00e1ez",
+                    "position": "SS",
+                    "stats": {
+                        "runs": 19,
+                        "doubles": 7,
+                        "triples": 0,
+                        "home_runs": 2,
+                        "hits": 35,
+                        "steals": 1,
+                        "rbi": 14
+                    }
+                },
+                {
+                    "id": 805808,
+                    "name": "Kevin McGonigle",
+                    "position": "3B",
+                    "stats": {
+                        "runs": 80,
+                        "doubles": 21,
+                        "triples": 3,
+                        "home_runs": 12,
+                        "hits": 129,
+                        "steals": 12,
+                        "rbi": 48
+                    }
+                },
+                {
+                    "id": 679529,
+                    "name": "Spencer Torkelson",
+                    "position": "1B",
+                    "stats": {
+                        "runs": 53,
+                        "doubles": 21,
+                        "triples": 0,
+                        "home_runs": 20,
+                        "hits": 97,
+                        "steals": 0,
+                        "rbi": 63
+                    }
+                },
+                {
+                    "id": 650402,
+                    "name": "Gleyber Torres",
+                    "position": "2B",
+                    "stats": {
+                        "runs": 40,
+                        "doubles": 9,
+                        "triples": 0,
+                        "home_runs": 8,
+                        "hits": 66,
+                        "steals": 0,
+                        "rbi": 33
+                    }
+                },
+                {
+                    "id": 703601,
+                    "name": "Max Clark",
+                    "position": "CF",
+                    "stats": {
+                        "runs": 7,
+                        "doubles": 2,
+                        "triples": 2,
+                        "home_runs": 1,
+                        "hits": 14,
+                        "steals": 0,
+                        "rbi": 7
+                    }
+                },
+                {
+                    "id": 693307,
+                    "name": "Dillon Dingler",
+                    "position": "C",
+                    "stats": {
+                        "runs": 65,
+                        "doubles": 23,
+                        "triples": 2,
+                        "home_runs": 26,
+                        "hits": 113,
+                        "steals": 0,
+                        "rbi": 81
+                    }
+                },
+                {
+                    "id": 690993,
+                    "name": "Colt Keith",
+                    "position": "DH",
+                    "stats": {
+                        "runs": 42,
+                        "doubles": 15,
+                        "triples": 4,
+                        "home_runs": 8,
+                        "hits": 85,
+                        "steals": 5,
+                        "rbi": 31
+                    }
+                }
+            ],
+            "away_pitcher": {
+                "id": 680732,
+                "name": "Sean Burke",
+                "stats": {
+                    "strikeouts": 152,
+                    "era": "2.99",
+                    "ip": "135.2"
+                }
+            },
+            "home_pitcher": {
+                "id": 623454,
+                "name": "Drew Anderson",
+                "stats": {
+                    "strikeouts": 82,
+                    "era": "3.91",
+                    "ip": "71.1"
+                }
+            },
+            "lineup_hash": "4ece14e627aa3b9b70a11436b7db9c34"
+        },
+        "824477": {
+            "away_team": "Miami Marlins",
+            "home_team": "Cincinnati Reds",
+            "away_lineup": [],
+            "home_lineup": [
+                {
+                    "id": 682829,
+                    "name": "Elly De La Cruz",
+                    "position": "SS",
+                    "stats": {
+                        "runs": 68,
+                        "doubles": 18,
+                        "triples": 5,
+                        "home_runs": 20,
+                        "hits": 107,
+                        "steals": 21,
+                        "rbi": 56
+                    }
+                },
+                {
+                    "id": 701398,
+                    "name": "Sal Stewart",
+                    "position": "1B",
+                    "stats": {
+                        "runs": 68,
+                        "doubles": 23,
+                        "triples": 0,
+                        "home_runs": 26,
+                        "hits": 121,
+                        "steals": 12,
+                        "rbi": 91
+                    }
+                },
+                {
+                    "id": 669911,
+                    "name": "Michael Toglia",
+                    "position": "RF",
+                    "stats": {
+                        "runs": 1,
+                        "doubles": 1,
+                        "triples": 0,
+                        "home_runs": 0,
+                        "hits": 2,
+                        "steals": 0,
+                        "rbi": 0
+                    }
+                },
+                {
+                    "id": 680574,
+                    "name": "Matt McLain",
+                    "position": "2B",
+                    "stats": {
+                        "runs": 42,
+                        "doubles": 16,
+                        "triples": 0,
+                        "home_runs": 11,
+                        "hits": 62,
+                        "steals": 14,
+                        "rbi": 29
+                    }
+                },
+                {
+                    "id": 663647,
+                    "name": "Ke'Bryan Hayes",
+                    "position": "3B",
+                    "stats": {
+                        "runs": 17,
+                        "doubles": 2,
+                        "triples": 1,
+                        "home_runs": 5,
+                        "hits": 26,
+                        "steals": 1,
+                        "rbi": 8
+                    }
+                },
+                {
+                    "id": 670770,
+                    "name": "TJ Friedl",
+                    "position": "CF",
+                    "stats": {
+                        "runs": 19,
+                        "doubles": 6,
+                        "triples": 1,
+                        "home_runs": 3,
+                        "hits": 34,
+                        "steals": 5,
+                        "rbi": 11
+                    }
+                },
+                {
+                    "id": 624431,
+                    "name": "Jose Trevino",
+                    "position": "C",
+                    "stats": {
+                        "runs": 10,
+                        "doubles": 3,
+                        "triples": 0,
+                        "home_runs": 4,
+                        "hits": 22,
+                        "steals": 0,
+                        "rbi": 12
+                    }
+                },
+                {
+                    "id": 553993,
+                    "name": "Eugenio Su\u00e1rez",
+                    "position": "DH",
+                    "stats": {
+                        "runs": 31,
+                        "doubles": 15,
+                        "triples": 0,
+                        "home_runs": 18,
+                        "hits": 66,
+                        "steals": 0,
+                        "rbi": 49
+                    }
+                },
+                {
+                    "id": 668709,
+                    "name": "JJ Bleday",
+                    "position": "LF",
+                    "stats": {
+                        "runs": 45,
+                        "doubles": 13,
+                        "triples": 1,
+                        "home_runs": 20,
+                        "hits": 73,
+                        "steals": 6,
+                        "rbi": 47
+                    }
+                }
+            ],
+            "away_pitcher": {
+                "id": 691587,
+                "name": "Eury P\u00e9rez",
+                "stats": {
+                    "strikeouts": 128,
+                    "era": "3.39",
+                    "ip": "116.2"
+                }
+            },
+            "home_pitcher": {
+                "id": 666157,
+                "name": "Nick Lodolo",
+                "stats": {
+                    "strikeouts": 55,
+                    "era": "4.86",
+                    "ip": "66.2"
+                }
+            },
+            "lineup_hash": "fff5cdfde348b08f25f2769bbf34d10b"
         }
     }
 }
