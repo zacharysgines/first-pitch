@@ -5,17 +5,168 @@
             "away_team": "St. Louis Cardinals",
             "home_team": "Cincinnati Reds",
             "away_lineup": [],
-            "home_lineup": [],
-            "away_pitcher": null,
-            "home_pitcher": null,
-            "lineup_hash": "fadd9563fdc6a580d1f6bba53be06079"
+            "home_lineup": [
+                {
+                    "id": 682829,
+                    "name": "Elly De La Cruz",
+                    "position": "SS",
+                    "stats": {
+                        "runs": 68,
+                        "doubles": 18,
+                        "triples": 5,
+                        "home_runs": 20,
+                        "hits": 107,
+                        "steals": 21,
+                        "rbi": 56
+                    }
+                },
+                {
+                    "id": 667472,
+                    "name": "Dane Myers",
+                    "position": "CF",
+                    "stats": {
+                        "runs": 22,
+                        "doubles": 8,
+                        "triples": 0,
+                        "home_runs": 3,
+                        "hits": 48,
+                        "steals": 8,
+                        "rbi": 18
+                    }
+                },
+                {
+                    "id": 701398,
+                    "name": "Sal Stewart",
+                    "position": "1B",
+                    "stats": {
+                        "runs": 68,
+                        "doubles": 23,
+                        "triples": 0,
+                        "home_runs": 26,
+                        "hits": 121,
+                        "steals": 12,
+                        "rbi": 91
+                    }
+                },
+                {
+                    "id": 669911,
+                    "name": "Michael Toglia",
+                    "position": "LF",
+                    "stats": {
+                        "runs": 1,
+                        "doubles": 1,
+                        "triples": 0,
+                        "home_runs": 0,
+                        "hits": 2,
+                        "steals": 0,
+                        "rbi": 0
+                    }
+                },
+                {
+                    "id": 682622,
+                    "name": "Noelvi Marte",
+                    "position": "RF",
+                    "stats": {
+                        "runs": 19,
+                        "doubles": 7,
+                        "triples": 0,
+                        "home_runs": 6,
+                        "hits": 36,
+                        "steals": 7,
+                        "rbi": 15
+                    }
+                },
+                {
+                    "id": 680574,
+                    "name": "Matt McLain",
+                    "position": "2B",
+                    "stats": {
+                        "runs": 42,
+                        "doubles": 16,
+                        "triples": 0,
+                        "home_runs": 11,
+                        "hits": 62,
+                        "steals": 14,
+                        "rbi": 29
+                    }
+                },
+                {
+                    "id": 663647,
+                    "name": "Ke'Bryan Hayes",
+                    "position": "3B",
+                    "stats": {
+                        "runs": 17,
+                        "doubles": 2,
+                        "triples": 1,
+                        "home_runs": 5,
+                        "hits": 26,
+                        "steals": 1,
+                        "rbi": 8
+                    }
+                },
+                {
+                    "id": 663886,
+                    "name": "Tyler Stephenson",
+                    "position": "C",
+                    "stats": {
+                        "runs": 32,
+                        "doubles": 16,
+                        "triples": 0,
+                        "home_runs": 12,
+                        "hits": 75,
+                        "steals": 0,
+                        "rbi": 39
+                    }
+                },
+                {
+                    "id": 553993,
+                    "name": "Eugenio Su\u00e1rez",
+                    "position": "DH",
+                    "stats": {
+                        "runs": 31,
+                        "doubles": 15,
+                        "triples": 0,
+                        "home_runs": 18,
+                        "hits": 67,
+                        "steals": 0,
+                        "rbi": 49
+                    }
+                }
+            ],
+            "away_pitcher": {
+                "id": 687273,
+                "name": "Quinn Mathews",
+                "stats": {
+                    "strikeouts": 3,
+                    "era": "3.60",
+                    "ip": "5.0"
+                }
+            },
+            "home_pitcher": {
+                "id": 592288,
+                "name": "Kent Emanuel",
+                "stats": {
+                    "strikeouts": 0,
+                    "era": "-.--",
+                    "ip": "0.0"
+                }
+            },
+            "lineup_hash": "10f0d2b9a34e7c3d6094b1904e718c25"
         },
         "824478": {
             "away_team": "St. Louis Cardinals",
             "home_team": "Cincinnati Reds",
             "away_lineup": [],
             "home_lineup": [],
-            "away_pitcher": null,
+            "away_pitcher": {
+                "id": 669467,
+                "name": "Andre Pallante",
+                "stats": {
+                    "strikeouts": 92,
+                    "era": "3.46",
+                    "ip": "130.0"
+                }
+            },
             "home_pitcher": {
                 "id": 695076,
                 "name": "Rhett Lowder",
@@ -25,7 +176,7 @@
                     "ip": "94.1"
                 }
             },
-            "lineup_hash": "3c44f73dd6fe36d76bd4bcf86da32da7"
+            "lineup_hash": "a6886753fe77c95764a7fab17dcb53e1"
         },
         "822939": {
             "away_team": "Baltimore Orioles",
@@ -247,7 +398,134 @@
         "824514": {
             "away_team": "St. Louis Cardinals",
             "home_team": "Cincinnati Reds",
-            "away_lineup": [],
+            "away_lineup": [
+                {
+                    "id": 691023,
+                    "name": "Jordan Walker",
+                    "position": "RF",
+                    "stats": {
+                        "runs": 73,
+                        "doubles": 26,
+                        "triples": 0,
+                        "home_runs": 24,
+                        "hits": 132,
+                        "steals": 16,
+                        "rbi": 88
+                    }
+                },
+                {
+                    "id": 665877,
+                    "name": "Jos\u00e9 Ferm\u00edn",
+                    "position": "2B",
+                    "stats": {
+                        "runs": 21,
+                        "doubles": 11,
+                        "triples": 0,
+                        "home_runs": 5,
+                        "hits": 55,
+                        "steals": 6,
+                        "rbi": 27
+                    }
+                },
+                {
+                    "id": 691458,
+                    "name": "Blaze Jordan",
+                    "position": "3B",
+                    "stats": {
+                        "runs": 14,
+                        "doubles": 7,
+                        "triples": 3,
+                        "home_runs": 2,
+                        "hits": 38,
+                        "steals": 0,
+                        "rbi": 24
+                    }
+                },
+                {
+                    "id": 676475,
+                    "name": "Alec Burleson",
+                    "position": "1B",
+                    "stats": {
+                        "runs": 70,
+                        "doubles": 31,
+                        "triples": 1,
+                        "home_runs": 21,
+                        "hits": 135,
+                        "steals": 3,
+                        "rbi": 90
+                    }
+                },
+                {
+                    "id": 686780,
+                    "name": "Pedro Pag\u00e9s",
+                    "position": "C",
+                    "stats": {
+                        "runs": 13,
+                        "doubles": 6,
+                        "triples": 0,
+                        "home_runs": 4,
+                        "hits": 34,
+                        "steals": 2,
+                        "rbi": 11
+                    }
+                },
+                {
+                    "id": 695491,
+                    "name": "Joshua B\u00e1ez",
+                    "position": "LF",
+                    "stats": {
+                        "runs": 3,
+                        "doubles": 0,
+                        "triples": 0,
+                        "home_runs": 3,
+                        "hits": 3,
+                        "steals": 0,
+                        "rbi": 5
+                    }
+                },
+                {
+                    "id": 677592,
+                    "name": "Everson Pereira",
+                    "position": "CF",
+                    "stats": {
+                        "runs": 10,
+                        "doubles": 5,
+                        "triples": 0,
+                        "home_runs": 5,
+                        "hits": 21,
+                        "steals": 1,
+                        "rbi": 12
+                    }
+                },
+                {
+                    "id": 691026,
+                    "name": "Masyn Winn",
+                    "position": "SS",
+                    "stats": {
+                        "runs": 46,
+                        "doubles": 17,
+                        "triples": 2,
+                        "home_runs": 4,
+                        "hits": 98,
+                        "steals": 10,
+                        "rbi": 49
+                    }
+                },
+                {
+                    "id": 671056,
+                    "name": "Iv\u00e1n Herrera",
+                    "position": "DH",
+                    "stats": {
+                        "runs": 76,
+                        "doubles": 23,
+                        "triples": 1,
+                        "home_runs": 13,
+                        "hits": 115,
+                        "steals": 7,
+                        "rbi": 52
+                    }
+                }
+            ],
             "home_lineup": [
                 {
                     "id": 682829,
@@ -394,32 +672,7 @@
                     "ip": "0.0"
                 }
             },
-            "lineup_hash": "10f0d2b9a34e7c3d6094b1904e718c25"
-        },
-        "824478": {
-            "away_team": "St. Louis Cardinals",
-            "home_team": "Cincinnati Reds",
-            "away_lineup": [],
-            "home_lineup": [],
-            "away_pitcher": {
-                "id": 669467,
-                "name": "Andre Pallante",
-                "stats": {
-                    "strikeouts": 92,
-                    "era": "3.46",
-                    "ip": "130.0"
-                }
-            },
-            "home_pitcher": {
-                "id": 695076,
-                "name": "Rhett Lowder",
-                "stats": {
-                    "strikeouts": 77,
-                    "era": "5.15",
-                    "ip": "94.1"
-                }
-            },
-            "lineup_hash": "a6886753fe77c95764a7fab17dcb53e1"
+            "lineup_hash": "7755287be865dc397979340b9a9c8e5e"
         }
     }
 }
