@@ -3440,7 +3440,8 @@
         "home_prospect_score": 0,
         "score_0_to_1": 0.6431782730030258,
         "score": 64.3,
-        "home_war": 5.358778625954198
+        "home_war": 5.358778625954198,
+        "away_war": 1.361344537815126
       },
       {
         "game_id": 824722,
@@ -3716,7 +3717,8 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.538352037951014,
-        "score": 53.8
+        "score": 53.8,
+        "home_war": 5.150812064965197
       },
       {
         "game_id": 824394,
@@ -3778,7 +3780,8 @@
         "away_prospect_score": 0.19920000000000004,
         "home_prospect_score": 0,
         "score_0_to_1": 0.5295204195544594,
-        "score": 53.0
+        "score": 53.0,
+        "home_war": 4.427266338721012
       },
       {
         "game_id": 823748,
@@ -4174,19 +4177,19 @@
         "away_wp": 0.409358024691358,
         "home_wp": 0.4351851851851852,
         "away_starter": null,
-        "home_starter": null,
+        "home_starter": "Seth Lugo",
         "away_current_war": null,
         "away_projected_war": null,
         "away_current_ip": null,
         "away_projected_ip": null,
         "away_blended_war": null,
         "away_war_source": null,
-        "home_current_war": null,
-        "home_projected_war": null,
-        "home_current_ip": null,
-        "home_projected_ip": null,
-        "home_blended_war": null,
-        "home_war_source": null,
+        "home_current_war": 1.6,
+        "home_projected_war": 1.2,
+        "home_current_ip": 139.3,
+        "home_projected_ip": 133.2,
+        "home_blended_war": 2.0674802584350322,
+        "home_war_source": "pace",
         "away_win_streak": 0,
         "home_win_streak": 3,
         "away_career_milestones": [],
@@ -4201,7 +4204,7 @@
         "min_wp_score": 0,
         "division_score": 0,
         "away_war_score": 0,
-        "home_war_score": 0,
+        "home_war_score": 0.17305598304986172,
         "away_playoff_imp_score": 0.0010960383523736447,
         "home_playoff_imp_score": 0.007182774235400417,
         "away_win_streak_score": 0,
@@ -4210,8 +4213,9 @@
         "home_milestone_score": 0,
         "away_prospect_score": 0,
         "home_prospect_score": 0,
-        "score_0_to_1": 0.1585025225419403,
-        "score": 15.9
+        "score_0_to_1": 0.23069868019712547,
+        "score": 23.1,
+        "home_war": 2.0674802584350322
       }
     ]
   },
