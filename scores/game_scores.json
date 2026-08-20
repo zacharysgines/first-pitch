@@ -3901,7 +3901,17 @@
         "home_win_streak": 0,
         "away_career_milestones": [],
         "away_season_milestones": [],
-        "home_career_milestones": [],
+        "home_career_milestones": [
+          {
+            "stat": "home_runs",
+            "player": "Gary S\u00e1nchez",
+            "value": 199,
+            "target": 200,
+            "diff": 1,
+            "milestone_type": "Milestone",
+            "milestone_score": 0.25257644999999995
+          }
+        ],
         "home_season_milestones": [],
         "away_debuts": [],
         "home_debuts": [],
@@ -3917,11 +3927,13 @@
         "away_win_streak_score": 0,
         "home_win_streak_score": 0,
         "away_milestone_score": 0,
-        "home_milestone_score": 0,
+        "home_milestone_score": 0.25257644999999995,
         "away_prospect_score": 0,
         "home_prospect_score": 0,
-        "score_0_to_1": 0.42411598356103686,
-        "score": 42.4
+        "score_0_to_1": 0.5080011212589401,
+        "score": 50.8,
+        "away_war": 2.7651792245793714,
+        "home_war": 1.7426888604353394
       },
       {
         "game_id": 824474,
@@ -4198,7 +4210,8 @@
         "home_prospect_score": 0,
         "score_0_to_1": 0.31059049037984265,
         "score": 31.1,
-        "home_war": 1.4400000000000002
+        "home_war": 1.4400000000000002,
+        "away_war": 2.983587240131302
       }
     ]
   },
