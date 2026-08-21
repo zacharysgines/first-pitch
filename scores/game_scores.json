@@ -3717,7 +3717,17 @@
         "home_war_source": "pace",
         "away_win_streak": 1,
         "home_win_streak": 1,
-        "away_career_milestones": [],
+        "away_career_milestones": [
+          {
+            "stat": "home_runs",
+            "player": "Ronald Acu\u00f1a Jr.",
+            "value": 199,
+            "target": 200,
+            "diff": 1,
+            "milestone_type": "Milestone",
+            "milestone_score": 0.25257644999999995
+          }
+        ],
         "away_season_milestones": [],
         "home_career_milestones": [],
         "home_season_milestones": [],
@@ -3734,12 +3744,13 @@
         "home_playoff_imp_score": 7.298961198776155e-07,
         "away_win_streak_score": 0,
         "home_win_streak_score": 0,
-        "away_milestone_score": 0,
+        "away_milestone_score": 0.25257644999999995,
         "home_milestone_score": 0,
         "away_prospect_score": 0,
         "home_prospect_score": 0,
-        "score_0_to_1": 0.8099299373801675,
-        "score": 81.0
+        "score_0_to_1": 0.8050259259744625,
+        "score": 80.5,
+        "away_war": 6.4186046511627906
       },
       {
         "game_id": 822857,
