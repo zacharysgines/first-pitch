@@ -3687,7 +3687,8 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.6441479311225224,
-        "score": 64.4
+        "score": 64.4,
+        "home_war": 1.696779261586803
       },
       {
         "game_id": 823505,
@@ -3740,7 +3741,8 @@
         "home_prospect_score": 0,
         "score_0_to_1": 0.6085596063426326,
         "score": 60.9,
-        "home_war": 1.918032786885246
+        "home_war": 1.918032786885246,
+        "away_war": 2.6553745928338763
       },
       {
         "game_id": 824881,
@@ -4132,7 +4134,8 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.44390356081207727,
-        "score": 44.4
+        "score": 44.4,
+        "away_war": 2.55863539445629
       },
       {
         "game_id": 823016,
@@ -4185,7 +4188,8 @@
         "home_prospect_score": 0,
         "score_0_to_1": 0.44378976940368065,
         "score": 44.4,
-        "home_war": 1.584
+        "home_war": 1.584,
+        "away_war": 1.6051789137101289
       },
       {
         "game_id": 823098,
@@ -4271,7 +4275,17 @@
         "away_season_milestones": [],
         "home_career_milestones": [],
         "home_season_milestones": [],
-        "away_debuts": [],
+        "away_debuts": [
+          {
+            "name": "Mason Adams",
+            "org": "COL",
+            "pos": "SP",
+            "mlb_rank": null,
+            "org_rank": 21.0,
+            "pos_rank": 196.0,
+            "score": 0.14220000000000002
+          }
+        ],
         "home_debuts": [],
         "away_wp_score": 0.06766988717521705,
         "home_wp_score": 0.12704587777777776,
@@ -4286,11 +4300,12 @@
         "home_win_streak_score": 0,
         "away_milestone_score": 0,
         "home_milestone_score": 0,
-        "away_prospect_score": 0,
+        "away_prospect_score": 0.1422,
         "home_prospect_score": 0,
-        "score_0_to_1": 0.2667835734004427,
-        "score": 26.7,
-        "home_war": 3.5541103017689903
+        "score_0_to_1": 0.3145685767798069,
+        "score": 31.5,
+        "home_war": 3.5541103017689903,
+        "away_war": null
       },
       {
         "game_id": 824233,
@@ -4343,7 +4358,8 @@
         "home_prospect_score": 0,
         "score_0_to_1": 0.23531942710541043,
         "score": 23.5,
-        "home_war": 0.3749039692701665
+        "home_war": 0.3749039692701665,
+        "away_war": null
       },
       {
         "game_id": 823181,
