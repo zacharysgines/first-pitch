@@ -3507,7 +3507,17 @@
         "home_win_streak": 2,
         "away_career_milestones": [],
         "away_season_milestones": [],
-        "home_career_milestones": [],
+        "home_career_milestones": [
+          {
+            "stat": "rbi",
+            "player": "Jos\u00e9 Ram\u00edrez",
+            "value": 997,
+            "target": 1000,
+            "diff": 3,
+            "milestone_type": "Milestone",
+            "milestone_score": 0.23887313
+          }
+        ],
         "home_season_milestones": [],
         "away_debuts": [],
         "home_debuts": [],
@@ -3523,11 +3533,13 @@
         "away_win_streak_score": 0,
         "home_win_streak_score": 0,
         "away_milestone_score": 0,
-        "home_milestone_score": 0,
+        "home_milestone_score": 0.23887313,
         "away_prospect_score": 0,
         "home_prospect_score": 0,
-        "score_0_to_1": 0.7247982427400865,
-        "score": 72.5
+        "score_0_to_1": 0.7618736066947907,
+        "score": 76.2,
+        "away_war": 6.107784431137723,
+        "home_war": 2.377109317681585
       },
       {
         "game_id": 822851,
@@ -3632,8 +3644,9 @@
         "home_milestone_score": 0,
         "away_prospect_score": 0,
         "home_prospect_score": 0,
-        "score_0_to_1": 0.6627979565371905,
-        "score": 66.3
+        "score_0_to_1": 0.6237507880602426,
+        "score": 62.4,
+        "home_war": 1.897810218978102
       },
       {
         "game_id": 824470,
@@ -3746,8 +3759,9 @@
         "home_milestone_score": 0,
         "away_prospect_score": 0,
         "home_prospect_score": 0,
-        "score_0_to_1": 0.5711607546246337,
-        "score": 57.1
+        "score_0_to_1": 0.5615225692292172,
+        "score": 56.2,
+        "away_war": 3.4559999999999995
       },
       {
         "game_id": 823983,
@@ -3957,7 +3971,8 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.462817174782022,
-        "score": 46.3
+        "score": 46.3,
+        "home_war": 3.2551908908238447
       },
       {
         "game_id": 823906,
@@ -4061,7 +4076,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.3547500313044595,
-        "score": 35.5
+        "score": 35.5,
+        "away_war": 2.8346456692913393,
+        "home_war": 2.748091603053435
       },
       {
         "game_id": 823660,
@@ -4113,7 +4130,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.34959159354352287,
-        "score": 35.0
+        "score": 35.0,
+        "away_war": null,
+        "home_war": 0.0
       },
       {
         "game_id": 824717,
@@ -4243,14 +4262,14 @@
         "home_losses": 55,
         "away_wp": 0.4616543209876543,
         "home_wp": 0.5836049382716049,
-        "away_starter": null,
+        "away_starter": "Justin Hagenman",
         "home_starter": "Griffin Jax",
-        "away_current_war": null,
-        "away_projected_war": null,
-        "away_current_ip": null,
-        "away_projected_ip": null,
-        "away_blended_war": null,
-        "away_war_source": null,
+        "away_current_war": 0,
+        "away_projected_war": 1.1,
+        "away_current_ip": 0,
+        "away_projected_ip": 84.1,
+        "away_blended_war": 2.3543400713436387,
+        "away_war_source": "projected",
         "home_current_war": 1,
         "home_projected_war": 1.6,
         "home_current_ip": 91.7,
@@ -4270,7 +4289,7 @@
         "team_diff_score": 0.07167876134379511,
         "min_wp_score": 0,
         "division_score": 0,
-        "away_war_score": 0,
+        "away_war_score": 0.19091921407380777,
         "home_war_score": 0.16679471057729273,
         "away_playoff_imp_score": 0.002412250912281883,
         "home_playoff_imp_score": 1.0112781854143549e-06,
@@ -4280,8 +4299,10 @@
         "home_milestone_score": 0,
         "away_prospect_score": 0,
         "home_prospect_score": 0,
-        "score_0_to_1": 0.23890023437199603,
-        "score": 23.9
+        "score_0_to_1": 0.31382598133365613,
+        "score": 31.4,
+        "away_war": 2.3543400713436387,
+        "home_war": 1.9629225736095965
       }
     ]
   },
