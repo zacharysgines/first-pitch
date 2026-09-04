@@ -2,8 +2,10 @@ name: Refresh daily game scores
 
 on:
   schedule:
-    # 12:37 UTC = 6:37 AM MDT / 5:37 AM MST
-    - cron: "37 12 * * *"
+    # Primary: 13:37 UTC = 7:37 AM MDT / 6:37 AM MST
+    - cron: "37 13 * * *"
+    # Backup: 15:07 UTC = 9:07 AM MDT / 8:07 AM MST
+    - cron: "7 15 * * *"
   workflow_dispatch: {}
 
 permissions:
@@ -11,11 +13,12 @@ permissions:
 
 concurrency:
   group: refresh-scores
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   refresh:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
