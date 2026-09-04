@@ -23,16 +23,6 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Log run timing
-        run: |
-          echo "Event: ${{ github.event_name }}"
-          echo "Schedule that triggered this run: ${{ github.event.schedule }}"
-          echo "Expected scheduled UTC time: 12:37 UTC"
-          echo "Actual runner start time UTC:"
-          date -u
-          echo "Actual runner local time:"
-          date
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
