@@ -3785,7 +3785,71 @@
         "home_prospect_score": 0,
         "score_0_to_1": 0.7396861897522822,
         "score": 74.0,
-        "away_war": 6.625
+        "away_war": 6.625,
+        "home_war": 5.852823730747289
+      },
+      {
+        "game_id": 823256,
+        "game_datetime": "2026-09-05T01:40:00Z",
+        "national_broadcasts": [],
+        "away_team_name": "New York Yankees",
+        "home_team_name": "San Diego Padres",
+        "away_wins": 80,
+        "home_wins": 73,
+        "away_losses": 60,
+        "home_losses": 67,
+        "away_wp": 0.5659382716049383,
+        "home_wp": 0.5177037037037037,
+        "away_starter": "Max Fried",
+        "home_starter": "Walker Buehler",
+        "away_current_war": 2.8,
+        "away_projected_war": 3.7,
+        "away_current_ip": 90,
+        "away_projected_ip": 172.0,
+        "away_blended_war": 5.0776095186587344,
+        "away_war_source": "pace",
+        "home_current_war": 1.5,
+        "home_projected_war": 0.5,
+        "home_current_ip": 131.3,
+        "home_projected_ip": 106.1,
+        "home_blended_war": 2.056359482102056,
+        "home_war_source": "pace",
+        "away_win_streak": 2,
+        "home_win_streak": 0,
+        "away_career_milestones": [],
+        "away_season_milestones": [],
+        "home_career_milestones": [
+          {
+            "stat": "doubles",
+            "player": "Xander Bogaerts",
+            "value": 398,
+            "target": 400,
+            "diff": 2,
+            "milestone_type": "Milestone",
+            "milestone_score": 0.27456618
+          }
+        ],
+        "home_season_milestones": [],
+        "away_debuts": [],
+        "home_debuts": [],
+        "away_wp_score": 0.18259174444444443,
+        "home_wp_score": 0.15754353333333332,
+        "team_diff_score": 0.1353515122296943,
+        "min_wp_score": 0.09639924798079491,
+        "division_score": 0,
+        "away_war_score": 0.4093371375761998,
+        "home_war_score": 0.1723837721258128,
+        "away_playoff_imp_score": 0.07890987161513022,
+        "home_playoff_imp_score": 0.39832936843510003,
+        "away_win_streak_score": 0,
+        "home_win_streak_score": 0,
+        "away_milestone_score": 0,
+        "home_milestone_score": 0.27456618,
+        "away_prospect_score": 0,
+        "home_prospect_score": 0,
+        "score_0_to_1": 0.697240291913338,
+        "score": 69.7,
+        "home_war": 2.056359482102056
       },
       {
         "game_id": 824797,
@@ -3837,59 +3901,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.6516647920515019,
-        "score": 65.2
-      },
-      {
-        "game_id": 823256,
-        "game_datetime": "2026-09-05T01:40:00Z",
-        "national_broadcasts": [],
-        "away_team_name": "New York Yankees",
-        "home_team_name": "San Diego Padres",
-        "away_wins": 80,
-        "home_wins": 73,
-        "away_losses": 60,
-        "home_losses": 67,
-        "away_wp": 0.5659382716049383,
-        "home_wp": 0.5177037037037037,
-        "away_starter": "Max Fried",
-        "home_starter": "Walker Buehler",
-        "away_current_war": 2.8,
-        "away_projected_war": 3.7,
-        "away_current_ip": 90,
-        "away_projected_ip": 172.0,
-        "away_blended_war": 5.0776095186587344,
-        "away_war_source": "pace",
-        "home_current_war": 1.5,
-        "home_projected_war": 0.5,
-        "home_current_ip": 131.3,
-        "home_projected_ip": 106.1,
-        "home_blended_war": 2.056359482102056,
-        "home_war_source": "pace",
-        "away_win_streak": 2,
-        "home_win_streak": 0,
-        "away_career_milestones": [],
-        "away_season_milestones": [],
-        "home_career_milestones": [],
-        "home_season_milestones": [],
-        "away_debuts": [],
-        "home_debuts": [],
-        "away_wp_score": 0.18259174444444443,
-        "home_wp_score": 0.15754353333333332,
-        "team_diff_score": 0.1353515122296943,
-        "min_wp_score": 0.09639924798079491,
-        "division_score": 0,
-        "away_war_score": 0.4093371375761998,
-        "home_war_score": 0.1723837721258128,
-        "away_playoff_imp_score": 0.07890987161513022,
-        "home_playoff_imp_score": 0.39832936843510003,
-        "away_win_streak_score": 0,
-        "home_win_streak_score": 0,
-        "away_milestone_score": 0,
-        "home_milestone_score": 0,
-        "away_prospect_score": 0,
-        "home_prospect_score": 0,
-        "score_0_to_1": 0.6516592972708669,
-        "score": 65.2
+        "score": 65.2,
+        "away_war": 4.801940177849636,
+        "home_war": 3.898089171974522
       },
       {
         "game_id": 822852,
@@ -3941,7 +3955,8 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.6225061670291632,
-        "score": 62.3
+        "score": 62.3,
+        "home_war": null
       },
       {
         "game_id": 824424,
@@ -4118,8 +4133,10 @@
         "home_milestone_score": 0,
         "away_prospect_score": 0,
         "home_prospect_score": 0,
-        "score_0_to_1": 0.49105348340768173,
-        "score": 49.1
+        "score_0_to_1": 0.4763201072968163,
+        "score": 47.6,
+        "away_war": -0.5081157374735358,
+        "home_war": 1.0295765472312703
       },
       {
         "game_id": 823905,
@@ -4223,7 +4240,8 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.40974596663246576,
-        "score": 41.0
+        "score": 41.0,
+        "home_war": null
       },
       {
         "game_id": 823824,
@@ -4275,7 +4293,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.4020312749046995,
-        "score": 40.2
+        "score": 40.2,
+        "away_war": 1.1976047904191616,
+        "home_war": 2.796116504854369
       },
       {
         "game_id": 824471,
@@ -4328,7 +4348,8 @@
         "home_prospect_score": 0,
         "score_0_to_1": 0.3638224057178314,
         "score": 36.4,
-        "home_war": 1.9285714285714286
+        "home_war": 1.9285714285714286,
+        "away_war": 3.2638259292837715
       },
       {
         "game_id": 824554,
@@ -4380,7 +4401,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.3627704626633691,
-        "score": 36.3
+        "score": 36.3,
+        "away_war": 1.125,
+        "home_war": -0.43795620437956206
       },
       {
         "game_id": 823579,
@@ -4433,7 +4456,8 @@
         "home_prospect_score": 0,
         "score_0_to_1": 0.322448213302726,
         "score": 32.2,
-        "home_war": 3.4682080924855496
+        "home_war": 3.4682080924855496,
+        "away_war": 0.72
       },
       {
         "game_id": 824311,
@@ -4592,7 +4616,8 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.23562771811125316,
-        "score": 23.6
+        "score": 23.6,
+        "away_war": -1.324918032786885
       }
     ]
   },
