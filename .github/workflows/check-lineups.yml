@@ -2,8 +2,14 @@ name: Check Lineups
 
 on:
   schedule:
-    - cron: "0,30 14-23 * * *"
-    - cron: "0 3 * * *"
+    # 9:00 AM–5:30 PM MDT
+    - cron: "7,37 15-23 * * *"
+
+    # 6:00 PM–9:30 PM MDT
+    - cron: "7,37 0-3 * * *"
+
+    # 10:00 PM MDT
+    - cron: "7 4 * * *"
 
   workflow_dispatch:
 
@@ -13,7 +19,8 @@ concurrency:
 
 jobs:
   check-lineups:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
 
     steps:
       - name: Check out repo
