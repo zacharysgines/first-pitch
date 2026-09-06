@@ -3631,183 +3631,6 @@
         "824552": {
             "away_team": "Minnesota Twins",
             "home_team": "Chicago White Sox",
-            "away_lineup": [],
-            "home_lineup": [
-                {
-                    "id": 671976,
-                    "name": "Tristan Peters",
-                    "position": "CF",
-                    "stats": {
-                        "runs": 55,
-                        "doubles": 28,
-                        "triples": 4,
-                        "home_runs": 12,
-                        "hits": 108,
-                        "steals": 8,
-                        "rbi": 52
-                    }
-                },
-                {
-                    "id": 808959,
-                    "name": "Munetaka Murakami",
-                    "position": "1B",
-                    "stats": {
-                        "runs": 73,
-                        "doubles": 14,
-                        "triples": 0,
-                        "home_runs": 30,
-                        "hits": 81,
-                        "steals": 1,
-                        "rbi": 61
-                    }
-                },
-                {
-                    "id": 805367,
-                    "name": "Chase Meidroth",
-                    "position": "2B",
-                    "stats": {
-                        "runs": 77,
-                        "doubles": 27,
-                        "triples": 0,
-                        "home_runs": 12,
-                        "hits": 137,
-                        "steals": 3,
-                        "rbi": 51
-                    }
-                },
-                {
-                    "id": 691019,
-                    "name": "Kyle Teel",
-                    "position": "C",
-                    "stats": {
-                        "runs": 9,
-                        "doubles": 2,
-                        "triples": 0,
-                        "home_runs": 2,
-                        "hits": 12,
-                        "steals": 0,
-                        "rbi": 14
-                    }
-                },
-                {
-                    "id": 695657,
-                    "name": "Colson Montgomery",
-                    "position": "SS",
-                    "stats": {
-                        "runs": 66,
-                        "doubles": 22,
-                        "triples": 0,
-                        "home_runs": 31,
-                        "hits": 108,
-                        "steals": 1,
-                        "rbi": 82
-                    }
-                },
-                {
-                    "id": 695731,
-                    "name": "Braden Montgomery",
-                    "position": "RF",
-                    "stats": {
-                        "runs": 39,
-                        "doubles": 12,
-                        "triples": 3,
-                        "home_runs": 6,
-                        "hits": 59,
-                        "steals": 1,
-                        "rbi": 36
-                    }
-                },
-                {
-                    "id": 643217,
-                    "name": "Andrew Benintendi",
-                    "position": "DH",
-                    "stats": {
-                        "runs": 53,
-                        "doubles": 21,
-                        "triples": 2,
-                        "home_runs": 14,
-                        "hits": 92,
-                        "steals": 1,
-                        "rbi": 70
-                    }
-                },
-                {
-                    "id": 803011,
-                    "name": "Sam Antonacci",
-                    "position": "LF",
-                    "stats": {
-                        "runs": 70,
-                        "doubles": 20,
-                        "triples": 3,
-                        "home_runs": 8,
-                        "hits": 110,
-                        "steals": 17,
-                        "rbi": 41
-                    }
-                },
-                {
-                    "id": 678246,
-                    "name": "Miguel Vargas",
-                    "position": "3B",
-                    "stats": {
-                        "runs": 95,
-                        "doubles": 30,
-                        "triples": 1,
-                        "home_runs": 30,
-                        "hits": 130,
-                        "steals": 15,
-                        "rbi": 78
-                    }
-                }
-            ],
-            "away_pitcher": {
-                "id": 641927,
-                "name": "Bailey Ober",
-                "stats": {
-                    "strikeouts": 79,
-                    "era": "4.37",
-                    "ip": "113.1"
-                }
-            },
-            "home_pitcher": {
-                "id": 663542,
-                "name": "Bryan Hudson",
-                "stats": {
-                    "strikeouts": 55,
-                    "era": "3.03",
-                    "ip": "59.1"
-                }
-            },
-            "lineup_hash": "5733b148617f6847ba0e9e9cc6e25861"
-        },
-        "823903": {
-            "away_team": "Washington Nationals",
-            "home_team": "Los Angeles Dodgers",
-            "away_lineup": [],
-            "home_lineup": [],
-            "away_pitcher": {
-                "id": 674841,
-                "name": "Andrew Alvarez",
-                "stats": {
-                    "strikeouts": 86,
-                    "era": "3.47",
-                    "ip": "90.2"
-                }
-            },
-            "home_pitcher": {
-                "id": 680736,
-                "name": "Justin Wrobleski",
-                "stats": {
-                    "strikeouts": 104,
-                    "era": "3.65",
-                    "ip": "128.1"
-                }
-            },
-            "lineup_hash": "a1f788270185ef2232ee03d7eb7780b3"
-        },
-        "824552": {
-            "away_team": "Minnesota Twins",
-            "home_team": "Chicago White Sox",
             "away_lineup": [
                 {
                     "id": 665019,
@@ -4083,6 +3906,183 @@
                 }
             },
             "lineup_hash": "b701719ebb2bea39d86eae59649ac71b"
+        },
+        "823903": {
+            "away_team": "Washington Nationals",
+            "home_team": "Los Angeles Dodgers",
+            "away_lineup": [],
+            "home_lineup": [],
+            "away_pitcher": {
+                "id": 674841,
+                "name": "Andrew Alvarez",
+                "stats": {
+                    "strikeouts": 86,
+                    "era": "3.47",
+                    "ip": "90.2"
+                }
+            },
+            "home_pitcher": {
+                "id": 680736,
+                "name": "Justin Wrobleski",
+                "stats": {
+                    "strikeouts": 104,
+                    "era": "3.65",
+                    "ip": "128.1"
+                }
+            },
+            "lineup_hash": "a1f788270185ef2232ee03d7eb7780b3"
+        },
+        "823903": {
+            "away_team": "Washington Nationals",
+            "home_team": "Los Angeles Dodgers",
+            "away_lineup": [],
+            "home_lineup": [
+                {
+                    "id": 669257,
+                    "name": "Will Smith",
+                    "position": "C",
+                    "stats": {
+                        "runs": 25,
+                        "doubles": 6,
+                        "triples": 0,
+                        "home_runs": 6,
+                        "hits": 44,
+                        "steals": 0,
+                        "rbi": 25
+                    }
+                },
+                {
+                    "id": 663656,
+                    "name": "Kyle Tucker",
+                    "position": "RF",
+                    "stats": {
+                        "runs": 74,
+                        "doubles": 20,
+                        "triples": 3,
+                        "home_runs": 12,
+                        "hits": 106,
+                        "steals": 10,
+                        "rbi": 59
+                    }
+                },
+                {
+                    "id": 571771,
+                    "name": "Enrique Hern\u00e1ndez",
+                    "position": "3B",
+                    "stats": {
+                        "runs": 9,
+                        "doubles": 2,
+                        "triples": 0,
+                        "home_runs": 2,
+                        "hits": 12,
+                        "steals": 0,
+                        "rbi": 5
+                    }
+                },
+                {
+                    "id": 571970,
+                    "name": "Max Muncy",
+                    "position": "DH",
+                    "stats": {
+                        "runs": 69,
+                        "doubles": 20,
+                        "triples": 1,
+                        "home_runs": 26,
+                        "hits": 103,
+                        "steals": 2,
+                        "rbi": 68
+                    }
+                },
+                {
+                    "id": 518692,
+                    "name": "Freddie Freeman",
+                    "position": "1B",
+                    "stats": {
+                        "runs": 71,
+                        "doubles": 32,
+                        "triples": 1,
+                        "home_runs": 16,
+                        "hits": 155,
+                        "steals": 6,
+                        "rbi": 66
+                    }
+                },
+                {
+                    "id": 669242,
+                    "name": "Tommy Edman",
+                    "position": "CF",
+                    "stats": {
+                        "runs": 36,
+                        "doubles": 10,
+                        "triples": 2,
+                        "home_runs": 6,
+                        "hits": 62,
+                        "steals": 6,
+                        "rbi": 32
+                    }
+                },
+                {
+                    "id": 606192,
+                    "name": "Teoscar Hern\u00e1ndez",
+                    "position": "LF",
+                    "stats": {
+                        "runs": 53,
+                        "doubles": 17,
+                        "triples": 1,
+                        "home_runs": 12,
+                        "hits": 96,
+                        "steals": 3,
+                        "rbi": 51
+                    }
+                },
+                {
+                    "id": 605141,
+                    "name": "Mookie Betts",
+                    "position": "SS",
+                    "stats": {
+                        "runs": 56,
+                        "doubles": 19,
+                        "triples": 0,
+                        "home_runs": 17,
+                        "hits": 101,
+                        "steals": 1,
+                        "rbi": 54
+                    }
+                },
+                {
+                    "id": 500743,
+                    "name": "Miguel Rojas",
+                    "position": "2B",
+                    "stats": {
+                        "runs": 20,
+                        "doubles": 14,
+                        "triples": 0,
+                        "home_runs": 3,
+                        "hits": 52,
+                        "steals": 0,
+                        "rbi": 20
+                    }
+                }
+            ],
+            "away_pitcher": {
+                "id": 674841,
+                "name": "Andrew Alvarez",
+                "stats": {
+                    "strikeouts": 86,
+                    "era": "3.47",
+                    "ip": "90.2"
+                }
+            },
+            "home_pitcher": {
+                "id": 680736,
+                "name": "Justin Wrobleski",
+                "stats": {
+                    "strikeouts": 104,
+                    "era": "3.65",
+                    "ip": "128.1"
+                }
+            },
+            "lineup_hash": "357c405c7f2356a9f7479e637b52df7d"
         }
     }
 }
