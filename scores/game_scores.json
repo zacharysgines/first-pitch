@@ -3421,8 +3421,8 @@
         "game_id": 823414,
         "game_datetime": "2026-09-08T22:40:00Z",
         "national_broadcasts": [
-          "TBS (out-of-market only)",
-          "TBS"
+          "TBS",
+          "TBS (out-of-market only)"
         ],
         "away_team_name": "Houston Astros",
         "home_team_name": "Philadelphia Phillies",
@@ -3497,19 +3497,19 @@
         "away_wp": 0.49171604938271607,
         "home_wp": 0.4739135802469136,
         "away_starter": "Cal Quantrill",
-        "home_starter": null,
+        "home_starter": "Bryce Miller",
         "away_current_war": 1.4,
         "away_projected_war": 0.8,
         "away_current_ip": 96.7,
         "away_projected_ip": 119.1,
         "away_blended_war": 2.605997931747673,
         "away_war_source": "pace",
-        "home_current_war": null,
-        "home_projected_war": null,
-        "home_current_ip": null,
-        "home_projected_ip": null,
-        "home_blended_war": null,
-        "home_war_source": null,
+        "home_current_war": 1,
+        "home_projected_war": 1.7,
+        "home_current_ip": 98.7,
+        "home_projected_ip": 123.1,
+        "home_blended_war": 1.8237082066869301,
+        "home_war_source": "pace",
         "away_win_streak": 1,
         "home_win_streak": 1,
         "away_career_milestones": [],
@@ -3524,7 +3524,7 @@
         "min_wp_score": 0,
         "division_score": 0.07390000000000002,
         "away_war_score": 0.20743475426239127,
-        "home_war_score": 0,
+        "home_war_score": 0.1586601124473636,
         "away_playoff_imp_score": 0.6342282885707837,
         "home_playoff_imp_score": 0.04957262135628401,
         "away_win_streak_score": 0,
@@ -3533,9 +3533,10 @@
         "home_milestone_score": 0,
         "away_prospect_score": 0,
         "home_prospect_score": 0,
-        "score_0_to_1": 0.6769191494703668,
-        "score": 67.7,
-        "away_war": 2.605997931747673
+        "score_0_to_1": 0.7014643213915034,
+        "score": 70.1,
+        "away_war": 2.605997931747673,
+        "home_war": 1.8237082066869301
       },
       {
         "game_id": 823250,
@@ -3598,7 +3599,8 @@
         "home_prospect_score": 0,
         "score_0_to_1": 0.6304939875604094,
         "score": 63.0,
-        "home_war": 4.274406332453826
+        "home_war": 4.274406332453826,
+        "away_war": null
       },
       {
         "game_id": 824792,
@@ -3822,7 +3824,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.501694767288585,
-        "score": 50.2
+        "score": 50.2,
+        "away_war": 0.42326109893677455,
+        "home_war": 5.850340136054421
       },
       {
         "game_id": 824957,
@@ -3874,7 +3878,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.4969951996766735,
-        "score": 49.7
+        "score": 49.7,
+        "away_war": 2.884615384615384,
+        "home_war": null
       },
       {
         "game_id": 823500,
@@ -4196,7 +4202,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.3393792188761654,
-        "score": 33.9
+        "score": 33.9,
+        "away_war": 2.3846883098967737,
+        "home_war": 2.86109191430546
       },
       {
         "game_id": 824228,
