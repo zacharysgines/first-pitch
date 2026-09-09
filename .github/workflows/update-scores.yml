@@ -1,11 +1,6 @@
 name: Refresh daily game scores
 
 on:
-  schedule:
-    # Primary: 13:37 UTC = 7:37 AM MDT / 6:37 AM MST
-    - cron: "37 13 * * *"
-    # Backup: 15:07 UTC = 9:07 AM MDT / 8:07 AM MST
-    - cron: "7 15 * * *"
   workflow_dispatch: {}
 
 permissions:
@@ -19,9 +14,18 @@ jobs:
   refresh:
     runs-on: ubuntu-22.04
     timeout-minutes: 20
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+
+      - name: Log run timing
+        run: |
+          echo "Event: ${{ github.event_name }}"
+          echo "UTC start time:"
+          date -u
+          echo "Runner local time:"
+          date
 
       - name: Set up Python
         uses: actions/setup-python@v5
