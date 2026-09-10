@@ -1,17 +1,10 @@
 name: Check Lineups
 
 on:
-  schedule:
-    # 9:00 AM–5:30 PM MDT
-    - cron: "7,37 15-23 * * *"
-
-    # 6:00 PM–9:30 PM MDT
-    - cron: "7,37 0-3 * * *"
-
-    # 10:00 PM MDT
-    - cron: "7 4 * * *"
-
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 concurrency:
   group: check-lineups
@@ -25,6 +18,14 @@ jobs:
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
+
+      - name: Log run timing
+        run: |
+          echo "Event: ${{ github.event_name }}"
+          echo "UTC start time:"
+          date -u
+          echo "Runner local time:"
+          date
 
       - name: Set up Python
         uses: actions/setup-python@v5
