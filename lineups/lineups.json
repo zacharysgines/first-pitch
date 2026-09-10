@@ -563,81 +563,6 @@
             "away_team": "Texas Rangers",
             "home_team": "Seattle Mariners",
             "away_lineup": [],
-            "home_lineup": [],
-            "away_pitcher": {
-                "id": 594798,
-                "name": "Jacob deGrom",
-                "stats": {
-                    "strikeouts": 174,
-                    "era": "3.96",
-                    "ip": "143.1"
-                }
-            },
-            "home_pitcher": {
-                "id": 669302,
-                "name": "Logan Gilbert",
-                "stats": {
-                    "strikeouts": 176,
-                    "era": "3.71",
-                    "ip": "165.0"
-                }
-            },
-            "lineup_hash": "0917f9684174d5e99e1b8f3819640744"
-        },
-        "823499": {
-            "away_team": "Colorado Rockies",
-            "home_team": "New York Yankees",
-            "away_lineup": [],
-            "home_lineup": [],
-            "away_pitcher": {
-                "id": 663372,
-                "name": "Ryan Feltner",
-                "stats": {
-                    "strikeouts": 81,
-                    "era": "5.91",
-                    "ip": "106.2"
-                }
-            },
-            "home_pitcher": {
-                "id": 608331,
-                "name": "Max Fried",
-                "stats": {
-                    "strikeouts": 87,
-                    "era": "2.73",
-                    "ip": "95.2"
-                }
-            },
-            "lineup_hash": "e4ad7d057fed25d425a2449c3d7315c6"
-        },
-        "824550": {
-            "away_team": "Pittsburgh Pirates",
-            "home_team": "Chicago White Sox",
-            "away_lineup": [],
-            "home_lineup": [],
-            "away_pitcher": {
-                "id": 683003,
-                "name": "Jared Jones",
-                "stats": {
-                    "strikeouts": 92,
-                    "era": "4.46",
-                    "ip": "78.2"
-                }
-            },
-            "home_pitcher": {
-                "id": 696146,
-                "name": "Hagen Smith",
-                "stats": {
-                    "strikeouts": 23,
-                    "era": "0.56",
-                    "ip": "16.0"
-                }
-            },
-            "lineup_hash": "066f8e2496319d8c86c1ac7bd7cc9397"
-        },
-        "823088": {
-            "away_team": "Texas Rangers",
-            "home_team": "Seattle Mariners",
-            "away_lineup": [],
             "home_lineup": [
                 {
                     "id": 647304,
@@ -785,6 +710,335 @@
                 }
             },
             "lineup_hash": "ddd04588e1d4dcd24fe7c347c3d2657d"
+        },
+        "823499": {
+            "away_team": "Colorado Rockies",
+            "home_team": "New York Yankees",
+            "away_lineup": [],
+            "home_lineup": [],
+            "away_pitcher": {
+                "id": 663372,
+                "name": "Ryan Feltner",
+                "stats": {
+                    "strikeouts": 81,
+                    "era": "5.91",
+                    "ip": "106.2"
+                }
+            },
+            "home_pitcher": {
+                "id": 608331,
+                "name": "Max Fried",
+                "stats": {
+                    "strikeouts": 87,
+                    "era": "2.73",
+                    "ip": "95.2"
+                }
+            },
+            "lineup_hash": "e4ad7d057fed25d425a2449c3d7315c6"
+        },
+        "824550": {
+            "away_team": "Pittsburgh Pirates",
+            "home_team": "Chicago White Sox",
+            "away_lineup": [],
+            "home_lineup": [],
+            "away_pitcher": {
+                "id": 683003,
+                "name": "Jared Jones",
+                "stats": {
+                    "strikeouts": 92,
+                    "era": "4.46",
+                    "ip": "78.2"
+                }
+            },
+            "home_pitcher": {
+                "id": 696146,
+                "name": "Hagen Smith",
+                "stats": {
+                    "strikeouts": 23,
+                    "era": "0.56",
+                    "ip": "16.0"
+                }
+            },
+            "lineup_hash": "066f8e2496319d8c86c1ac7bd7cc9397"
+        },
+        "823088": {
+            "away_team": "Texas Rangers",
+            "home_team": "Seattle Mariners",
+            "away_lineup": [
+                {
+                    "id": 694497,
+                    "name": "Evan Carter",
+                    "position": "CF",
+                    "stats": {
+                        "runs": 49,
+                        "doubles": 13,
+                        "triples": 3,
+                        "home_runs": 9,
+                        "hits": 70,
+                        "steals": 15,
+                        "rbi": 35
+                    }
+                },
+                {
+                    "id": 694671,
+                    "name": "Wyatt Langford",
+                    "position": "LF",
+                    "stats": {
+                        "runs": 57,
+                        "doubles": 18,
+                        "triples": 2,
+                        "home_runs": 16,
+                        "hits": 87,
+                        "steals": 12,
+                        "rbi": 38
+                    }
+                },
+                {
+                    "id": 669394,
+                    "name": "Jake Burger",
+                    "position": "1B",
+                    "stats": {
+                        "runs": 63,
+                        "doubles": 21,
+                        "triples": 0,
+                        "home_runs": 26,
+                        "hits": 119,
+                        "steals": 3,
+                        "rbi": 83
+                    }
+                },
+                {
+                    "id": 592626,
+                    "name": "Joc Pederson",
+                    "position": "DH",
+                    "stats": {
+                        "runs": 55,
+                        "doubles": 11,
+                        "triples": 2,
+                        "home_runs": 25,
+                        "hits": 85,
+                        "steals": 2,
+                        "rbi": 50
+                    }
+                },
+                {
+                    "id": 608369,
+                    "name": "Corey Seager",
+                    "position": "SS",
+                    "stats": {
+                        "runs": 51,
+                        "doubles": 14,
+                        "triples": 0,
+                        "home_runs": 17,
+                        "hits": 73,
+                        "steals": 1,
+                        "rbi": 40
+                    }
+                },
+                {
+                    "id": 670032,
+                    "name": "Nicky Lopez",
+                    "position": "2B",
+                    "stats": {
+                        "runs": 21,
+                        "doubles": 4,
+                        "triples": 1,
+                        "home_runs": 1,
+                        "hits": 57,
+                        "steals": 5,
+                        "rbi": 23
+                    }
+                },
+                {
+                    "id": 677649,
+                    "name": "Ezequiel Duran",
+                    "position": "3B",
+                    "stats": {
+                        "runs": 66,
+                        "doubles": 26,
+                        "triples": 4,
+                        "home_runs": 17,
+                        "hits": 131,
+                        "steals": 11,
+                        "rbi": 78
+                    }
+                },
+                {
+                    "id": 607043,
+                    "name": "Brandon Nimmo",
+                    "position": "RF",
+                    "stats": {
+                        "runs": 56,
+                        "doubles": 31,
+                        "triples": 4,
+                        "home_runs": 14,
+                        "hits": 141,
+                        "steals": 7,
+                        "rbi": 58
+                    }
+                },
+                {
+                    "id": 643376,
+                    "name": "Danny Jansen",
+                    "position": "C",
+                    "stats": {
+                        "runs": 15,
+                        "doubles": 7,
+                        "triples": 1,
+                        "home_runs": 6,
+                        "hits": 28,
+                        "steals": 1,
+                        "rbi": 20
+                    }
+                }
+            ],
+            "home_lineup": [
+                {
+                    "id": 647304,
+                    "name": "Josh Naylor",
+                    "position": "1B",
+                    "stats": {
+                        "runs": 53,
+                        "doubles": 20,
+                        "triples": 0,
+                        "home_runs": 10,
+                        "hits": 142,
+                        "steals": 26,
+                        "rbi": 49
+                    }
+                },
+                {
+                    "id": 702284,
+                    "name": "Cole Young",
+                    "position": "2B",
+                    "stats": {
+                        "runs": 69,
+                        "doubles": 18,
+                        "triples": 3,
+                        "home_runs": 16,
+                        "hits": 130,
+                        "steals": 3,
+                        "rbi": 60
+                    }
+                },
+                {
+                    "id": 703155,
+                    "name": "Lazaro Montes",
+                    "position": "RF",
+                    "stats": {
+                        "runs": 3,
+                        "doubles": 1,
+                        "triples": 0,
+                        "home_runs": 2,
+                        "hits": 5,
+                        "steals": 0,
+                        "rbi": 6
+                    }
+                },
+                {
+                    "id": 668227,
+                    "name": "Randy Arozarena",
+                    "position": "LF",
+                    "stats": {
+                        "runs": 93,
+                        "doubles": 29,
+                        "triples": 1,
+                        "home_runs": 22,
+                        "hits": 140,
+                        "steals": 21,
+                        "rbi": 67
+                    }
+                },
+                {
+                    "id": 641487,
+                    "name": "J.P. Crawford",
+                    "position": "SS",
+                    "stats": {
+                        "runs": 42,
+                        "doubles": 12,
+                        "triples": 0,
+                        "home_runs": 10,
+                        "hits": 77,
+                        "steals": 1,
+                        "rbi": 33
+                    }
+                },
+                {
+                    "id": 686527,
+                    "name": "Dominic Canzone",
+                    "position": "DH",
+                    "stats": {
+                        "runs": 50,
+                        "doubles": 24,
+                        "triples": 2,
+                        "home_runs": 21,
+                        "hits": 105,
+                        "steals": 2,
+                        "rbi": 65
+                    }
+                },
+                {
+                    "id": 663728,
+                    "name": "Cal Raleigh",
+                    "position": "C",
+                    "stats": {
+                        "runs": 42,
+                        "doubles": 13,
+                        "triples": 0,
+                        "home_runs": 21,
+                        "hits": 72,
+                        "steals": 2,
+                        "rbi": 59
+                    }
+                },
+                {
+                    "id": 801126,
+                    "name": "Brock Rodden",
+                    "position": "3B",
+                    "stats": {
+                        "runs": 6,
+                        "doubles": 3,
+                        "triples": 1,
+                        "home_runs": 0,
+                        "hits": 12,
+                        "steals": 0,
+                        "rbi": 4
+                    }
+                },
+                {
+                    "id": 677594,
+                    "name": "Julio Rodr\u00edguez",
+                    "position": "CF",
+                    "stats": {
+                        "runs": 65,
+                        "doubles": 21,
+                        "triples": 0,
+                        "home_runs": 20,
+                        "hits": 128,
+                        "steals": 20,
+                        "rbi": 61
+                    }
+                }
+            ],
+            "away_pitcher": {
+                "id": 594798,
+                "name": "Jacob deGrom",
+                "stats": {
+                    "strikeouts": 174,
+                    "era": "3.96",
+                    "ip": "143.1"
+                }
+            },
+            "home_pitcher": {
+                "id": 669302,
+                "name": "Logan Gilbert",
+                "stats": {
+                    "strikeouts": 176,
+                    "era": "3.71",
+                    "ip": "165.0"
+                }
+            },
+            "lineup_hash": "e3039606783ee9116667e9b95fa3a1fa"
         }
     }
 }
