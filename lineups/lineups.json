@@ -841,183 +841,6 @@
         "823499": {
             "away_team": "Colorado Rockies",
             "home_team": "New York Yankees",
-            "away_lineup": [],
-            "home_lineup": [
-                {
-                    "id": 682987,
-                    "name": "Spencer Jones",
-                    "position": "CF",
-                    "stats": {
-                        "runs": 30,
-                        "doubles": 12,
-                        "triples": 1,
-                        "home_runs": 9,
-                        "hits": 50,
-                        "steals": 9,
-                        "rbi": 31
-                    }
-                },
-                {
-                    "id": 641857,
-                    "name": "Ryan McMahon",
-                    "position": "3B",
-                    "stats": {
-                        "runs": 29,
-                        "doubles": 13,
-                        "triples": 0,
-                        "home_runs": 10,
-                        "hits": 63,
-                        "steals": 3,
-                        "rbi": 33
-                    }
-                },
-                {
-                    "id": 691176,
-                    "name": "Jasson Dom\u00ednguez",
-                    "position": "RF",
-                    "stats": {
-                        "runs": 21,
-                        "doubles": 12,
-                        "triples": 0,
-                        "home_runs": 6,
-                        "hits": 47,
-                        "steals": 7,
-                        "rbi": 14
-                    }
-                },
-                {
-                    "id": 669224,
-                    "name": "Austin Wells",
-                    "position": "C",
-                    "stats": {
-                        "runs": 31,
-                        "doubles": 7,
-                        "triples": 0,
-                        "home_runs": 10,
-                        "hits": 55,
-                        "steals": 3,
-                        "rbi": 28
-                    }
-                },
-                {
-                    "id": 700250,
-                    "name": "Ben Rice",
-                    "position": "DH",
-                    "stats": {
-                        "runs": 90,
-                        "doubles": 22,
-                        "triples": 3,
-                        "home_runs": 36,
-                        "hits": 133,
-                        "steals": 3,
-                        "rbi": 88
-                    }
-                },
-                {
-                    "id": 683011,
-                    "name": "Anthony Volpe",
-                    "position": "2B",
-                    "stats": {
-                        "runs": 20,
-                        "doubles": 9,
-                        "triples": 1,
-                        "home_runs": 1,
-                        "hits": 41,
-                        "steals": 7,
-                        "rbi": 19
-                    }
-                },
-                {
-                    "id": 641355,
-                    "name": "Cody Bellinger",
-                    "position": "LF",
-                    "stats": {
-                        "runs": 65,
-                        "doubles": 23,
-                        "triples": 3,
-                        "home_runs": 13,
-                        "hits": 116,
-                        "steals": 10,
-                        "rbi": 63
-                    }
-                },
-                {
-                    "id": 806146,
-                    "name": "George Lombard Jr.",
-                    "position": "SS",
-                    "stats": {
-                        "runs": 14,
-                        "doubles": 2,
-                        "triples": 1,
-                        "home_runs": 3,
-                        "hits": 23,
-                        "steals": 1,
-                        "rbi": 11
-                    }
-                },
-                {
-                    "id": 671277,
-                    "name": "Luis Garc\u00eda Jr.",
-                    "position": "1B",
-                    "stats": {
-                        "runs": 64,
-                        "doubles": 26,
-                        "triples": 5,
-                        "home_runs": 29,
-                        "hits": 135,
-                        "steals": 5,
-                        "rbi": 89
-                    }
-                }
-            ],
-            "away_pitcher": {
-                "id": 663372,
-                "name": "Ryan Feltner",
-                "stats": {
-                    "strikeouts": 81,
-                    "era": "5.91",
-                    "ip": "106.2"
-                }
-            },
-            "home_pitcher": {
-                "id": 608331,
-                "name": "Max Fried",
-                "stats": {
-                    "strikeouts": 87,
-                    "era": "2.73",
-                    "ip": "95.2"
-                }
-            },
-            "lineup_hash": "b925ea16dc37af52c43272ddabecb55d"
-        },
-        "824550": {
-            "away_team": "Pittsburgh Pirates",
-            "home_team": "Chicago White Sox",
-            "away_lineup": [],
-            "home_lineup": [],
-            "away_pitcher": {
-                "id": 683003,
-                "name": "Jared Jones",
-                "stats": {
-                    "strikeouts": 92,
-                    "era": "4.46",
-                    "ip": "78.2"
-                }
-            },
-            "home_pitcher": {
-                "id": 696146,
-                "name": "Hagen Smith",
-                "stats": {
-                    "strikeouts": 23,
-                    "era": "0.56",
-                    "ip": "16.0"
-                }
-            },
-            "lineup_hash": "066f8e2496319d8c86c1ac7bd7cc9397"
-        },
-        "823499": {
-            "away_team": "Colorado Rockies",
-            "home_team": "New York Yankees",
             "away_lineup": [
                 {
                     "id": 691182,
@@ -1293,6 +1116,183 @@
                 }
             },
             "lineup_hash": "aa3aa3574b6c2bf5a3763c3c94b8d574"
+        },
+        "824550": {
+            "away_team": "Pittsburgh Pirates",
+            "home_team": "Chicago White Sox",
+            "away_lineup": [],
+            "home_lineup": [],
+            "away_pitcher": {
+                "id": 683003,
+                "name": "Jared Jones",
+                "stats": {
+                    "strikeouts": 92,
+                    "era": "4.46",
+                    "ip": "78.2"
+                }
+            },
+            "home_pitcher": {
+                "id": 696146,
+                "name": "Hagen Smith",
+                "stats": {
+                    "strikeouts": 23,
+                    "era": "0.56",
+                    "ip": "16.0"
+                }
+            },
+            "lineup_hash": "066f8e2496319d8c86c1ac7bd7cc9397"
+        },
+        "824550": {
+            "away_team": "Pittsburgh Pirates",
+            "home_team": "Chicago White Sox",
+            "away_lineup": [],
+            "home_lineup": [
+                {
+                    "id": 671976,
+                    "name": "Tristan Peters",
+                    "position": "CF",
+                    "stats": {
+                        "runs": 58,
+                        "doubles": 30,
+                        "triples": 4,
+                        "home_runs": 12,
+                        "hits": 112,
+                        "steals": 8,
+                        "rbi": 53
+                    }
+                },
+                {
+                    "id": 808959,
+                    "name": "Munetaka Murakami",
+                    "position": "1B",
+                    "stats": {
+                        "runs": 74,
+                        "doubles": 14,
+                        "triples": 0,
+                        "home_runs": 31,
+                        "hits": 83,
+                        "steals": 1,
+                        "rbi": 63
+                    }
+                },
+                {
+                    "id": 805367,
+                    "name": "Chase Meidroth",
+                    "position": "2B",
+                    "stats": {
+                        "runs": 78,
+                        "doubles": 27,
+                        "triples": 0,
+                        "home_runs": 12,
+                        "hits": 138,
+                        "steals": 3,
+                        "rbi": 51
+                    }
+                },
+                {
+                    "id": 695657,
+                    "name": "Colson Montgomery",
+                    "position": "SS",
+                    "stats": {
+                        "runs": 67,
+                        "doubles": 22,
+                        "triples": 0,
+                        "home_runs": 31,
+                        "hits": 108,
+                        "steals": 1,
+                        "rbi": 83
+                    }
+                },
+                {
+                    "id": 695731,
+                    "name": "Braden Montgomery",
+                    "position": "RF",
+                    "stats": {
+                        "runs": 41,
+                        "doubles": 13,
+                        "triples": 3,
+                        "home_runs": 6,
+                        "hits": 61,
+                        "steals": 1,
+                        "rbi": 37
+                    }
+                },
+                {
+                    "id": 668670,
+                    "name": "Jake Rogers",
+                    "position": "C",
+                    "stats": {
+                        "runs": 17,
+                        "doubles": 4,
+                        "triples": 1,
+                        "home_runs": 4,
+                        "hits": 23,
+                        "steals": 1,
+                        "rbi": 14
+                    }
+                },
+                {
+                    "id": 643217,
+                    "name": "Andrew Benintendi",
+                    "position": "DH",
+                    "stats": {
+                        "runs": 55,
+                        "doubles": 24,
+                        "triples": 2,
+                        "home_runs": 14,
+                        "hits": 95,
+                        "steals": 1,
+                        "rbi": 70
+                    }
+                },
+                {
+                    "id": 803011,
+                    "name": "Sam Antonacci",
+                    "position": "LF",
+                    "stats": {
+                        "runs": 72,
+                        "doubles": 23,
+                        "triples": 3,
+                        "home_runs": 8,
+                        "hits": 115,
+                        "steals": 17,
+                        "rbi": 44
+                    }
+                },
+                {
+                    "id": 678246,
+                    "name": "Miguel Vargas",
+                    "position": "3B",
+                    "stats": {
+                        "runs": 95,
+                        "doubles": 30,
+                        "triples": 1,
+                        "home_runs": 30,
+                        "hits": 132,
+                        "steals": 16,
+                        "rbi": 79
+                    }
+                }
+            ],
+            "away_pitcher": {
+                "id": 683003,
+                "name": "Jared Jones",
+                "stats": {
+                    "strikeouts": 92,
+                    "era": "4.46",
+                    "ip": "78.2"
+                }
+            },
+            "home_pitcher": {
+                "id": 696146,
+                "name": "Hagen Smith",
+                "stats": {
+                    "strikeouts": 23,
+                    "era": "0.56",
+                    "ip": "16.0"
+                }
+            },
+            "lineup_hash": "25d00893333c58e96ef49bba55377670"
         }
     }
 }
