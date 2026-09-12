@@ -3501,7 +3501,17 @@
         "home_war_source": null,
         "away_win_streak": 2,
         "home_win_streak": 0,
-        "away_career_milestones": [],
+        "away_career_milestones": [
+          {
+            "stat": "home_runs",
+            "player": "Pete Alonso",
+            "value": 298,
+            "target": 300,
+            "diff": 2,
+            "milestone_type": "Milestone",
+            "milestone_score": 0.22714799999999996
+          }
+        ],
         "away_season_milestones": [],
         "home_career_milestones": [],
         "home_season_milestones": [],
@@ -3518,13 +3528,14 @@
         "home_playoff_imp_score": 0.47365551965277053,
         "away_win_streak_score": 0,
         "home_win_streak_score": 0,
-        "away_milestone_score": 0,
+        "away_milestone_score": 0.2271479999999999,
         "home_milestone_score": 0,
         "away_prospect_score": 0,
         "home_prospect_score": 0,
-        "score_0_to_1": 0.6890737790557673,
-        "score": 68.9,
-        "home_war": null
+        "score_0_to_1": 0.7281119833586409,
+        "score": 72.8,
+        "home_war": null,
+        "away_war": 2.013157894736842
       },
       {
         "game_id": 824630,
@@ -3575,8 +3586,10 @@
         "home_milestone_score": 0,
         "away_prospect_score": 0,
         "home_prospect_score": 0,
-        "score_0_to_1": 0.5261320007380021,
-        "score": 52.6
+        "score_0_to_1": 0.5166364485674585,
+        "score": 51.7,
+        "away_war": 4.87741935483871,
+        "home_war": 3.558139534883721
       },
       {
         "game_id": 823657,
