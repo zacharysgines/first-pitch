@@ -3659,7 +3659,17 @@
         "home_win_streak": 1,
         "away_career_milestones": [],
         "away_season_milestones": [],
-        "home_career_milestones": [],
+        "home_career_milestones": [
+          {
+            "stat": "rbi",
+            "player": "Jos\u00e9 Ram\u00edrez",
+            "value": 997,
+            "target": 1000,
+            "diff": 3,
+            "milestone_type": "Milestone",
+            "milestone_score": 0.23887313
+          }
+        ],
         "home_season_milestones": [],
         "away_debuts": [],
         "home_debuts": [],
@@ -3675,11 +3685,12 @@
         "away_win_streak_score": 0,
         "home_win_streak_score": 0,
         "away_milestone_score": 0,
-        "home_milestone_score": 0,
+        "home_milestone_score": 0.23887313,
         "away_prospect_score": 0,
         "home_prospect_score": 0,
-        "score_0_to_1": 0.770439502407237,
-        "score": 77.0
+        "score_0_to_1": 0.7969495473412802,
+        "score": 79.7,
+        "home_war": 3.408284023668639
       },
       {
         "game_id": 825034,
