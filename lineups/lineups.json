@@ -57,12 +57,12 @@
             "away_lineup": [],
             "home_lineup": [],
             "away_pitcher": {
-                "id": 663436,
-                "name": "Davis Martin",
+                "id": 669684,
+                "name": "Chris Murphy",
                 "stats": {
-                    "strikeouts": 115,
-                    "era": "4.05",
-                    "ip": "135.2"
+                    "strikeouts": 34,
+                    "era": "3.94",
+                    "ip": "32.0"
                 }
             },
             "home_pitcher": {
@@ -74,7 +74,7 @@
                     "ip": "162.2"
                 }
             },
-            "lineup_hash": "f93a7fc80f65fb0f7c148e1d8827bf9c"
+            "lineup_hash": "81abfae7913557ff871d44c6bb842514"
         },
         "823333": {
             "away_team": "Milwaukee Brewers",
@@ -379,7 +379,134 @@
         "824384": {
             "away_team": "Chicago White Sox",
             "home_team": "Cleveland Guardians",
-            "away_lineup": [],
+            "away_lineup": [
+                {
+                    "id": 671976,
+                    "name": "Tristan Peters",
+                    "position": "RF",
+                    "stats": {
+                        "runs": 59,
+                        "doubles": 31,
+                        "triples": 4,
+                        "home_runs": 12,
+                        "hits": 114,
+                        "steals": 8,
+                        "rbi": 54
+                    }
+                },
+                {
+                    "id": 682668,
+                    "name": "Luisangel Acu\u00f1a",
+                    "position": "SS",
+                    "stats": {
+                        "runs": 21,
+                        "doubles": 4,
+                        "triples": 0,
+                        "home_runs": 1,
+                        "hits": 46,
+                        "steals": 17,
+                        "rbi": 12
+                    }
+                },
+                {
+                    "id": 545341,
+                    "name": "Randal Grichuk",
+                    "position": "DH",
+                    "stats": {
+                        "runs": 34,
+                        "doubles": 23,
+                        "triples": 1,
+                        "home_runs": 13,
+                        "hits": 66,
+                        "steals": 0,
+                        "rbi": 38
+                    }
+                },
+                {
+                    "id": 808959,
+                    "name": "Munetaka Murakami",
+                    "position": "1B",
+                    "stats": {
+                        "runs": 75,
+                        "doubles": 14,
+                        "triples": 0,
+                        "home_runs": 31,
+                        "hits": 84,
+                        "steals": 1,
+                        "rbi": 65
+                    }
+                },
+                {
+                    "id": 805367,
+                    "name": "Chase Meidroth",
+                    "position": "2B",
+                    "stats": {
+                        "runs": 81,
+                        "doubles": 27,
+                        "triples": 0,
+                        "home_runs": 14,
+                        "hits": 141,
+                        "steals": 3,
+                        "rbi": 55
+                    }
+                },
+                {
+                    "id": 668670,
+                    "name": "Jake Rogers",
+                    "position": "C",
+                    "stats": {
+                        "runs": 17,
+                        "doubles": 4,
+                        "triples": 1,
+                        "home_runs": 4,
+                        "hits": 23,
+                        "steals": 1,
+                        "rbi": 14
+                    }
+                },
+                {
+                    "id": 686668,
+                    "name": "Brenton Doyle",
+                    "position": "CF",
+                    "stats": {
+                        "runs": 27,
+                        "doubles": 6,
+                        "triples": 0,
+                        "home_runs": 3,
+                        "hits": 37,
+                        "steals": 13,
+                        "rbi": 12
+                    }
+                },
+                {
+                    "id": 803011,
+                    "name": "Sam Antonacci",
+                    "position": "LF",
+                    "stats": {
+                        "runs": 74,
+                        "doubles": 23,
+                        "triples": 4,
+                        "home_runs": 8,
+                        "hits": 120,
+                        "steals": 18,
+                        "rbi": 44
+                    }
+                },
+                {
+                    "id": 678246,
+                    "name": "Miguel Vargas",
+                    "position": "3B",
+                    "stats": {
+                        "runs": 98,
+                        "doubles": 30,
+                        "triples": 1,
+                        "home_runs": 31,
+                        "hits": 137,
+                        "steals": 19,
+                        "rbi": 81
+                    }
+                }
+            ],
             "home_lineup": [],
             "away_pitcher": {
                 "id": 669684,
@@ -399,7 +526,7 @@
                     "ip": "162.2"
                 }
             },
-            "lineup_hash": "81abfae7913557ff871d44c6bb842514"
+            "lineup_hash": "7b2b2089ab3e6f8ee918013c81a9043e"
         }
     }
 }
