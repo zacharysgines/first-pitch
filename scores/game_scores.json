@@ -3712,7 +3712,17 @@
         "home_win_streak": 0,
         "away_career_milestones": [],
         "away_season_milestones": [],
-        "home_career_milestones": [],
+        "home_career_milestones": [
+          {
+            "stat": "rbi",
+            "player": "Jos\u00e9 Ram\u00edrez",
+            "value": 997,
+            "target": 1000,
+            "diff": 3,
+            "milestone_type": "Milestone",
+            "milestone_score": 0.23887313
+          }
+        ],
         "home_season_milestones": [],
         "away_debuts": [],
         "home_debuts": [],
@@ -3728,12 +3738,13 @@
         "away_win_streak_score": 0,
         "home_win_streak_score": 0,
         "away_milestone_score": 0,
-        "home_milestone_score": 0,
+        "home_milestone_score": 0.23887313,
         "away_prospect_score": 0,
         "home_prospect_score": 0,
-        "score_0_to_1": 0.695812703533236,
-        "score": 69.6,
-        "away_war": null
+        "score_0_to_1": 0.7367930186271233,
+        "score": 73.7,
+        "away_war": null,
+        "home_war": 2.433927473878304
       },
       {
         "game_id": 825030,
@@ -3942,7 +3953,8 @@
         "home_prospect_score": 0,
         "score_0_to_1": 0.5670246405940738,
         "score": 56.7,
-        "home_war": null
+        "home_war": null,
+        "away_war": 6.695598264104153
       },
       {
         "game_id": 822762,
@@ -3994,7 +4006,8 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.5418993454684715,
-        "score": 54.2
+        "score": 54.2,
+        "home_war": null
       },
       {
         "game_id": 822683,
@@ -4046,7 +4059,8 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.49130079167138896,
-        "score": 49.1
+        "score": 49.1,
+        "away_war": 5.573945541911371
       },
       {
         "game_id": 823654,
@@ -4310,7 +4324,8 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.31940088787762777,
-        "score": 31.9
+        "score": 31.9,
+        "away_war": 1.5281087452879265
       },
       {
         "game_id": 822925,
@@ -4363,7 +4378,8 @@
         "home_prospect_score": 0,
         "score_0_to_1": 0.25089957762449244,
         "score": 25.1,
-        "home_war": 1.9939577039274925
+        "home_war": 1.9939577039274925,
+        "away_war": 0.6969990319457889
       },
       {
         "game_id": 823980,
