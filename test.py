@@ -33,90 +33,63 @@
 import statsapi
 import pandas as pd
 from datetime import datetime
-from pathlib import Path
 import unicodedata
+import sys
+from pathlib import Path
+
+#Find the project root path and add that path to Python's import path so we can find the files we
+#need to import from
+ROOT_DIR = Path(__file__).resolve().parents[1]  
+sys.path.insert(0, str(ROOT_DIR))
+
+from teams_info.teams_info import get_teams_info
+from records.records import records
 
 
+gamedate_str = '09/10/2026'
+standings = statsapi.standings_data(date=gamedate_str)
 
-#Load projected records from projected_records.csv
-def load_projections():
-    with open(Path(__file__).resolve().parent / "records" / "projected_records.csv", 'r', encoding='utf-8') as f:
-        df = pd.read_csv(f)
-        projections = df.to_dict(orient='records')    
-    return projections 
+teams_info = get_teams_info(standings)               #Initialize the teams_info dictionary to hold all scoring info
+records(teams_info, standings)                       #Get each team's current or projected record 
 
-# # def LoadProjections():
-# #     #Load projections.csv
-# #     with open('projected_records.csv', 'r', encoding='utf-8') as f:
-# #         df = pd.read_csv(f)
-# #         projections = df.to_dict(orient='records')
-    
-# #     return projections
+print(teams_info)
 
-# def GetTeams(standings):
-#     #Initialize the teams dictionary
-#     teams = {}
-
-#     #If there's no standings (i.e., first day of the season), use projections instead
-#     if standings:
-#         for division in standings.values():
-#             for team in division['teams']:                
-#                 #Initialize the dictionary for each team within the teams dictionary
-#                 team_name = teams.setdefault(team['name'], {})
-#                 #Save each team's Id
-#                 team_obj = statsapi.lookup_team(team['name'], activeStatus="Y")
-#                 team_name['id'] = team_obj[0]['id']
-#                 #Save each team's divison
-#                 team_name['division'] = division['div_name']
-    
-    # else:
-    #     #Load Projections
-    #     projections = load_projections()
-    #     for team in projections:
-    #         #Initialize the dictionary for each team within the teams_info dictionary
-    #         team_info = teams_info.setdefault(team['Name'], {})
-    #         #Save each team's id
-    #         team_obj = statsapi.lookup_team(team['Name'], activeStatus="Y")
-    #         team_info['id'] = team_obj[0]['id']
-    #         #Save each team's divison
-    #         team_info['division'] = team['Division']
-    
-#     return teams
-
-# # def GetProspects():
-# #     PROSPECTS_CSV = 'scores\prospects.csv'
-
-# #     try:
-# #         df = pd.read_csv(PROSPECTS_CSV, encoding="utf-8")
-# #     except UnicodeDecodeError:
-# #         df = pd.read_csv(PROSPECTS_CSV, encoding="cp1252")
-# #     prospects = df.to_dict(orient='records')
-
-# #     return prospects
-
-# # fv = 40
-# # original_prospect_score = 0
-# # unadjusted_score = 0.24395779497136927
-# # new_prospect_score = .0094 * math.exp(.0576 * fv)
-# # new_unadjusted_score = unadjusted_score - original_prospect_score + new_prospect_score
-# # score = min(100, 100*((math.log(1+new_unadjusted_score))/(math.log(3))))
-# # print('Prospect Score:', new_prospect_score)
-# # print('Unadjusted Score:', new_unadjusted_score)
-# # print('Score:', score)
-
-gamedate = '04/26/2026'
-date_obj = datetime.strptime(gamedate, "%m/%d/%Y")
-
-games = statsapi.schedule(gamedate)
-# standings = statsapi.standings_data(date=gamedate)
-# teams = GetTeams(standings)
-
-# pitchers = statsapi.lookup_player("Diaz")
-
-# for pitcher in pitchers:
-#     print(pitcher)
+current_standings = {}
+for team, team_info in teams_info.items():
+    current_standings[team] = {
+        'wins': team_info['wins'],
+        'losses': team_info['losses'],
+        'win_perc': team_info['adjusted_win_perc'],
+        'sim_wins': 0
+    }
+    print(team)
+    print(team_info)
 
 
+    {"wins": 87, "losses": 58, "winning_percentage": 0.600, "sim_wins": 0},
 
-for game in games:
-    print(game)
+
+#Define current structure of MLB
+mlb = {
+    'american_leauge': {
+        'east': ['Tampa Bay Rays', 'New York Yankees', 'Boston Red Sox', 'Toronto Blue Jays', 'Baltimore Orioles'],
+        'central': ['Chicago White Sox', 'Cleveland Guardians', 'Minnesota Twins', 'Detroit Tigers', 'Kansas City Royals'],
+        'west': ['Houston Astros', 'Texas Rangers', 'Seattle Mariners', 'Athletics', 'Los Angeles Angels'],
+    },
+    'national_league': {
+        'east': ['Atlanta Braves', 'Philadelphia Phillies', 'Miami Marlins', 'New York Mets', 'Washington Nationals'],
+        'central': ['Milwaukee Brewers', 'Chicago Cubs', 'Pittsburgh Pirates', 'St. Louis Cardinals', 'Cincinnati Reds'],
+        'west': ['Los Angeles Dodgers', 'San Diego Padres', 'Arizona Diamondbacks', 'San Francisco Giants', 'Colorado Rockies'],
+    }
+}
+
+#List to track which teams made the playoffs in this simulation
+playoff_teams = []
+for league in mlb.values():
+    #Track division winners
+    division_winners = []
+    for division in league.values():
+        #Take the top team in each division based on wins, breaking ties randomly
+        division_winner = max(division, key=lambda team: (
+            sim_standings[team]['wins'] + sim_standings[team]['sim_wins'], random.random()
+        ))

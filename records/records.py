@@ -95,7 +95,7 @@ def calc_score(wp, team_info, current_wins, current_losses, games_played):
     team_info['losses'] = current_losses
     team_info['adjusted_wins'] = round(games_played * wp)
     team_info['adjusted_losses'] = games_played - round(games_played * wp)
-    team_info['win_perc'] = wp
+    team_info['adjusted_win_perc'] = wp
     team_info['wp_score'] = wp_score
 
     return None
