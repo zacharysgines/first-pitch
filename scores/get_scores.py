@@ -44,7 +44,7 @@ def combine_component_scores(components, gamma=1.4, single_component_cap=0.90):
     return 1.0 - remaining
 
 
-def score_all_games(starting_date_str, ending_date_str):
+def score_all_games(starting_date_str, ending_date_str, use_json=True):
     #Get all scores from game_scores.json 
     saved_scores = load_scores()
 
@@ -67,7 +67,7 @@ def score_all_games(starting_date_str, ending_date_str):
         gamedate_str = rolling_date_obj.strftime("%m/%d/%Y")
         
         #Get the scores for the current date
-        score_games(gamedate_str, saved_scores)
+        score_games(gamedate_str, saved_scores, use_json=use_json)
                      
         #After getting the scores, print the current time running, how many scores we've gotten, and how many there are total to get        
         current_time = time.time()
@@ -141,7 +141,7 @@ def get_scores(standings, games, gamedate_str):
     teams_info = get_teams_info(standings)               #Initialize the teams_info dictionary to hold all scoring info
     get_all_lineups(games, gamedate_str)                 #Get lineups for today
     records(teams_info, standings)                       #Get each team's current or projected record 
-    playoff_imp(standings, teams_info)                   #Calculate playoff implications for each team
+    playoff_imp(teams_info, gamedate_str)                #Calculate playoff implications for each team
     win_streak(standings, teams_info, gamedate_str)      #Find winning streaks for each team
     starting_pitchers(games, teams_info, gamedate_str)   #Get the starters for today's games
     milestones(games, gamedate_str, teams_info)          #Find any milestones, record chases or prospect debuts
@@ -170,16 +170,16 @@ def get_scores(standings, games, gamedate_str):
         home_wins = home_team_info['wins']
         home_losses = home_team_info['losses']
         #Playoff Implications
-        away_playoff_imp_score = away_team_info['playoff_imp']
-        home_playoff_imp_score = home_team_info['playoff_imp'] 
+        away_playoff_imp_score = away_team_info['playoff_imp_score']
+        home_playoff_imp_score = home_team_info['playoff_imp_score'] 
         #Win Streak
         away_win_streak = away_team_info['win_streak']
         away_win_streak_score = away_team_info['win_streak_score']
         home_win_streak = home_team_info['win_streak']
         home_win_streak_score = home_team_info['win_streak_score']
         #Winning Percentage
-        away_wp = away_team_info['win_perc']
-        home_wp = home_team_info['win_perc']
+        away_wp = away_team_info['adjusted_win_perc']
+        home_wp = home_team_info['adjusted_win_perc']
         away_wp_score = away_team_info['wp_score']
         home_wp_score = home_team_info['wp_score']
         #Team Diff
@@ -248,7 +248,7 @@ def get_scores(standings, games, gamedate_str):
             gamma=1.4,
         )
 
-        score = round(100 * score_0_to_1, 1) 
+        score = round(100 * score_0_to_1, 1)
 
         #Add the scores for this game to the game_scores list
         game_scores.append({
@@ -411,6 +411,7 @@ def update_scores(gamedate_str, games, games_to_update):
             saved_game['team_diff_score'],
             saved_game['away_war_score'],
             saved_game['home_war_score'],
+            saved_game['min_wp_score'],
             saved_game['division_score'],
             saved_game['away_milestone_score'],
             saved_game['home_milestone_score'],
@@ -433,5 +434,5 @@ def update_scores(gamedate_str, games, games_to_update):
 
     return saved_scores
 
-#get_all_scores('08/21/2026', '12/31/2026')
+#score_all_games('09/01/2026', '09/10/2026', use_json=False)
 #score_games('06/04/2026', use_json=False)
