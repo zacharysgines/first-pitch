@@ -3422,7 +3422,7 @@
         "game_id": 824141,
         "game_datetime": "2026-09-17T23:15:00Z",
         "national_broadcasts": [
-          "FOX / FOX ONE"
+          "FOX/ FOX ONE"
         ],
         "away_team_name": "Kansas City Royals",
         "home_team_name": "Houston Astros",
@@ -3574,13 +3574,15 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.409531051317513,
-        "score": 41.0
+        "score": 41.0,
+        "away_war": -0.5333333333333334,
+        "home_war": 5.165315034310667
       },
       {
         "game_id": 823573,
         "game_datetime": "2026-09-17T23:15:00Z",
         "national_broadcasts": [
-          "FOX / FOX ONE"
+          "FOX/ FOX ONE"
         ],
         "away_team_name": "Philadelphia Phillies",
         "home_team_name": "New York Mets",
@@ -3784,7 +3786,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.2984348110865752,
-        "score": 29.8
+        "score": 29.8,
+        "away_war": 2.601626016260163,
+        "home_war": null
       },
       {
         "game_id": 824464,
@@ -3836,7 +3840,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.28656663493198775,
-        "score": 28.7
+        "score": 28.7,
+        "away_war": 2.295573893473368,
+        "home_war": 0.4777704047777041
       }
     ]
   },
