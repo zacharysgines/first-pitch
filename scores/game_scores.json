@@ -3361,7 +3361,17 @@
         "home_win_streak": 0,
         "away_career_milestones": [],
         "away_season_milestones": [],
-        "home_career_milestones": [],
+        "home_career_milestones": [
+          {
+            "stat": "home_runs",
+            "player": "Christian Walker",
+            "value": 199,
+            "target": 200,
+            "diff": 1,
+            "milestone_type": "Milestone",
+            "milestone_score": 0.25257644999999995
+          }
+        ],
         "home_season_milestones": [],
         "away_debuts": [],
         "home_debuts": [],
@@ -3377,12 +3387,13 @@
         "away_win_streak_score": 0,
         "home_win_streak_score": 0,
         "away_milestone_score": 0,
-        "home_milestone_score": 0,
+        "home_milestone_score": 0.25257644999999995,
         "away_prospect_score": 0,
         "home_prospect_score": 0,
-        "score_0_to_1": 0.5930408198779555,
-        "score": 59.3,
-        "away_war": 1.1432604093154553
+        "score_0_to_1": 0.6523198168417161,
+        "score": 65.2,
+        "away_war": 1.1432604093154553,
+        "home_war": 2.569338521400778
       },
       {
         "game_id": 823571,
@@ -3817,7 +3828,8 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.4110404454691903,
-        "score": 41.1
+        "score": 41.1,
+        "home_war": 2.1375
       },
       {
         "game_id": 822921,
@@ -3978,7 +3990,8 @@
         "home_prospect_score": 0,
         "score_0_to_1": 0.262379654041652,
         "score": 26.2,
-        "home_war": -0.08927846765684623
+        "home_war": -0.08927846765684623,
+        "away_war": 2.040104620749782
       },
       {
         "game_id": 824304,
