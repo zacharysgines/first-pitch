@@ -3264,7 +3264,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.7391627429883141,
-        "score": 73.9
+        "score": 73.9,
+        "away_war": 2.7643236857649143,
+        "home_war": 2.4839006439742413
       },
       {
         "game_id": 825029,
@@ -3296,7 +3298,17 @@
         "home_win_streak": 0,
         "away_career_milestones": [],
         "away_season_milestones": [],
-        "home_career_milestones": [],
+        "home_career_milestones": [
+          {
+            "stat": "doubles",
+            "player": "Ketel Marte",
+            "value": 299,
+            "target": 300,
+            "diff": 1,
+            "milestone_type": "Milestone",
+            "milestone_score": 0.26016624
+          }
+        ],
         "home_season_milestones": [],
         "away_debuts": [],
         "home_debuts": [],
@@ -3312,11 +3324,12 @@
         "away_win_streak_score": 0,
         "home_win_streak_score": 0,
         "away_milestone_score": 0,
-        "home_milestone_score": 0,
+        "home_milestone_score": 0.26016624,
         "away_prospect_score": 0,
         "home_prospect_score": 0,
-        "score_0_to_1": 0.5948834394541198,
-        "score": 59.5
+        "score_0_to_1": 0.6563913980668665,
+        "score": 65.6,
+        "home_war": 2.6129032258064515
       },
       {
         "game_id": 824137,
@@ -3368,7 +3381,8 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.5930408198779555,
-        "score": 59.3
+        "score": 59.3,
+        "away_war": 1.1432604093154553
       },
       {
         "game_id": 823571,
@@ -3910,7 +3924,8 @@
         "home_prospect_score": 0,
         "score_0_to_1": 0.3664606406127252,
         "score": 36.6,
-        "home_war": 2.566191446028513
+        "home_war": 2.566191446028513,
+        "away_war": 3.355381840048106
       },
       {
         "game_id": 824461,
