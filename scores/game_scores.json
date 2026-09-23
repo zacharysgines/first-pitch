@@ -3061,19 +3061,19 @@
         "away_wp": 0.4616049382716049,
         "home_wp": 0.4963271604938272,
         "away_starter": "Nolan McLean",
-        "home_starter": null,
+        "home_starter": "Cody Bradford",
         "away_current_war": 3.2,
         "away_projected_war": 1.8,
         "away_current_ip": 172.7,
         "away_projected_ip": 144.0,
         "away_blended_war": 3.335263462651998,
         "away_war_source": "pace",
-        "home_current_war": null,
-        "home_projected_war": null,
-        "home_current_ip": null,
-        "home_projected_ip": null,
-        "home_blended_war": null,
-        "home_war_source": null,
+        "home_current_war": 0.5,
+        "home_projected_war": 1.0,
+        "home_current_ip": 38.7,
+        "home_projected_ip": 76.0,
+        "home_blended_war": 2.3463157894736844,
+        "home_war_source": "projected",
         "away_win_streak": 1,
         "home_win_streak": 0,
         "away_career_milestones": [],
@@ -3088,7 +3088,7 @@
         "min_wp_score": 0,
         "division_score": 0,
         "away_war_score": 0.2598091201902911,
-        "home_war_score": 0,
+        "home_war_score": 0.1904056825327699,
         "away_playoff_imp_score": 0,
         "home_playoff_imp_score": 0.5713162669044826,
         "away_win_streak_score": 0,
@@ -3097,8 +3097,9 @@
         "home_milestone_score": 0,
         "away_prospect_score": 0,
         "home_prospect_score": 0,
-        "score_0_to_1": 0.6231882796758383,
-        "score": 62.3
+        "score_0_to_1": 0.6601435403686637,
+        "score": 66.0,
+        "home_war": 2.3463157894736844
       },
       {
         "game_id": 824868,
@@ -3568,7 +3569,8 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.26501279085190876,
-        "score": 26.5
+        "score": 26.5,
+        "home_war": 1.9205690574985181
       },
       {
         "game_id": 823327,
@@ -3776,7 +3778,9 @@
         "away_prospect_score": 0,
         "home_prospect_score": 0,
         "score_0_to_1": 0.20911930565534853,
-        "score": 20.9
+        "score": 20.9,
+        "away_war": null,
+        "home_war": null
       },
       {
         "game_id": 824784,
