@@ -1401,7 +1401,15 @@
             "home_team": "Philadelphia Phillies",
             "away_lineup": [],
             "home_lineup": [],
-            "away_pitcher": null,
+            "away_pitcher": {
+                "id": 675660,
+                "name": "Shane Drohan",
+                "stats": {
+                    "strikeouts": 121,
+                    "era": "4.26",
+                    "ip": "120.1"
+                }
+            },
             "home_pitcher": {
                 "id": 691725,
                 "name": "Andrew Painter",
@@ -1411,7 +1419,7 @@
                     "ip": "120.2"
                 }
             },
-            "lineup_hash": "c60424be4bbaf086a461e6308fed88d9"
+            "lineup_hash": "6a58d9cb12bb21c380ccfa15b9fb7ca0"
         },
         "824707": {
             "away_team": "Cleveland Guardians",
@@ -1567,7 +1575,134 @@
             "away_team": "Milwaukee Brewers",
             "home_team": "Philadelphia Phillies",
             "away_lineup": [],
-            "home_lineup": [],
+            "home_lineup": [
+                {
+                    "id": 702222,
+                    "name": "Justin Crawford",
+                    "position": "CF",
+                    "stats": {
+                        "runs": 48,
+                        "doubles": 19,
+                        "triples": 5,
+                        "home_runs": 3,
+                        "hits": 109,
+                        "steals": 16,
+                        "rbi": 41
+                    }
+                },
+                {
+                    "id": 650559,
+                    "name": "Bryan De La Cruz",
+                    "position": "LF",
+                    "stats": {
+                        "runs": 10,
+                        "doubles": 4,
+                        "triples": 0,
+                        "home_runs": 2,
+                        "hits": 21,
+                        "steals": 0,
+                        "rbi": 12
+                    }
+                },
+                {
+                    "id": 547180,
+                    "name": "Bryce Harper",
+                    "position": "RF",
+                    "stats": {
+                        "runs": 92,
+                        "doubles": 32,
+                        "triples": 3,
+                        "home_runs": 28,
+                        "hits": 150,
+                        "steals": 7,
+                        "rbi": 85
+                    }
+                },
+                {
+                    "id": 592663,
+                    "name": "J.T. Realmuto",
+                    "position": "C",
+                    "stats": {
+                        "runs": 51,
+                        "doubles": 18,
+                        "triples": 0,
+                        "home_runs": 11,
+                        "hits": 84,
+                        "steals": 3,
+                        "rbi": 50
+                    }
+                },
+                {
+                    "id": 664761,
+                    "name": "Alec Bohm",
+                    "position": "1B",
+                    "stats": {
+                        "runs": 58,
+                        "doubles": 29,
+                        "triples": 1,
+                        "home_runs": 15,
+                        "hits": 141,
+                        "steals": 2,
+                        "rbi": 88
+                    }
+                },
+                {
+                    "id": 681082,
+                    "name": "Bryson Stott",
+                    "position": "3B",
+                    "stats": {
+                        "runs": 69,
+                        "doubles": 32,
+                        "triples": 6,
+                        "home_runs": 10,
+                        "hits": 131,
+                        "steals": 26,
+                        "rbi": 66
+                    }
+                },
+                {
+                    "id": 656941,
+                    "name": "Kyle Schwarber",
+                    "position": "DH",
+                    "stats": {
+                        "runs": 93,
+                        "doubles": 18,
+                        "triples": 1,
+                        "home_runs": 45,
+                        "hits": 131,
+                        "steals": 3,
+                        "rbi": 95
+                    }
+                },
+                {
+                    "id": 650333,
+                    "name": "Luis Arraez",
+                    "position": "2B",
+                    "stats": {
+                        "runs": 67,
+                        "doubles": 33,
+                        "triples": 7,
+                        "home_runs": 6,
+                        "hits": 185,
+                        "steals": 10,
+                        "rbi": 64
+                    }
+                },
+                {
+                    "id": 607208,
+                    "name": "Trea Turner",
+                    "position": "SS",
+                    "stats": {
+                        "runs": 100,
+                        "doubles": 28,
+                        "triples": 1,
+                        "home_runs": 19,
+                        "hits": 151,
+                        "steals": 21,
+                        "rbi": 58
+                    }
+                }
+            ],
             "away_pitcher": {
                 "id": 675660,
                 "name": "Shane Drohan",
@@ -1586,7 +1721,7 @@
                     "ip": "120.2"
                 }
             },
-            "lineup_hash": "6a58d9cb12bb21c380ccfa15b9fb7ca0"
+            "lineup_hash": "81ba0c06c5fb77e9a53d43f0ea061b44"
         }
     }
 }
