@@ -2455,7 +2455,17 @@
         "home_war_source": "pace",
         "away_win_streak": 1,
         "home_win_streak": 0,
-        "away_career_milestones": [],
+        "away_career_milestones": [
+          {
+            "stat": "home_runs",
+            "player": "Manny Machado",
+            "value": 398,
+            "target": 400,
+            "diff": 2,
+            "milestone_type": "Milestone",
+            "milestone_score": 0.30221999999999993
+          }
+        ],
         "away_season_milestones": [],
         "home_career_milestones": [],
         "home_season_milestones": [],
@@ -2472,13 +2482,14 @@
         "home_playoff_imp_score": 0,
         "away_win_streak_score": 0,
         "home_win_streak_score": 0,
-        "away_milestone_score": 0,
+        "away_milestone_score": 0.30221999999999993,
         "home_milestone_score": 0,
         "away_prospect_score": 0,
         "home_prospect_score": 0,
-        "score_0_to_1": 0.6422968158192328,
-        "score": 64.2,
-        "home_war": 5.050511451646342
+        "score_0_to_1": 0.7092814651081649,
+        "score": 70.9,
+        "home_war": 5.050511451646342,
+        "away_war": 3.5125910509885534
       },
       {
         "game_id": 824950,
