@@ -3066,56 +3066,6 @@
             "away_team": "Houston Astros",
             "home_team": "Athletics",
             "away_lineup": [],
-            "home_lineup": [],
-            "away_pitcher": {
-                "id": 669713,
-                "name": "Hayden Wesneski",
-                "stats": {
-                    "strikeouts": 41,
-                    "era": "3.50",
-                    "ip": "54.0"
-                }
-            },
-            "home_pitcher": {
-                "id": 678022,
-                "name": "Jack Perkins",
-                "stats": {
-                    "strikeouts": 131,
-                    "era": "5.90",
-                    "ip": "116.0"
-                }
-            },
-            "lineup_hash": "dbdbaea9dbc75981a4c83434a10e25dd"
-        },
-        "823083": {
-            "away_team": "Los Angeles Angels",
-            "home_team": "Seattle Mariners",
-            "away_lineup": [],
-            "home_lineup": [],
-            "away_pitcher": {
-                "id": 696270,
-                "name": "Ryan Johnson",
-                "stats": {
-                    "strikeouts": 76,
-                    "era": "4.93",
-                    "ip": "95.0"
-                }
-            },
-            "home_pitcher": {
-                "id": 807739,
-                "name": "Kade Anderson",
-                "stats": {
-                    "strikeouts": 28,
-                    "era": "4.18",
-                    "ip": "32.1"
-                }
-            },
-            "lineup_hash": "1f67e625191abc6c47b176885ad25cd7"
-        },
-        "824949": {
-            "away_team": "Houston Astros",
-            "home_team": "Athletics",
-            "away_lineup": [],
             "home_lineup": [
                 {
                     "id": 671732,
@@ -3263,6 +3213,183 @@
                 }
             },
             "lineup_hash": "3ca268432e18a486a0de64237baa5695"
+        },
+        "823083": {
+            "away_team": "Los Angeles Angels",
+            "home_team": "Seattle Mariners",
+            "away_lineup": [],
+            "home_lineup": [],
+            "away_pitcher": {
+                "id": 696270,
+                "name": "Ryan Johnson",
+                "stats": {
+                    "strikeouts": 76,
+                    "era": "4.93",
+                    "ip": "95.0"
+                }
+            },
+            "home_pitcher": {
+                "id": 807739,
+                "name": "Kade Anderson",
+                "stats": {
+                    "strikeouts": 28,
+                    "era": "4.18",
+                    "ip": "32.1"
+                }
+            },
+            "lineup_hash": "1f67e625191abc6c47b176885ad25cd7"
+        },
+        "823083": {
+            "away_team": "Los Angeles Angels",
+            "home_team": "Seattle Mariners",
+            "away_lineup": [
+                {
+                    "id": 642350,
+                    "name": "Jose Siri",
+                    "position": "LF",
+                    "stats": {
+                        "runs": 35,
+                        "doubles": 10,
+                        "triples": 0,
+                        "home_runs": 9,
+                        "hits": 52,
+                        "steals": 9,
+                        "rbi": 30
+                    }
+                },
+                {
+                    "id": 695681,
+                    "name": "Christian Moore",
+                    "position": "2B",
+                    "stats": {
+                        "runs": 4,
+                        "doubles": 4,
+                        "triples": 1,
+                        "home_runs": 2,
+                        "hits": 24,
+                        "steals": 1,
+                        "rbi": 18
+                    }
+                },
+                {
+                    "id": 687263,
+                    "name": "Zach Neto",
+                    "position": "SS",
+                    "stats": {
+                        "runs": 101,
+                        "doubles": 31,
+                        "triples": 5,
+                        "home_runs": 27,
+                        "hits": 148,
+                        "steals": 24,
+                        "rbi": 77
+                    }
+                },
+                {
+                    "id": 545361,
+                    "name": "Mike Trout",
+                    "position": "DH",
+                    "stats": {
+                        "runs": 86,
+                        "doubles": 26,
+                        "triples": 0,
+                        "home_runs": 22,
+                        "hits": 124,
+                        "steals": 11,
+                        "rbi": 54
+                    }
+                },
+                {
+                    "id": 694203,
+                    "name": "Denzer Guzman",
+                    "position": "3B",
+                    "stats": {
+                        "runs": 32,
+                        "doubles": 9,
+                        "triples": 0,
+                        "home_runs": 8,
+                        "hits": 60,
+                        "steals": 2,
+                        "rbi": 33
+                    }
+                },
+                {
+                    "id": 687093,
+                    "name": "Vaughn Grissom",
+                    "position": "1B",
+                    "stats": {
+                        "runs": 47,
+                        "doubles": 22,
+                        "triples": 0,
+                        "home_runs": 13,
+                        "hits": 101,
+                        "steals": 1,
+                        "rbi": 71
+                    }
+                },
+                {
+                    "id": 685133,
+                    "name": "Wade Meckler",
+                    "position": "RF",
+                    "stats": {
+                        "runs": 42,
+                        "doubles": 15,
+                        "triples": 1,
+                        "home_runs": 3,
+                        "hits": 90,
+                        "steals": 8,
+                        "rbi": 27
+                    }
+                },
+                {
+                    "id": 623168,
+                    "name": "Tyler Heineman",
+                    "position": "C",
+                    "stats": {
+                        "runs": 15,
+                        "doubles": 3,
+                        "triples": 1,
+                        "home_runs": 1,
+                        "hits": 30,
+                        "steals": 1,
+                        "rbi": 9
+                    }
+                },
+                {
+                    "id": 669326,
+                    "name": "Bryce Teodosio",
+                    "position": "CF",
+                    "stats": {
+                        "runs": 6,
+                        "doubles": 2,
+                        "triples": 0,
+                        "home_runs": 0,
+                        "hits": 12,
+                        "steals": 5,
+                        "rbi": 4
+                    }
+                }
+            ],
+            "home_lineup": [],
+            "away_pitcher": {
+                "id": 696270,
+                "name": "Ryan Johnson",
+                "stats": {
+                    "strikeouts": 76,
+                    "era": "4.93",
+                    "ip": "95.0"
+                }
+            },
+            "home_pitcher": {
+                "id": 807739,
+                "name": "Kade Anderson",
+                "stats": {
+                    "strikeouts": 28,
+                    "era": "4.18",
+                    "ip": "32.1"
+                }
+            },
+            "lineup_hash": "a6eb3a6ede3c75eb984c36bf72e858df"
         }
     }
 }
