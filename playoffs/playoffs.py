@@ -122,8 +122,8 @@ def simulate_season(current_standings, remaining_schedule, todays_games, playoff
             home_team = game['home_name']
             away_wp = sim_standings[away_team]['win_perc']
             home_wp = sim_standings[home_team]['win_perc']
-            away_win_prob = (away_wp - away_wp * home_wp) / (away_wp + home_wp - 2 * away_wp * home_wp)
-
+            away_win_prob = (away_wp - away_wp * home_wp) / (away_wp + home_wp - 2 * away_wp * home_wp)                             
+                                
             #Simulate winner of the game based on win probability using a random number generator
             if random.random() < away_win_prob:
                 sim_standings[away_team]['sim_wins'] += 1
@@ -391,8 +391,154 @@ def resolve_tiebreak(start_date_str, teams, teams_info, simulated_results, remai
             simulated_results, remaining_schedule, matchup_cache
         )
 
-    #For now, randomly choose among the teams still tied for the best percentage.
-    return random.choice(top_teams)
+    #If the head-to-head tiebreak is still tied, compare intradivision records.
+    division_records = {}
+
+    for team in top_teams:
+        team_id = teams_info[team]['id']
+        team_division = teams_info[team]['division']
+
+        #Cache the historical intradivision record so we do not call the API
+        #again for every Monte Carlo simulation.
+        division_cache_key = (
+            'division_record',
+            start_date_obj,
+            team_id
+        )
+
+        if division_cache_key not in matchup_cache:
+            team_schedule = get_schedule(
+                start_date=f'01/01/{current_year}',
+                end_date=previous_date_str,
+                team=team_id
+            )
+
+            historical_wins = 0
+            historical_losses = 0
+
+            for game in team_schedule:
+                if game.get('game_type') != 'R':
+                    continue
+
+                #Figure out this team's opponent.
+                if game['away_name'] == team:
+                    opponent = game['home_name']
+                elif game['home_name'] == team:
+                    opponent = game['away_name']
+                else:
+                    continue
+
+                #Only intradivision games count.
+                if opponent not in teams_info:
+                    continue
+
+                if teams_info[opponent]['division'] != team_division:
+                    continue
+
+                #Use the API's winning team when available.
+                if game.get('winning_team'):
+                    if game['winning_team'] == team:
+                        historical_wins += 1
+                    elif game['losing_team'] == team:
+                        historical_losses += 1
+
+                #Handle Completed Early games the same way as above.
+                elif game.get('status') == 'Completed Early':
+                    if game['away_score'] == game['home_score']:
+                        continue
+
+                    if game['away_score'] > game['home_score']:
+                        winner = game['away_name']
+                    else:
+                        winner = game['home_name']
+
+                    if winner == team:
+                        historical_wins += 1
+                    else:
+                        historical_losses += 1
+
+            matchup_cache[division_cache_key] = {
+                'wins': historical_wins,
+                'losses': historical_losses
+            }
+
+        #Start with the historical intradivision record.
+        wins = matchup_cache[division_cache_key]['wins']
+        losses = matchup_cache[division_cache_key]['losses']
+
+        #Add any intradivision games played in this simulation.
+        for game in remaining_schedule:
+            away_team = game['away_name']
+            home_team = game['home_name']
+
+            if team != away_team and team != home_team:
+                continue
+
+            opponent = home_team if team == away_team else away_team
+
+            if opponent not in teams_info:
+                continue
+
+            if teams_info[opponent]['division'] != team_division:
+                continue
+
+            simulated_winner = simulated_results[game['game_id']]
+
+            if (
+                simulated_winner == 'away' and team == away_team
+            ) or (
+                simulated_winner == 'home' and team == home_team
+            ):
+                wins += 1
+            else:
+                losses += 1
+
+        division_records[team] = {
+            'wins': wins,
+            'losses': losses,
+            'win_perc': wins / (wins + losses)
+        }
+
+
+    #Find the best intradivision winning percentage.
+    best_division_win_perc = max(
+        record['win_perc']
+        for record in division_records.values()
+    )
+
+    division_top_teams = [
+        team
+        for team, record in division_records.items()
+        if abs(record['win_perc'] - best_division_win_perc) < 1e-12
+    ]
+
+
+    #If one team has the best intradivision record, that team wins the tiebreak.
+    if len(division_top_teams) == 1:
+        return division_top_teams[0]
+
+
+    #If intradivision record eliminated some teams, restart the tiebreak
+    #with only the remaining tied teams.
+    if len(division_top_teams) < len(top_teams):
+        remaining_teams = [
+            team for team in teams
+            if team['team_name'] in division_top_teams
+        ]
+
+        return resolve_tiebreak(
+            start_date_str,
+            remaining_teams,
+            teams_info,
+            simulated_results,
+            remaining_schedule,
+            matchup_cache
+        )
+
+
+    #For now, randomly choose if the teams are also tied in intradivision record.
+    #The next MLB tiebreaker would be intraleague record.
+    return random.choice(division_top_teams)
         
 
 def calculate_playoff_prob(playoff_change_counter):

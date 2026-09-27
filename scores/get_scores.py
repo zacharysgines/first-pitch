@@ -1,7 +1,6 @@
 import statsapi
 from datetime import datetime, timedelta
 import time
-import math
 import sys
 from pathlib import Path
 
